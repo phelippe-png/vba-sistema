@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9FC94153-6EB7-4172-9CAB-703176276E0B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Cliente\VBASistema.dproj">
+            <Dependencies>Servidor\APIHorse.dproj</Dependencies>
+        </Projects>
+        <Projects Include="Servidor\APIHorse.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="VBASistema" DependsOnTargets="APIHorse">
+        <MSBuild Projects="Cliente\VBASistema.dproj"/>
+    </Target>
+    <Target Name="VBASistema:Clean" DependsOnTargets="APIHorse:Clean">
+        <MSBuild Projects="Cliente\VBASistema.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VBASistema:Make" DependsOnTargets="APIHorse:Make">
+        <MSBuild Projects="Cliente\VBASistema.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="APIHorse">
+        <MSBuild Projects="Servidor\APIHorse.dproj"/>
+    </Target>
+    <Target Name="APIHorse:Clean">
+        <MSBuild Projects="Servidor\APIHorse.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="APIHorse:Make">
+        <MSBuild Projects="Servidor\APIHorse.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="VBASistema;APIHorse"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="VBASistema:Clean;APIHorse:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="VBASistema:Make;APIHorse:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
