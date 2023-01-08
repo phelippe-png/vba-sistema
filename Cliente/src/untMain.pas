@@ -14,7 +14,7 @@ uses
   FireDAC.Comp.Client, untListarLotes, Vcl.ComCtrls, untListarContasPagar,
   relatorioContasPagar, untCadastrarProducao, untProducao,
   relatorioControleProducao, functions, untContasReceber,
-  relatorioContasReceber, untModalRelatorios, ShellAPI;
+  relatorioContasReceber, untModalRelatorios, ShellAPI, MidasLib, MidasCon, Midas;
 
 type
   TformMain = class(TForm)
