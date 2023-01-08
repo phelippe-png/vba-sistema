@@ -136,7 +136,7 @@ begin
   pnlMenu.Padding.Bottom := 100;
   panelPrevious := TPanel.Create(Self);
 
-  shell := ShellExecute(Handle, 'open', 'C:\vba-sistema\Executaveis\APIHorse.exe', nil, nil, SW_HIDE);
+  shell := ShellExecute(Handle, 'open', 'C:\VBASistema\vba-sistema\Executaveis\APIHorse.exe', nil, nil, SW_HIDE);
 end;
 
 procedure TformMain.FormResize(Sender: TObject);
