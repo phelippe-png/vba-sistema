@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/01/05 19:49:31.000.160,=C:\Users\pheli\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/01/05 20:11:09.000.431,C:\Users\pheli\Desktop\ProjetoDownload\src\untMain.pas=C:\Users\pheli\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/01/05 20:11:09.000.431,C:\Users\pheli\Desktop\ProjetoDownload\src\untMain.dfm=C:\Users\pheli\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2023/01/05 20:11:43.000.908,C:\Users\pheli\Desktop\ProjetoDownload\ProjetoDownload.dproj=C:\Users\pheli\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2023/01/07 00:38:12.000.141,C:\Users\pheli\Desktop\ProjetoDownload\Atualizador.dproj=C:\Users\pheli\Desktop\ProjetoDownload\ProjetoDownload.dproj</Transaction>
+    <Transaction>2023/01/08 15:29:14.491,C:\vba-sistema\Atualizador\Atualizador.dproj=C:\Users\pheli\Desktop\Atualizador\Atualizador.dproj</Transaction>
+    <Transaction>2023/01/08 15:30:09.169,C:\Users\pheli\Desktop\Atualizador\src\src\untMain.dfm=C:\Users\pheli\Desktop\Atualizador\src\untMain.dfm</Transaction>
+    <Transaction>2023/01/08 15:30:09.169,C:\Users\pheli\Desktop\Atualizador\src\src\untMain.pas=C:\Users\pheli\Desktop\Atualizador\src\untMain.pas</Transaction>
+    <Transaction>2023/01/08 15:30:34.383,C:\vba-sistema\Atualizador\src\untMain.dfm=C:\Users\pheli\Desktop\Atualizador\src\src\untMain.dfm</Transaction>
+    <Transaction>2023/01/08 15:30:34.383,C:\vba-sistema\Atualizador\src\untMain.pas=C:\Users\pheli\Desktop\Atualizador\src\src\untMain.pas</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -468,7 +468,7 @@ begin
     Result := UTF8Decode(streamResponse.DataString);
   except on e: Exception do
     begin
-      raise Exception.Create('HTTP ERROR!');
+      raise Exception.Create('HTTP ERROR! ' + e.Message);
     end;
   end;
 end;
