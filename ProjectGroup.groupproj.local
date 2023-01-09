@@ -2,6 +2,6 @@
 <BorlandProject>
 	<Transactions/>
 	<Default.Personality>
-		<Projects ActiveProject="C:\vba-sistema\Cliente\VBASistema.dproj"/>
+		<Projects ActiveProject="C:\vba-sistema\Servidor\APIHorse.dproj"/>
 	</Default.Personality>
 </BorlandProject>

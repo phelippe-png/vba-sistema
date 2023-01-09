@@ -9,9 +9,6 @@
         <Projects Include="Servidor\APIHorse.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Atualizador\Atualizador.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -38,23 +35,14 @@
     <Target Name="APIHorse:Make">
         <MSBuild Projects="Servidor\APIHorse.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Atualizador">
-        <MSBuild Projects="Atualizador\Atualizador.dproj"/>
-    </Target>
-    <Target Name="Atualizador:Clean">
-        <MSBuild Projects="Atualizador\Atualizador.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Atualizador:Make">
-        <MSBuild Projects="Atualizador\Atualizador.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="VBASistema;APIHorse;Atualizador"/>
+        <CallTarget Targets="VBASistema;APIHorse"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="VBASistema:Clean;APIHorse:Clean;Atualizador:Clean"/>
+        <CallTarget Targets="VBASistema:Clean;APIHorse:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="VBASistema:Make;APIHorse:Make;Atualizador:Make"/>
+        <CallTarget Targets="VBASistema:Make;APIHorse:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
