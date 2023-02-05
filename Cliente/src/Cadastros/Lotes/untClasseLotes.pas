@@ -84,9 +84,9 @@ begin
 
   try
     if editar then
-      functions.httpRequest(put, 'http://localhost:9000/lotes', convertJSONToStream)
+      functions.httpRequest(httpPut, 'http://localhost:9000/lotes', convertJSONToStream)
     else
-      functions.httpRequest(post, 'http://localhost:9000/lotes', convertJSONToStream);
+      functions.httpRequest(httpPost, 'http://localhost:9000/lotes', convertJSONToStream);
   except
     raise Exception.Create('Error Message');
   end;
@@ -105,7 +105,7 @@ begin
 
   convertJSONToStream := TStringStream.Create(dadosLote.ToJSON);
 
-  functions.httpRequest(delete, 'http://localhost:9000/lotes', convertJSONToStream);
+  functions.httpRequest(httpDelete, 'http://localhost:9000/lotes', convertJSONToStream);
 end;
 
 function TLotes.existeOP(op: string): boolean;
@@ -138,7 +138,7 @@ var
   stream: TStream;
 begin
   stream := TStringStream.Create('tab_lotes');
-  result := functions.httpRequest(get, 'http://localhost:9000/lotes', stream);
+  result := functions.httpRequest(httpGet, 'http://localhost:9000/lotes', stream);
 end;
 
 function TLotes.getLote: string;

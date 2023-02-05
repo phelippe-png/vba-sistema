@@ -64,7 +64,7 @@ begin
   dadosProducao.AddPair('status', Fstatus);
 
   stream := TStringStream.Create(dadosProducao.ToJSON);
-  functions.httpRequest(put, 'htt://localhost:9000/producoes', stream);
+  functions.httpRequest(httpPut, 'htt://localhost:9000/producoes', stream);
 
   if Fstatus = 'FINALIZADO' then
   begin
@@ -75,7 +75,7 @@ begin
     dadosProducao.AddPair('finalizado', TJSONBool.Create(true));
 
     stream := TStringStream.Create(dadosProducao.ToJSON);
-    functions.httpRequest(put, 'htt://localhost:9000/producoes', stream);
+    functions.httpRequest(httpPut, 'htt://localhost:9000/producoes', stream);
   end;
 end;
 
@@ -96,7 +96,7 @@ begin
   dadosProducao.AddPair('valor', CurrToStr(FvalorLote).Replace(',', '.'));
 
   stream := TStringStream.Create(dadosProducao.ToJSON);
-  functions.httpRequest(post, 'http://localhost:9000/contasreceber', stream);
+  functions.httpRequest(httpPost, 'http://localhost:9000/contasreceber', stream);
 end;
 
 procedure TProducao.enviarDadosCorpoProducao;
@@ -113,10 +113,10 @@ begin
   stream := TStringStream.Create(dadosProducao.ToJSON);
 
   if modo = 'adicionar' then
-    functions.httpRequest(post, 'http://localhost:9000/producoes', stream);
+    functions.httpRequest(httpPost, 'http://localhost:9000/producoes', stream);
 
   if modo = 'editar' then
-    functions.httpRequest(put, 'http://localhost:9000/producoes', stream);
+    functions.httpRequest(httpPut, 'http://localhost:9000/producoes', stream);
 end;
 
 procedure TProducao.enviarDadosProducao;
@@ -136,9 +136,9 @@ begin
   stream := TStringStream.Create(dadosProducao.ToJSON);
 
   if modo = 'adicionar' then
-    functions.httpRequest(post, 'http://localhost:9000/producoes', stream)
+    functions.httpRequest(httpPost, 'http://localhost:9000/producoes', stream)
   else if modo = 'editar' then
-    functions.httpRequest(put, 'http://localhost:9000/producoes', stream);
+    functions.httpRequest(httpPut, 'http://localhost:9000/producoes', stream);
 end;
 
 procedure TProducao.excluirCorpoProducao(id: integer);
@@ -150,7 +150,7 @@ begin
 
   stream := TStringStream.Create(dadosProducao.ToJSON);
 
-  functions.httpRequest(delete, 'http://localhost:9000/producoes', stream);
+  functions.httpRequest(httpDelete, 'http://localhost:9000/producoes', stream);
 
   Fcoluna := '';
 end;
@@ -163,7 +163,7 @@ begin
 
   stream := TStringStream.Create(dadosProducao.ToJSON);
 
-  functions.httpRequest(delete, 'http://localhost:9000/producoes', stream);
+  functions.httpRequest(httpDelete, 'http://localhost:9000/producoes', stream);
 end;
 
 end.

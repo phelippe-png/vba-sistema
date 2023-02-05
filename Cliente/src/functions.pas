@@ -5,57 +5,142 @@ interface
 uses
   Vcl.Controls, Winapi.Windows, Winapi.Messages, Vcl.DBGrids, Data.DB, IdHTTP,
   IdSSLOpenSSL, System.Classes, System.SysUtils, Vcl.StdCtrls, Vcl.Forms,
-  Vcl.Graphics, System.JSON, System.StrUtils;
+  Vcl.Graphics, System.JSON, System.StrUtils, FireDAC.Comp.Client,
+  System.MaskUtils;
 
 type
-  method = (get, post, put, delete);
+  tipoFormatacaoEdit = (tpSemFormatacao, tpFormatCpfCnpj, tpFormatCep, tpFormatTelefone);
+  methodHttp = (httpGet, httpPost, httpPut, httpDelete);
 
-type
   TIdHTTPAccess = class(TIdHTTP)
   end;
 
-type
   TFunctions = class
   private
     http: TIdHTTP;
     stream: TStream;
-    bool: boolean;
-    boolSel: boolean;
-    boolSelSemDesconto: boolean;
-    sel: integer;
+    SisBoolEdit: boolean;
     tamanhoTextCampoAntigo: integer;
   public
-    idSSL: TIdSSLIOHandlerSocketOpenSSL;
     editar: boolean;
 
-    function GetVariantType(const v: variant): string;
+    procedure SisEditFloatChange(campo: TEdit; vNrCasasDecimais : Integer = 2);
+    function SisFormatarEdit(edit: TEdit; tipoFormatacao: tipoFormatacaoEdit): string;
+    function SisOnlyNumbers(str: string): string;
+    function SisCursorIsNumber(edit: TEdit): boolean;
+    procedure SisEditKeyPress(edit: TEdit; var Key: Char);
+
     procedure DrawControl(Control: TWinControl);
     procedure redimensionarGrid(const Grid: TDBGrid; const CoverWhiteSpace: Boolean = True);
     procedure inicializarHttp;
-    function httpRequest(method: method; URL: string; streamRequest: TStream = nil): string overload;
+    function httpRequest(method: methodHttp; URL: string; streamRequest: TStream = nil): string overload;
     function buscarDados(value: variant; tabelaBanco, coluna, tipoRetorno, url: string): string;
 
-    procedure EditCPFChange(campo:TEdit);
-    procedure EditCNPJChange(campo: TEdit);
-    procedure EditCPFCNPJKeyPress(campo:TEdit; var Key: char);
-
-    procedure EditCepChange(campo:TEdit);
-    procedure EditCepKeyPress(campo:TEdit; var Key: char);
-
-    procedure EditFloatChange(campo: TEdit);
-    procedure EditFloatChange3(campo: TEdit);
-    procedure EditFloatKeyPress(campo: TEdit; var Key: char);
-
-    procedure EditTelefoneChange(campo: TEdit);
-    procedure EditTelefoneKeyPress(campo: TEdit; var Key: char);
-
     function verificarPosicaoCursor(campo: TEdit): boolean;
-
-//    function httpRequest(method: method; URL: string): string overload;
     constructor Create;
   end;
 
 implementation
+
+procedure TFunctions.SisEditFloatChange(campo: TEdit; vNrCasasDecimais : Integer = 2);
+ var
+  s: string;
+  v: Extended;
+  I: integer;
+begin
+//   1º Passo : se o edit estiver vazio, nada pode ser feito.
+  if campo.Text = emptystr then
+  begin
+    campo.Text := '0';
+    Exit;
+  end;
+
+  //   2º Passo : obter o texto do edit, SEM a virgula e SEM o ponto decimal:
+  s := '';
+  for I := 1 to length(campo.Text) do
+    if (campo.Text[I] in ['0' .. '9']) then
+      s := s + campo.Text[I];
+
+  //  Validando campo de valor!
+  if NOT(TryStrToFloat(s, v)) then
+    campo.Text := '0';
+
+  // 3º Passo : fazer com que o conteúdo do edit apresente as casas decimais:
+  try
+    v := StrToFloat(s);
+    v := (v /  StrToInt('1'+StringOfChar('0',vNrCasasDecimais)));
+  except on E: Exception do
+    raise Exception.Create('Valor digitado incorretamente !'+sLineBreak+e.Message);
+  end;
+   campo.Text := FormatFloat('###,'+StringOfChar('#',vNrCasasDecimais)+'0.'+StringOfChar('0',vNrCasasDecimais), v);
+
+  campo.SelStart := length(campo.Text);
+end;
+
+function TFunctions.SisFormatarEdit(edit: TEdit; tipoFormatacao: tipoFormatacaoEdit): string;
+var
+  formatText: string;
+  sel: integer;
+begin
+  sel := edit.SelStart;
+  formatText := SisOnlyNumbers(edit.Text);
+
+  case tipoFormatacao of
+    tpFormatCpfCnpj:
+    begin
+      if Length(Trim(edit.Text)) > 14 then
+        formatText := FormatMaskText('00\.000\.000\/0000\-00;0;', formatText)
+      else
+        formatText := FormatMaskText('000\.000\.000\-00;0;', formatText);
+    end;
+    tpFormatCep:
+      formatText := FormatMaskText('00\.000\-000;0;', formatText);
+    tpFormatTelefone:
+      formatText := FormatMaskText('\(00\)00000\-0000;0;', formatText);
+  end;
+
+  Delete(formatText, Pos(' ', formatText), Length(formatText));
+  edit.Text := formatText;
+
+  if SisBoolEdit then
+    edit.SelStart := Length(edit.Text)
+  else
+    edit.SelStart := sel;
+end;
+
+function TFunctions.SisOnlyNumbers(str: string): string;
+var
+  I: Integer;
+begin
+  for I := 1 to Length(str) do
+    if str[I] in ['0' .. '9'] then
+      Result := Result + str[I];
+end;
+
+function TFunctions.SisCursorIsNumber(edit: TEdit): boolean;
+var
+  char: string;
+begin
+  char := Copy(edit.Text, edit.SelStart, 1);
+
+  if (char <> '') and (char[1] in ['0'..'9']) then
+    Result := true else Result := false;
+end;
+
+procedure TFunctions.SisEditKeyPress(edit: TEdit; var Key: Char);
+begin
+  if (Key = #8) or (edit.SelStart <> Length(edit.Text)) then
+    SisBoolEdit := false
+  else
+    SisBoolEdit := true;
+
+  if (not SisCursorIsNumber(edit)) and (Key = #8) then
+  begin
+    edit.SelStart := edit.SelStart - 1;
+    Key := #8;
+  end;
+end;
+
 
 constructor TFunctions.Create;
 begin
@@ -75,7 +160,7 @@ begin
 
   streamRequest := TStringStream.Create(jsonBody.ToJSON);
 
-  result := httpRequest(get, url, streamRequest);
+  result := httpRequest(httpGet, url, streamRequest);
 end;
 
 procedure TFunctions.DrawControl(Control: TWinControl);
@@ -95,357 +180,7 @@ begin
   end;
 end;
 
-procedure TFunctions.EditCepChange(campo:TEdit);
-var
-  text: String;
-  textReplaced: string;
-  sel: integer;
-begin
-  sel := campo.SelStart;
-
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace('-', '');
-
-    if Length(textReplaced) >= 3 then
-      Insert('.', textReplaced, 3);
-
-    if Length(textReplaced) >= 7 then
-      Insert('-', textReplaced, 7);
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-    campo.SelStart := sel;
-
-  bool := false;
-end;
-
-procedure TFunctions.EditCepKeyPress(campo:TEdit; var Key: char);
-var
-  text: String;
-  textReplaced: string;
-begin
-  verificarPosicaoCursor(campo);
-
-  if (Key = #8) or (campo.SelStart <> Length(campo.Text)) then
-    boolSel := false
-  else
-    boolSel := true;
-end;
-
-procedure TFunctions.EditCNPJChange(campo: TEdit);
-var
-  text: String;
-  textReplaced: string;
-  sel: integer;
-begin
-  sel := campo.SelStart ;
-
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace('-', '').Replace('/', '');
-
-    if Length(textReplaced) >= 3 then
-      Insert('.', textReplaced, 3);
-
-    if Length(textReplaced) >= 7 then
-      Insert('.', textReplaced, 7);
-
-    if Length(textReplaced) >= 11 then
-      Insert('/', textReplaced, 11);
-
-    if Length(textReplaced) >= 16 then
-      Insert('-', textReplaced, 16);
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-    campo.SelStart := sel;
-
-  bool := false;
-end;
-
-procedure TFunctions.EditCPFChange(campo: TEdit);
-var
-  text: String;
-  textReplaced: string;
-  sel: integer;
-begin
-  sel := campo.SelStart;
-
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace('-', '').Replace('/', '');
-
-    if Length(textReplaced) >= 4 then
-      Insert('.', textReplaced, 4);
-
-    if Length(textReplaced) >= 8 then
-      Insert('.', textReplaced, 8);
-
-    if Length(textReplaced) >= 12 then
-      Insert('-', textReplaced, 12);
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-    campo.SelStart := sel;
-
-  bool := false;
-end;
-
-procedure TFunctions.EditCPFCNPJKeyPress(campo: TEdit; var Key: char);
-begin
-  verificarPosicaoCursor(campo);
-
-  if (Key = #8) or (campo.SelStart <> Length(campo.Text)) then
-    boolSel := false
-  else
-    boolSel := true;
-end;
-
-procedure TFunctions.EditFloatChange(campo: TEdit);
-var
-  text, textReplaced: string;
-begin
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace(',', '');
-
-    if Length(textReplaced) >= 3 then
-    begin
-      Insert(',', textReplaced, Length(textReplaced) - 1);
-      textReplaced := FormatFloat('###,###,##0.00', StrToCurr(textReplaced));
-    end;
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-  bool := false;
-
-  if boolSelSemDesconto then
-  begin
-    campo.SelStart := sel - 1;
-
-    if ((Length(campo.Text) - tamanhoTextCampoAntigo) = -2) then
-      campo.SelStart := sel - 2;
-
-    exit;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-  begin
-    campo.SelStart := sel + 1;
-
-    if ((Length(campo.Text) - tamanhoTextCampoAntigo) = 2) then
-      campo.SelStart := sel + 2;
-  end;
-end;
-
-procedure TFunctions.EditFloatChange3(campo: TEdit);
-var
-  text, textReplaced: string;
-begin
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace(',', '');
-
-    if Length(textReplaced) >= 4 then
-    begin
-      Insert(',', textReplaced, Length(textReplaced) - 2);
-      textReplaced := FormatFloat('###,###,##0.000', StrToCurr(textReplaced));
-    end;
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-  bool := false;
-
-  if boolSelSemDesconto then
-  begin
-    campo.SelStart := sel - 1;
-
-    if ((Length(campo.Text) - tamanhoTextCampoAntigo) = -2) then
-      campo.SelStart := sel - 2;
-
-    exit;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-  begin
-    campo.SelStart := sel + 1;
-
-    if ((Length(campo.Text) - tamanhoTextCampoAntigo) = 2) then
-      campo.SelStart := sel + 2;
-  end;
-end;
-
-procedure TFunctions.EditFloatKeyPress(campo: TEdit; var Key: char);
-var
-  s: integer;
-begin
-  sel := campo.SelStart;
-  tamanhoTextCampoAntigo := Length(campo.Text);
-
-  if verificarPosicaoCursor(campo) and (Key = #8) then
-    Key := #0;
-
-  if (Key = #8) then
-    boolSelSemDesconto := true
-  else
-    boolSelSemDesconto := false;
-
-  if (campo.SelStart <> Length(campo.Text)) then
-    boolSel := false
-  else
-    boolSel := true;
-end;
-
-//procedure TFunctions.EditFloatKeyPress3(campo: TEdit; var Key: char);
-//begin
-//  if Length(campo.Text) <= 14 then
-//  begin
-//    if (campo.SelStart = 3) and (Key = #8) then
-//    begin
-//      campo.SelStart := 2;
-//      Key := #0;
-//    end;
-//
-//    if (campo.SelStart = 7) and (Key = #8) then
-//    begin
-//      campo.SelStart := 6;
-//      Key := #0;
-//    end;
-//
-//    if (campo.SelStart = 11) and (Key = #8) then
-//    begin
-//      campo.SelStart := 10;
-//      Key := #0;
-//    end;
-//  end;
-//
-//  if Length(campo.Text) > 14 then
-//  begin
-//    if (campo.SelStart = 3) and (Key = #8) then
-//    begin
-//      campo.SelStart := 2;
-//      Key := #0;
-//    end;
-//
-//    if (campo.SelStart = 7) and (Key = #8) then
-//    begin
-//      campo.SelStart := 6;
-//      Key := #0;
-//    end;
-//
-//    if (campo.SelStart = 11) and (Key = #8) then
-//    begin
-//      campo.SelStart := 10;
-//      Key := #0;
-//    end;
-//
-//    if (campo.SelStart = 16) and (Key = #8) then
-//    begin
-//      campo.SelStart := 15;
-//      Key := #0;
-//    end;
-//  end;
-//
-//  if (Key = #8) or (campo.SelStart <> Length(campo.Text)) then
-//    boolSel := false
-//  else
-//    boolSel := true;
-//end;
-
-procedure TFunctions.EditTelefoneChange(campo: TEdit);
-var
-  text: String;
-  textReplaced: string;
-  sel: integer;
-begin
-  sel := campo.SelStart;
-
-  if bool = false then
-  begin
-    text := campo.Text;
-    textReplaced := text.Replace('.', '').Replace('-', '').Replace('(', '').Replace(') ', '');
-
-    if Length(textReplaced) >= 2 then
-    begin
-      Insert('(', textReplaced, 1);
-      Insert(') ', textReplaced, 4);
-    end;
-
-    if Length(textReplaced) >= 11 then
-      Insert('-', textReplaced, 11);
-
-    bool := true;
-    campo.Text := textReplaced;
-  end;
-
-  if boolSel then
-    campo.SelStart := Length(campo.Text)
-  else
-    campo.SelStart := sel;
-
-  bool := false;
-end;
-
-procedure TFunctions.EditTelefoneKeyPress(campo: TEdit; var Key: char);
-var
-  sel: integer;
-begin
-  if ((campo.SelStart = 4) and (Key = #8)) or ((campo.SelStart = 5) and (Key = #8)) then
-  begin
-    campo.SelStart := 3;
-    Key := #0;
-    exit;
-  end;
-
-  if (campo.SelStart = 1) and (Key = #8) and (Length(campo.Text) >= 5) then
-  begin
-    campo.SelStart := 0;
-    Key := #0;
-    exit;
-  end;
-
-  if ((campo.SelStart = 2) or (campo.SelStart = 3)) and (Key <> #8)  then
-  begin
-    campo.SelStart := 5;
-    exit;
-  end;
-
-  if (Key = #8) or (campo.SelStart <> Length(campo.Text)) then
-  begin
-    boolSel := false
-  end
-  else
-    boolSel := true;
-end;
-
-function TFunctions.httpRequest(method: method; URL: string; streamRequest: TStream = nil): string;
+function TFunctions.httpRequest(method: methodHttp; URL: string; streamRequest: TStream = nil): string;
 var
   methodHttp: string;
   streamResponse: TStringStream;
@@ -453,13 +188,13 @@ begin
   streamResponse := TStringStream.Create;
 
   try
-    if method = get then
+    if method = httpGet then
       methodHttp := Id_HTTPMethodGet;
-    if method = post then
+    if method = httpPost then
       methodHttp := Id_HTTPMethodPost;
-    if method = put then
+    if method = httpPut then
       methodHttp := Id_HTTPMethodPut;
-    if method = delete then
+    if method = httpDelete then
       methodHttp := Id_HTTPMethodDelete;
 
     TIdHTTPAccess(http).Request.ContentType := 'application/json';
@@ -470,31 +205,6 @@ begin
     begin
       raise Exception.Create('HTTP ERROR! ' + e.Message);
     end;
-  end;
-end;
-
-function TFunctions.GetVariantType(const v: variant): string;
-begin
-  case TVarData(v).vType of
-    varEmpty: result := 'Empty';
-    varNull: result := 'Null';
-    varSmallInt: result := 'SmallInt';
-    varInteger: result := 'Integer';
-    varSingle: result := 'Single';
-    varDouble: result := 'Double';
-    varCurrency: result := 'Currency';
-    varDate: result := 'Date';
-    varOleStr: result := 'OleStr';
-    varDispatch: result := 'Dispatch';
-    varError: result := 'Error';
-    varBoolean: result := 'Boolean';
-    varVariant: result := 'Variant';
-    varUnknown: result := 'Unknown';
-    varByte: result := 'Byte';
-    varString: result := 'String';
-    varTypeMask: result := 'TypeMask';
-    varArray: result := 'Array';
-    varByRef: result := 'ByRef';
   end;
 end;
 
@@ -583,6 +293,8 @@ begin
 end;
 
 procedure TFunctions.inicializarHttp;
+var
+  idSSL: TIdSSLIOHandlerSocketOpenSSL;
 begin
   http := TIdHTTP.Create(nil);
   idSSL := TIdSSLIOHandlerSocketOpenSSL.Create(http);

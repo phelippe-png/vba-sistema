@@ -201,6 +201,8 @@ begin
     ClientDataSet.Filter := ClientDataSet.Filter + ' and not (id in (' + notFilter + ') )';
 
   ClientDataSet.Filtered := true;
+
+  functions.redimensionarGrid(DBGrid);
 end;
 
 procedure TformListarLotes.DBGridDblClick(Sender: TObject);
@@ -313,6 +315,7 @@ begin
 
     editarDBGrid;
     cbFiltroMesesChange(Self);
+
   except
     abort;
   end;

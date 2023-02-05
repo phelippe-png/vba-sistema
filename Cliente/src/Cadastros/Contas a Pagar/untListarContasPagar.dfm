@@ -256,7 +256,6 @@ object formContasPagar: TformContasPagar
         TabOrder = 6
         Text = '0,00'
         OnChange = edValorTotalChange
-        OnKeyPress = edValorTotalKeyPress
       end
       object edDataVenc: TDateTimePicker
         Left = 281

@@ -28,7 +28,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure edValorChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure edValorKeyPress(Sender: TObject; var Key: Char);
   private
     FvalorPago: Currency;
     FtotalPagar: Currency;
@@ -99,12 +98,7 @@ end;
 
 procedure TformModal.edValorChange(Sender: TObject);
 begin
-  functions.EditFloatChange(edValor);
-end;
-
-procedure TformModal.edValorKeyPress(Sender: TObject; var Key: Char);
-begin
-  functions.EditFloatKeyPress(edValor, Key);
+  functions.SisEditFloatChange(edValor);
 end;
 
 procedure TformModal.exibirValores;

@@ -135,7 +135,6 @@ object formModal: TformModal
     TabOrder = 0
     Text = '0,00'
     OnChange = edValorChange
-    OnKeyPress = edValorKeyPress
   end
   object btnCancel: TPanel
     Left = 210

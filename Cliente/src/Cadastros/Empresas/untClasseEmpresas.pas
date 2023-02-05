@@ -81,14 +81,14 @@ begin
 
   stream := TStringStream.Create(dadosEmpresa.ToJSON);
 
-  functions.httpRequest(delete, 'http://localhost:9000/empresas', stream);
+  functions.httpRequest(httpDelete, 'http://localhost:9000/empresas', stream);
 end;
 
 function TEmpresa.getDados: string;
 begin
   stream := TStringStream.Create('tab_empresas');
 
-  result := functions.httpRequest(get, 'http://localhost:9000/empresas', stream);
+  result := functions.httpRequest(httpGet, 'http://localhost:9000/empresas', stream);
 end;
 
 procedure TEmpresa.cadastrarDados;
@@ -111,13 +111,9 @@ begin
   Stream := TStringStream.Create(dadosEmpresa.ToJSON);
 
   if editar = false then
-  begin
-    functions.httpRequest(post, 'http://localhost:9000/empresas', Stream);
-  end
+    functions.httpRequest(httpPost, 'http://localhost:9000/empresas', Stream)
   else
-  begin
-    functions.httpRequest(put, 'http://localhost:9000/empresas', Stream);
-  end;
+    functions.httpRequest(httpPut, 'http://localhost:9000/empresas', Stream);
 end;
 
 function TEmpresa.validarCEP(CEP: string): string;
@@ -126,7 +122,7 @@ var
 begin
   cepReplaced := CEP.Replace('.', '').Replace('-', '');
 
-  result := functions.httpRequest(get, 'https://viacep.com.br/ws/' + cepReplaced + '/json/');
+  result := functions.httpRequest(httpGet, 'https://viacep.com.br/ws/' + cepReplaced + '/json/');
 end;
 
 function TEmpresa.validaCPF(CPF: string): boolean;

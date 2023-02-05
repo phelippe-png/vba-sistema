@@ -17,6 +17,8 @@ object formContasReceber: TformContasReceber
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnResize = FormResize
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

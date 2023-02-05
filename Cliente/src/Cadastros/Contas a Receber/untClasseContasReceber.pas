@@ -36,7 +36,7 @@ begin
 
     stream := TStringStream.Create(jsonRequest.ToJSON);
   
-    functions.httpRequest(put, 'http://localhost:9000/contasreceber', stream);
+    functions.httpRequest(httpPut, 'http://localhost:9000/contasreceber', stream);
   except
     
   end;
@@ -57,7 +57,7 @@ begin
 
     stream := TStringStream.Create(jsonRequest.ToJSON);
 
-    functions.httpRequest(delete, 'http://localhost:9000/contasreceber', stream);
+    functions.httpRequest(httpDelete, 'http://localhost:9000/contasreceber', stream);
   except
 
   end;

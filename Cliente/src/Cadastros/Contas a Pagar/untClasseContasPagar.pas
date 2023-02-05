@@ -53,7 +53,7 @@ begin
 
     convertDadosToStream := TStringStream.Create(dadosConta.ToJSON);
 
-    functions.httpRequest(put, 'http://localhost:9000/contaspagar', convertDadosToStream);
+    functions.httpRequest(httpPut, 'http://localhost:9000/contaspagar', convertDadosToStream);
   except on e:Exception do
     raise Exception.Create('Erro ao confirmar pagamento!');
   end;
@@ -75,7 +75,7 @@ begin
 
     convertDadosToStream := TStringStream.Create(dadosConta.ToJSON);
 
-    functions.httpRequest(delete, 'http://localhost:9000/contaspagar', convertDadosToStream);
+    functions.httpRequest(httpDelete, 'http://localhost:9000/contaspagar', convertDadosToStream);
   except
     raise Exception.Create('Error Message');
   end;
@@ -96,7 +96,7 @@ begin
 
     convertDadosToStream := TStringStream.Create(dadosConta.ToJSON);
 
-    functions.httpRequest(put, 'http://localhost:9000/contaspagar', convertDadosToStream);
+    functions.httpRequest(httpPut, 'http://localhost:9000/contaspagar', convertDadosToStream);
   except
     raise Exception.Create('Error Message');
   end;
@@ -117,9 +117,9 @@ begin
     convertDadosToStream := TStringStream.Create(dadosConta.ToJSON);
 
     if not editar then
-      functions.httpRequest(post, 'http://localhost:9000/contaspagar', convertDadosToStream)
+      functions.httpRequest(httpPost, 'http://localhost:9000/contaspagar', convertDadosToStream)
     else
-      functions.httpRequest(put, 'http://localhost:9000/contaspagar', convertDadosToStream)
+      functions.httpRequest(httpPut, 'http://localhost:9000/contaspagar', convertDadosToStream)
   except
     raise Exception.Create('Error Message');
   end;

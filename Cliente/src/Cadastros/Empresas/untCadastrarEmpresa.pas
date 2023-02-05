@@ -137,7 +137,7 @@ procedure TformCadastrarEmpresa.edCEPChange(Sender: TObject);
 var
   jsonDadosCEP: TJSONObject;
 begin
-  functions.EditCepChange(edCEP);
+  functions.SisFormatarEdit(edCEP, tpFormatCep);
 
   try
     if Length(edCEP.Text) = 10 then
@@ -157,33 +157,29 @@ end;
 
 procedure TformCadastrarEmpresa.edCEPKeyPress(Sender: TObject; var Key: Char);
 begin
-  functions.EditCepKeyPress(edCEP, Key);
+  functions.SisEditKeyPress(edCEP, Key);
 end;
 
 procedure TformCadastrarEmpresa.edCPF_CNPJChange(Sender: TObject);
 begin
-  if Length(edCPF_CNPJ.Text) <= 14 then
-    functions.EditCPFChange(edCPF_CNPJ);
-
-  if Length(edCPF_CNPJ.Text) > 14 then
-    functions.EditCNPJChange(edCPF_CNPJ);
+  functions.SisFormatarEdit(edCPF_CNPJ, tpFormatCpfCnpj);
 end;
 
 procedure TformCadastrarEmpresa.edCPF_CNPJKeyPress(Sender: TObject;
   var Key: Char);
 begin
-  functions.EditCPFCNPJKeyPress(edCPF_CNPJ, Key);
+  functions.SisEditKeyPress(edCPF_CNPJ, Key);
 end;
 
 procedure TformCadastrarEmpresa.edTelefoneChange(Sender: TObject);
 begin
-  functions.EditTelefoneChange(edTelefone);
+  functions.SisFormatarEdit(edTelefone, tpFormatTelefone);
 end;
 
 procedure TformCadastrarEmpresa.edTelefoneKeyPress(Sender: TObject;
   var Key: Char);
 begin
-  functions.EditTelefoneKeyPress(edTelefone, Key);
+  functions.SisEditKeyPress(edTelefone, Key);
 end;
 
 function TformCadastrarEmpresa.existeEmpresaCadastrada: boolean;
@@ -223,7 +219,7 @@ begin
   classeEmpresas := TEmpresa.Create;
   functions := TFunctions.Create;
   ufs := TJSONArray.Create;
-  ufs := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(functions.httpRequest(get, 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome', nil)), 0) as TJSONArray;
+  ufs := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(functions.httpRequest(httpGet, 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome', nil)), 0) as TJSONArray;
 
   for I := 0 to Pred(ufs.Count) do
   begin

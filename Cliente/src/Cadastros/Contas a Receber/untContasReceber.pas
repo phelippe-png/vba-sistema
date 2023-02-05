@@ -322,7 +322,7 @@ begin
 
   stream := TStringStream.Create(jsonRequest.ToJSON);
 
-  ClientDataSet.LoadFromJSON(functions.httpRequest(get, 'http://localhost:9000/contasreceber'));
+  ClientDataSet.LoadFromJSON(functions.httpRequest(httpGet, 'http://localhost:9000/contasreceber'));
 
   ClientDataSet.IndexFieldNames := 'previsao_recebimento';
 end;

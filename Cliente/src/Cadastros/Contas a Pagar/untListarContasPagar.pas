@@ -59,7 +59,6 @@ type
     procedure btnConfirmarClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure edValorTotalKeyPress(Sender: TObject; var Key: Char);
   private
     classeContasPagar: TContasPagar;
     functions: TFunctions;
@@ -97,6 +96,7 @@ begin
     Application.MessageBox('Pagamento confirmado com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK);
     SQL;
     calcularTotais;
+    functions.redimensionarGrid(DBGrid);
   except on E: Exception do
     Application.MessageBox('Erro ao confirmar pagamento!', 'Erro', MB_ICONERROR + MB_OK);
   end;
@@ -164,6 +164,7 @@ begin
       Application.MessageBox('Valor pago inserido com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
       SQL;
       calcularTotais;
+      functions.redimensionarGrid(DBGrid);
     except on E: Exception do
       Application.MessageBox('Erro ao inserir valor pago!', 'Erro', MB_ICONERROR + MB_OK);
     end;
@@ -204,6 +205,8 @@ begin
 
     edValorTotal.Enabled := true;
     DBGrid.Enabled := true;
+
+    functions.redimensionarGrid(DBGrid);
   except on E: Exception do
     Application.MessageBox('Erro ao cadastrar conta!', 'Erro', MB_ICONERROR + MB_OK);
   end;
@@ -254,6 +257,7 @@ begin
 
   filtrarContas;
   calcularTotais;
+  functions.redimensionarGrid(DBGrid);
 end;
 
 procedure TformContasPagar.inserirSituacao;
@@ -410,12 +414,7 @@ end;
 
 procedure TformContasPagar.edValorTotalChange(Sender: TObject);
 begin
-  functions.EditFloatChange(edValorTotal);
-end;
-
-procedure TformContasPagar.edValorTotalKeyPress(Sender: TObject; var Key: Char);
-begin
-  functions.EditFloatKeyPress(edValorTotal, Key);
+  functions.SisEditFloatChange(edValorTotal);
 end;
 
 procedure TformContasPagar.filtrarContas;
@@ -486,6 +485,7 @@ begin
 
   filtrarContas;
   calcularTotais;
+  functions.redimensionarGrid(DBGrid);
 end;
 
 procedure TformContasPagar.SQL;
@@ -496,7 +496,7 @@ begin
     ClientDataSet.EmptyDataSet;
     stream := TStringStream.Create('tab_contaspagar');
 
-    ClientDataSet.LoadFromJSON(functions.httpRequest(get, 'http://localhost:9000/contaspagar', stream));
+    ClientDataSet.LoadFromJSON(functions.httpRequest(httpGet, 'http://localhost:9000/contaspagar', stream));
     ClientDataSet.IndexFieldNames := 'data_venc';
 
     cbFiltroMesesChange(Self);

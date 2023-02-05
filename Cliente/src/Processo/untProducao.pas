@@ -344,7 +344,7 @@ begin
   ClientDataSet.EmptyDataSet;
   stream := TStringStream.Create('tab_controleproducao');
 
-  ClientDataSet.LoadFromJSON(functions.httpRequest(get, 'http://localhost:9000/producoes', stream));
+  ClientDataSet.LoadFromJSON(functions.httpRequest(httpGet, 'http://localhost:9000/producoes', stream));
 
   inserirSituacao;
 end;

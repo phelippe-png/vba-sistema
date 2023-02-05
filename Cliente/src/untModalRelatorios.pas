@@ -132,13 +132,13 @@ begin
   stream := TStringStream.Create(montarQuery, TEncoding.UTF8);
 
   if tipoRelatorio = contasPagar then
-    relatorioContasPagar.imprimirRelatorio(functions.httpRequest(get, 'http://localhost:9000/relatorio-contaspagar', stream));
+    relatorioContasPagar.imprimirRelatorio(functions.httpRequest(httpGet, 'http://localhost:9000/relatorio-contaspagar', stream));
 
   if tipoRelatorio = contasReceber then
-    relatorioContasReceber.imprimirRelatorio(functions.httpRequest(get, 'http://localhost:9000/relatorio-contasreceber', stream));
+    relatorioContasReceber.imprimirRelatorio(functions.httpRequest(httpGet, 'http://localhost:9000/relatorio-contasreceber', stream));
 
   if tipoRelatorio = controleProducao then
-    relatorioControleProducao.imprimirRelatorio(functions.httpRequest(get, 'http://localhost:9000/relatorio-controleproducao', stream));
+    relatorioControleProducao.imprimirRelatorio(functions.httpRequest(httpGet, 'http://localhost:9000/relatorio-controleproducao', stream));
 end;
 
 procedure TformModalRelatorios.ckbEmpresaProducaoClick(Sender: TObject);

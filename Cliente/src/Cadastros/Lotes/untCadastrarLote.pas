@@ -47,9 +47,6 @@ type
     procedure edQuantidadeExit(Sender: TObject);
     procedure edValorTotalChange(Sender: TObject);
     procedure edTempoMinChange(Sender: TObject);
-    procedure edValorUnitKeyPress(Sender: TObject; var Key: Char);
-    procedure edTempoMinKeyPress(Sender: TObject; var Key: Char);
-    procedure edValorTotalKeyPress(Sender: TObject; var Key: Char);
   private
     classeLotes: TLotes;
     classeEmpresas: TEmpresa;
@@ -161,42 +158,22 @@ end;
 
 procedure TformCadastrarLote.edTempoMinChange(Sender: TObject);
 begin
-  functions.EditFloatChange3(edTempoMin);
-end;
-
-procedure TformCadastrarLote.edTempoMinKeyPress(Sender: TObject; var Key: Char);
-begin
-  functions.EditFloatKeyPress(edTempoMin, Key);
+  functions.SisEditFloatChange(edTempoMin, 3);
 end;
 
 procedure TformCadastrarLote.edValorTotalChange(Sender: TObject);
 begin
-  functions.EditFloatChange(edValorTotal);
-end;
-
-procedure TformCadastrarLote.edValorTotalKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  functions.EditFloatKeyPress(edValorTotal, Key);
+  functions.SisEditFloatChange(edValorTotal);
 end;
 
 procedure TformCadastrarLote.edValorUnitChange(Sender: TObject);
 var
   resultado: currency;
 begin
-  if edValorUnit.Text = '' then
-    edValorUnit.Text := '0';
-
-  functions.EditFloatChange(edValorUnit);
+  functions.SisEditFloatChange(edValorUnit);
 
   resultado := StrToCurr(Trim(edValorUnit.Text).Replace('.', '')) * StrToInt(edQuantidade.Text);
-  edValorTotal.Text := CurrToStr(resultado);
-end;
-
-procedure TformCadastrarLote.edValorUnitKeyPress(Sender: TObject;
-  var Key: Char);
-begin
-  functions.EditFloatKeyPress(edValorUnit, Key);
+  edValorTotal.Text := FormatCurr('###,###,##0.00', resultado);
 end;
 
 procedure TformCadastrarLote.FormCreate(Sender: TObject);

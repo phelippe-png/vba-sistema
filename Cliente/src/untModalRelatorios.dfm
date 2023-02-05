@@ -550,7 +550,7 @@ object formModalRelatorios: TformModalRelatorios
         object Label16: TLabel
           Left = 409
           Top = 8
-          Width = 72
+          Width = 36
           Height = 16
           Alignment = taCenter
           Caption = 'Status'

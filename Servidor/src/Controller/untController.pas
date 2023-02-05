@@ -18,7 +18,6 @@ type
     query: TFDQuery;
     FIndexConnection: Integer;
   public
-    function GetVariantType(const v: variant): string;
     function getDados(tabelaBanco: string): TFDQuery;
     function getByValue(value: Variant; tabelaBanco, coluna, tipoRetorno: string): TJSONValue;
     function setDados(Dados: TJSONObject; tabelaBanco: string): string;
@@ -33,31 +32,6 @@ type
   end;
 
 implementation
-
-function TController.GetVariantType(const v: variant): string;
-begin
-  case TVarData(v).vType of
-    varEmpty: result := 'Empty';
-    varNull: result := 'Null';
-    varSmallInt: result := 'SmallInt';
-    varInteger: result := 'Integer';
-    varSingle: result := 'Single';
-    varDouble: result := 'Double';
-    varCurrency: result := 'Currency';
-    varDate: result := 'Date';
-    varOleStr: result := 'OleStr';
-    varDispatch: result := 'Dispatch';
-    varError: result := 'Error';
-    varBoolean: result := 'Boolean';
-    varVariant: result := 'Variant';
-    varUnknown: result := 'Unknown';
-    varByte: result := 'Byte';
-    varString: result := 'String';
-    varTypeMask: result := 'TypeMask';
-    varArray: result := 'Array';
-    varByRef: result := 'ByRef';
-  end;
-end;
 
 constructor TController.Create;
 begin

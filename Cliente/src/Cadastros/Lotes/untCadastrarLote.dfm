@@ -263,7 +263,6 @@ object formCadastrarLote: TformCadastrarLote
           ParentFont = False
           TabOrder = 5
           OnChange = edValorUnitChange
-          OnKeyPress = edValorUnitKeyPress
         end
         object edValorTotal: TEdit
           Left = 392
@@ -281,7 +280,6 @@ object formCadastrarLote: TformCadastrarLote
           ParentFont = False
           TabOrder = 6
           OnChange = edValorTotalChange
-          OnKeyPress = edValorTotalKeyPress
         end
         object edTempoMin: TEdit
           Left = 16
@@ -299,7 +297,6 @@ object formCadastrarLote: TformCadastrarLote
           ParentFont = False
           TabOrder = 7
           OnChange = edTempoMinChange
-          OnKeyPress = edTempoMinKeyPress
         end
         object edEmpresa: TEdit
           Left = 208

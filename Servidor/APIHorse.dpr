@@ -19,9 +19,6 @@ begin
   System := THorse.Create;
   System.Use(Jhonson);
 
-//  untRotasEmpresas.Control(System);
-//  untRotasLotes.Control(System);
-//  untRotasContasPagar.Control(System);
   untRotas.Control(System);
 
   System.Listen(9000);
