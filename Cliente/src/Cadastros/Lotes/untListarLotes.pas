@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
   Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, FireDAC.Comp.Client, IdHTTP, DataSet.Serialize,
   untCadastrarLote, Vcl.ComCtrls, System.JSON, functions, Datasnap.DBClient,
-  untClasseLotes;
+  untClasseLotes, DateUtils;
 
 type
   TformListarLotes = class(TForm)
@@ -47,6 +47,7 @@ type
     formCadastrarLote: TformCadastrarLote;
     functions: TFunctions;
     classeLotes: TLotes;
+    dataEntrada: TDate;
 
     procedure SQL;
     procedure editarDBGrid;
@@ -82,7 +83,7 @@ begin
   if cbFiltro.ItemIndex = 3 then
     ClientDataSet.Filter := 'empresa like ' + QuotedStr('%' + edSearch.Text + '%');
 
-  ClientDataSet.Filter := 'month(data_entrada) = ' + IntToStr(cbFiltroMeses.ItemIndex + 1);
+  ClientDataSet.Filter := ClientDataSet.Filter + ' and month(data_entrada) = ' + IntToStr(cbFiltroMeses.ItemIndex + 1);
   ClientDataSet.Filtered := true;
 end;
 
@@ -122,6 +123,8 @@ begin
   try
     formCadastrarLote := TformCadastrarLote.Create(Self);
     formCadastrarLote.ShowModal;
+    cbFiltroMeses.ItemIndex := MonthOf(formCadastrarLote.edDataEnt.Date) - 1;
+    cbFiltroMesesChange(Self);
   finally
     SQL;
   end;

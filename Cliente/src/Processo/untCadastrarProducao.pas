@@ -189,7 +189,7 @@ begin
     exit;
   end;
 
-  if (pickerInicio.Date < Date) or ((pickerFinal.Date < Date) or (pickerFinal.Date < pickerInicio.Date)) then
+  if pickerFinal.Date < pickerInicio.Date then
   begin
     Application.MessageBox('As datas informadas são inválidas!', 'Atenção', MB_ICONWARNING + MB_OK);
     exit;

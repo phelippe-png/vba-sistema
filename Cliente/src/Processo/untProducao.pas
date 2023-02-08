@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
   Vcl.StdCtrls, Vcl.ExtCtrls, untCadastrarProducao, Datasnap.DBClient, IdHTTP, DataSet.Serialize,
   functions, System.JSON, Vcl.Buttons, relatorioControleProducao,
-  untClasseProducao;
+  untClasseProducao, DateUtils;
 
 type
   TformListarProducoes = class(TForm)
@@ -67,6 +67,8 @@ begin
   try
     formCadastrar := TformCadastrarProducao.Create(Self);
     formCadastrar.ShowModal;
+    cbFiltroMesProducao.ItemIndex := MonthOf(formCadastrar.pickerInicio.Date) - 1;
+    cbFiltroMesProducaoChange(Self);
   finally
     SQL;
     calcularValores;
@@ -265,6 +267,9 @@ end;
 procedure TformListarProducoes.Panel2Click(Sender: TObject);
 begin
   try
+    if ClientDataSet.RecordCount = 0 then
+      exit;
+
     if Application.MessageBox('Deseja realmente excluir a produção?', 'Confirmação', MB_ICONQUESTION + MB_YESNO) = ID_NO then
       exit;
 
@@ -288,6 +293,9 @@ var
   I: Integer;
 begin
   try
+    if ClientDataSet.RecordCount = 0 then
+      exit;
+
     if ClientDataSet.FieldByName('status').AsString = 'EM ABERTO' then
     begin
       if Application.MessageBox('Deseja iniciar a produção?', 'Confirmação', MB_ICONQUESTION + MB_YESNO) = ID_YES then
