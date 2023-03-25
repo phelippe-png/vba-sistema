@@ -174,10 +174,38 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas">
+        <DCCReference Include="src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.pas">
             <Form>formControlePagamentos</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Cadastros\Funcionários\untFuncionarios.pas">
+            <Form>formFuncionarios</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Cadastros\Funcionários\untCadastrarFuncionario.pas">
+            <Form>formCadastrarFuncionario</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Cadastros\Ponto de Funcionario\untCadastroPonto.pas">
+            <Form>formCadastrarPonto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas">
+            <Form>formPagamentos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <RcItem Include="img\trash.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>ICOTrash</ResourceId>
+        </RcItem>
+        <RcItem Include="img\add.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>ICOAdd</ResourceId>
+        </RcItem>
+        <RcItem Include="img\search.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>ICOSearch</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -208,9 +236,27 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="img\search.bmp" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\Executaveis\VBASistema.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>VBASistema.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\trash.bmp" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\add.bmp" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -989,6 +1035,7 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
+            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

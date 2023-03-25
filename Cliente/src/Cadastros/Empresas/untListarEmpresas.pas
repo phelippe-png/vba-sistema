@@ -39,10 +39,9 @@ type
     procedure Panel2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
-    ClientDataSet: TClientDataSet;
-    DataSource: TDataSource;
     formCadastrarEmpresa: TformCadastrarEmpresa;
     classeEmpresa: TEmpresa;
+    vFDMEmpresas: TFDMemTable;
 
     procedure EditDBGrid;
     procedure SQL;

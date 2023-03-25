@@ -1,5 +1,7 @@
 program VBASistema;
 
+{$R *.dres}
+
 uses
   Vcl.Forms,
   untMain in 'src\untMain.pas' {formMain},
@@ -25,7 +27,11 @@ uses
   untClasseContasReceber in 'src\Cadastros\Contas a Receber\untClasseContasReceber.pas',
   BancoFuncoes in 'src\Funções\BancoFuncoes.pas',
   DM in 'src\DM.pas' {SisDataModule: TDataModule},
-  untPagamentos in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas' {formControlePagamentos};
+  untControlePagamento in 'src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.pas' {formControlePagamentos},
+  untFuncionarios in 'src\Cadastros\Funcionários\untFuncionarios.pas' {formFuncionarios},
+  untCadastrarFuncionario in 'src\Cadastros\Funcionários\untCadastrarFuncionario.pas' {formCadastrarFuncionario},
+  untCadastroPonto in 'src\Cadastros\Ponto de Funcionario\untCadastroPonto.pas' {formCadastrarPonto},
+  untPagamentos in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas' {formPagamentos};
 
 {$R *.res}
 
@@ -34,6 +40,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TformMain, formMain);
   Application.CreateForm(TSisDataModule, SisDataModule);
-  Application.CreateForm(TformControlePagamentos, formControlePagamentos);
+  Application.CreateForm(TformCadastrarPonto, formCadastrarPonto);
+  Application.CreateForm(TformPagamentos, formPagamentos);
   Application.Run;
 end.

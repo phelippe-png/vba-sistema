@@ -4,9 +4,6 @@
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="Cliente\VBASistema.dproj">
-            <Dependencies>Servidor\APIHorse.dproj</Dependencies>
-        </Projects>
-        <Projects Include="Servidor\APIHorse.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,32 +14,23 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="VBASistema" DependsOnTargets="APIHorse">
+    <Target Name="VBASistema">
         <MSBuild Projects="Cliente\VBASistema.dproj"/>
     </Target>
-    <Target Name="VBASistema:Clean" DependsOnTargets="APIHorse:Clean">
+    <Target Name="VBASistema:Clean">
         <MSBuild Projects="Cliente\VBASistema.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="VBASistema:Make" DependsOnTargets="APIHorse:Make">
+    <Target Name="VBASistema:Make">
         <MSBuild Projects="Cliente\VBASistema.dproj" Targets="Make"/>
     </Target>
-    <Target Name="APIHorse">
-        <MSBuild Projects="Servidor\APIHorse.dproj"/>
-    </Target>
-    <Target Name="APIHorse:Clean">
-        <MSBuild Projects="Servidor\APIHorse.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="APIHorse:Make">
-        <MSBuild Projects="Servidor\APIHorse.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="VBASistema;APIHorse"/>
+        <CallTarget Targets="VBASistema"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="VBASistema:Clean;APIHorse:Clean"/>
+        <CallTarget Targets="VBASistema:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="VBASistema:Make;APIHorse:Make"/>
+        <CallTarget Targets="VBASistema:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

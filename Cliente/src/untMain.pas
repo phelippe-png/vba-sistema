@@ -15,7 +15,8 @@ uses
   relatorioContasPagar, untCadastrarProducao, untProducao,
   relatorioControleProducao, functions, untContasReceber,
   relatorioContasReceber, untModalRelatorios, ShellAPI, MidasLib, MidasCon, Midas,
-  BancoFuncoes, System.Generics.Collections;
+  BancoFuncoes, System.Generics.Collections, untFuncionarios, untPagamentos, untCadastroPonto,
+  untcontrolepagamento;
 
 type
   TformMain = class(TForm)
@@ -50,13 +51,19 @@ type
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
     menuControleProducao: TPanel;
-    SpeedButton1: TSpeedButton;
+    btnControleProducao: TSpeedButton;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
     SpeedButton7: TSpeedButton;
+    menuFuncionarios: TPanel;
+    btnContasReceber: TSpeedButton;
     menuContasPagar: TPanel;
     btnContasPagar: TSpeedButton;
-    btnContasReceber: TSpeedButton;
+    btnFuncionarios: TSpeedButton;
+    menuControlePagamento: TPanel;
+    btnControlePagamento: TSpeedButton;
+    menuCadastroPonto: TPanel;
+    btnCadastrarPonto: TSpeedButton;
     procedure Image2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -72,8 +79,8 @@ type
     procedure btnEmpresasMouseLeave(Sender: TObject);
     procedure btnLotesMouseLeave(Sender: TObject);
     procedure btnContasPagarMouseLeave(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
-    procedure SpeedButton1MouseLeave(Sender: TObject);
+    procedure btnControleProducaoClick(Sender: TObject);
+    procedure btnControleProducaoMouseLeave(Sender: TObject);
     procedure btnContasReceberMouseLeave(Sender: TObject);
     procedure btnContasReceberClick(Sender: TObject);
     procedure SpeedButton2MouseLeave(Sender: TObject);
@@ -82,7 +89,13 @@ type
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnFuncionariosMouseLeave(Sender: TObject);
+    procedure btnFuncionariosClick(Sender: TObject);
+    procedure btnControlePagamentoMouseLeave(Sender: TObject);
+    procedure btnControlePagamentoClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnCadastrarPontoMouseLeave(Sender: TObject);
+    procedure btnCadastrarPontoClick(Sender: TObject);
   private
     formContasPagar: TformContasPagar;
     formProducao: TformListarProducoes;
@@ -95,6 +108,7 @@ type
     procedure abrirMenus(panel: TPanel);
     procedure abrirTelas(form: TForm);
     procedure colorChangePainels(panel: TPanel);
+    procedure MouseLeaveCadastros(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -109,7 +123,7 @@ implementation
 procedure TformMain.fecharTelas;
 begin
   if formListarEmpresas <> nil then
-    formListarEmpresas.close;
+    formListarEmpresas.Close;
 
   if formListarLotes <> nil then
     formListarLotes.Close;
@@ -119,14 +133,12 @@ begin
 
   if formProducao <> nil then
     formProducao.Close;
-end;
 
-procedure TformMain.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-  Comando: string;
-begin
-  Comando := 'taskkill -im APIHorse.exe /f /t';
-  shell := ShellExecute(Handle, 'open', 'cmd.exe', PChar('/c' + Comando), nil, 0);
+  if formFuncionarios <> nil then
+    formFuncionarios.Close;
+
+  if formControlePagamentos <> nil then
+    formControlePagamentos.Close;
 end;
 
 procedure TformMain.FormCreate(Sender: TObject);
@@ -136,13 +148,16 @@ begin
   pnlMenu.Padding.Top := 100;
   pnlMenu.Padding.Bottom := 100;
   panelPrevious := TPanel.Create(Self);
-
-  shell := ShellExecute(Handle, 'open', 'C:\VBASistema\vba-sistema\Executaveis\APIHorse.exe', nil, nil, SW_HIDE);
 end;
 
 procedure TformMain.FormResize(Sender: TObject);
 begin
   Self.Constraints.MinWidth := 1050;
+end;
+
+procedure TformMain.FormShow(Sender: TObject);
+begin
+  btnControlePagamento.Caption := 'Controle de Pagamento' + sLineBreak + '(Manutenção)';
 end;
 
 procedure TformMain.Image2Click(Sender: TObject);
@@ -151,6 +166,20 @@ begin
     pnlMenus.Width := 57
   else
     pnlMenus.Width := 180;
+end;
+
+procedure TformMain.MouseLeaveCadastros(Sender: TObject);
+begin
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuEmpresa.Handle) or
+  (WindowFromPoint(Pt) = menuLotes.Handle) or
+  (WindowFromPoint(Pt) = menuContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuFuncionarios.Handle) or
+  (WindowFromPoint(Pt) = menuCadastroPonto.Handle) then
+    exit
+  else
+    pnlCadastrosMenu.Visible := false;
 end;
 
 procedure TformMain.abrirMenus(panel: TPanel);
@@ -206,13 +235,35 @@ begin
   form.Show;
 end;
 
+procedure TformMain.btnCadastrarPontoClick(Sender: TObject);
+begin
+  formCadastrarPonto := TformCadastrarPonto.Create(Self);
+  abrirTelas(formCadastrarPonto);
+end;
+
+procedure TformMain.btnCadastrarPontoMouseLeave(Sender: TObject);
+begin
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuEmpresa.Handle) or
+  (WindowFromPoint(Pt) = menuLotes.Handle) or
+  (WindowFromPoint(Pt) = menuContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuCadastroPonto.Handle) then
+    exit
+  else
+    pnlCadastrosMenu.Visible := false;
+end;
+
 procedure TformMain.btnContasPagarClick(Sender: TObject);
 begin
   formContasPagar := TformContasPagar.Create(self);
   abrirTelas(formContasPagar);
 end;
 
-procedure TformMain.SpeedButton1Click(Sender: TObject);
+
+
+procedure TformMain.btnControleProducaoClick(Sender: TObject);
 begin
   formProducao := TformListarProducoes.Create(self);
   abrirTelas(formProducao);
@@ -262,20 +313,6 @@ begin
   modalRelatorios.ShowModal;
 end;
 
-procedure TformMain.SpeedButton3MouseLeave(Sender: TObject);
-begin
-  pnlRelatorios.Color := $00404000;
-
-  GetCursorPos(Pt);
-
-  if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
-  (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
-  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) then
-    exit
-  else
-    pnlRelatoriosMenu.Visible := false;
-end;
-
 //mouseenter
 procedure TformMain.SpeedButton4MouseEnter(Sender: TObject);
 begin
@@ -300,7 +337,10 @@ procedure TformMain.btnLotesMouseLeave(Sender: TObject);
 begin
   GetCursorPos(Pt);
 
-  if (WindowFromPoint(Pt) = menuEmpresa.Handle) or (WindowFromPoint(Pt) = menuLotes.Handle) or (WindowFromPoint(Pt) = menuContasPagar.Handle) then
+  if (WindowFromPoint(Pt) = menuEmpresa.Handle) or
+  (WindowFromPoint(Pt) = menuLotes.Handle) or
+  (WindowFromPoint(Pt) = menuContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuFuncionarios.Handle) then
     exit
   else
     pnlCadastrosMenu.Visible := false;
@@ -313,19 +353,20 @@ begin
   if (WindowFromPoint(Pt) = menuEmpresa.Handle) or
   (WindowFromPoint(Pt) = menuLotes.Handle) or
   (WindowFromPoint(Pt) = menuContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuContasReceber.Handle) then
+  (WindowFromPoint(Pt) = menuContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuFuncionarios.Handle) then
     exit
   else
     pnlCadastrosMenu.Visible := false;
 end;
 
-procedure TformMain.SpeedButton1MouseLeave(Sender: TObject);
+procedure TformMain.btnControleProducaoMouseLeave(Sender: TObject);
 begin
   pnlProcessos.Color := $00404000;
 
   GetCursorPos(Pt);
 
-  if (WindowFromPoint(Pt) = menuControleProducao.Handle) then
+  if (WindowFromPoint(Pt) = menuControleProducao.Handle) or (WindowFromPoint(Pt) = menuControlePagamento.Handle) then
     exit
   else
     pnlProcessosMenu.Visible := false;
@@ -361,7 +402,23 @@ begin
 
   GetCursorPos(Pt);
 
-  if (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) then
+  if (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) then
+    exit
+  else
+    pnlRelatoriosMenu.Visible := false;
+end;
+
+procedure TformMain.SpeedButton3MouseLeave(Sender: TObject);
+begin
+  pnlRelatorios.Color := $00404000;
+
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -403,7 +460,8 @@ begin
   if (WindowFromPoint(Pt) = menuEmpresa.Handle) or
   (WindowFromPoint(Pt) = menuLotes.Handle) or
   (WindowFromPoint(Pt) = menuContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuContasReceber.Handle) then
+  (WindowFromPoint(Pt) = menuContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuCadastroPonto.Handle) then
     exit
   else
     pnlCadastrosMenu.Visible := false;
@@ -417,6 +475,40 @@ begin
     exit
   else
     pnlCadastrosMenu.Visible := false;
+end;
+
+procedure TformMain.btnFuncionariosClick(Sender: TObject);
+begin
+  formFuncionarios := TformFuncionarios.Create(Self);
+  abrirTelas(formFuncionarios);
+end;
+
+procedure TformMain.btnFuncionariosMouseLeave(Sender: TObject);
+begin
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuEmpresa.Handle) or (WindowFromPoint(Pt) = menuLotes.Handle) or (WindowFromPoint(Pt) = menuContasPagar.Handle) then
+    exit
+  else
+    pnlCadastrosMenu.Visible := false;
+end;
+
+procedure TformMain.btnControlePagamentoClick(Sender: TObject);
+begin
+  formpagamentos := tformpagamentos.Create(Self);
+  abrirTelas(formpagamentos);
+end;
+
+procedure TformMain.btnControlePagamentoMouseLeave(Sender: TObject);
+begin
+  pnlProcessos.Color := $00404000;
+
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuControleProducao.Handle) or (WindowFromPoint(Pt) = menuControlePagamento.Handle) then
+    exit
+  else
+    pnlProcessosMenu.Visible := false;
 end;
 
 end.

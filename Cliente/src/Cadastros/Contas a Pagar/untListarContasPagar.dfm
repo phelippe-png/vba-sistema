@@ -339,6 +339,7 @@ object formContasPagar: TformContasPagar
             Top = -20
             Width = 185
             Height = 102
+            ItemIndex = 0
             Items.Strings = (
               'Todos'
               'Contas pagas'

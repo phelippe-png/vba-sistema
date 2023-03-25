@@ -63,6 +63,7 @@ type
     classeContasPagar: TContasPagar;
     formRelatContasPagar: TformRelatContasPagar;
     vBookmark: TBookmark;
+    vFDMContas: TFDMemTable;
 
     procedure SQL;
     procedure calcularTotais;
@@ -82,7 +83,7 @@ implementation
 
 procedure TformContasPagar.btnConfirmarClick(Sender: TObject);
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     try
       if Application.MessageBox('Deseja confirmar o pagamento?', 'Confirmação', MB_ICONQUESTION + MB_YESNO) = ID_NO then
@@ -104,7 +105,7 @@ end;
 
 procedure TformContasPagar.btnDeleteClick(Sender: TObject);
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     try
       if Application.MessageBox('Deseja excluir a conta selecionada?', 'Confirmação', MB_ICONQUESTION + MB_YESNO) = ID_NO then
@@ -127,7 +128,7 @@ procedure TformContasPagar.btnEditClick(Sender: TObject);
 var
   panel: TPanel;
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     edDescricao.Text := FieldByName('descricao').AsString;
     edDataVenc.Date := FieldByName('data_venc').AsDateTime;
@@ -147,7 +148,7 @@ var
   valorTotal, valorPago, totalPagar: currency;
   pago: boolean;
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     modal := TformModal.Create(Self);
     modal.valorTotal := FieldByName('valor_total').AsCurrency;
@@ -179,7 +180,7 @@ end;
 
 procedure TformContasPagar.btnSaveClick(Sender: TObject);
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     try
       if (Trim(edDescricao.Text) = '') or (Trim(edValorTotal.Text) = '') then
@@ -211,15 +212,19 @@ begin
           Application.MessageBox('Dados atualizados com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK);
       end;
 
+      cbFiltroMeses.ItemIndex := Pred(MonthOf(edDataVenc.Date));
       SQL;
       calcularTotais;
 
+      edValorTotal.Text := '0.00';
+      edDescricao.Text := EmptyStr;
+      edDataVenc.Date := Now;
       edValorTotal.Enabled := true;
       dbgContasPagar.Enabled := true;
 
       SISDBGridResizeColumns(dbgContasPagar);
     except on E: Exception do
-      Application.MessageBox(PChar('Erro ao cadastrar conta!' + sLineBreak + 'Erro detalhado: ' + E.Message), 'Erro', MB_ICONERROR + MB_OK);
+      Application.MessageBox(PChar(E.Message), 'Erro', MB_ICONERROR + MB_OK);
     end;
   end;
 end;
@@ -233,7 +238,7 @@ begin
   resultadoValorPago := 0;
   resultadoTotalPagar := 0;
 
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     First;
     for I := 0 to Pred(RecordCount) do
@@ -277,7 +282,7 @@ end;
 
 procedure TformContasPagar.dbgContasPagarCellClick(Column: TColumn);
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     if RecordCount = 0 then
     begin
@@ -383,7 +388,7 @@ procedure TformContasPagar.filtrarContas;
 var
   filtro: string;
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     Filtered := false;
     Filter := 'month(data_venc) = ' + IntToStr(cbFiltroMeses.ItemIndex + 1);
@@ -402,7 +407,7 @@ end;
 
 procedure TformContasPagar.formatarValores;
 begin
-  with dbgContasPagar.DataSource.DataSet do
+  with vFDMContas do
   begin
     TFloatField(FieldByName('valor_total')).DisplayFormat := 'R$ ###,###,##0.00';
     TFloatField(FieldByName('valor_pago')).DisplayFormat := 'R$ ###,###,##0.00';
@@ -413,8 +418,9 @@ end;
 procedure TformContasPagar.FormCreate(Sender: TObject);
 begin
   classeContasPagar := TContasPagar.Create;
+  vFDMContas := BDCriarOuRetornarFDMemTable('FDMContasPagar');
   dbgContasPagar.DataSource := BDCriarOuRetornarDataSource('DSContasPagar', Self);
-  dbgContasPagar.DataSource.DataSet := BDCriarOuRetornarFDMemTable('FDMContasPagar');
+  dbgContasPagar.DataSource.DataSet := vFDMContas;
 
   SQL;
   calcularTotais;
@@ -446,7 +452,8 @@ end;
 
 procedure TformContasPagar.SQL;
 begin
-  dbgContasPagar.DataSource.DataSet := BDBuscarRegistros('tab_contaspagar',
+  vFDMContas.Close;
+  vFDMContas.Data := BDBuscarRegistros('tab_contaspagar',
   ' *, ' +
   ' case when pago is true then ''PAGO'' ' +
   ' when data_venc > current_date then ''EM DIA'' ' +
@@ -465,7 +472,7 @@ var
   valorPago: currency;
 begin
   valorTotal := Trim(edValorTotal.Text).Replace('.', '');
-  valorPago := dbgContasPagar.DataSource.DataSet.FieldByName('valor_pago').AsCurrency;
+  valorPago := vFDMContas.FieldByName('valor_pago').AsCurrency;
 
   if (classeContasPagar.editar) and (StrToCurr(valorTotal) < valorPago) then
   begin

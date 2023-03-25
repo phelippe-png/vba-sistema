@@ -35,13 +35,10 @@ type
     procedure edSearchChange(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure cbFiltroMesesChange(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure cbFiltroChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     vFDMRegistros: TFDMemTable;
-    ClientDataSet: TClientDataSet;
-    DataSource: TDataSource;
     formCadastrarLote: TformCadastrarLote;
     classeLotes: TLotes;
     dataEntrada: TDate;
@@ -50,6 +47,7 @@ type
     procedure editarDBGrid;
     function loteIncluido: boolean;
     procedure formatarValores;
+    procedure configurarDataSet;
   public
     lib: boolean;
     selecionar: boolean;
@@ -66,7 +64,7 @@ implementation
 
 procedure TformListarLotes.edSearchChange(Sender: TObject);
 begin
-  with dbgLotes.DataSource.DataSet do
+  with vFDMRegistros do
   begin
     FilterOptions := [foCaseInsensitive];
     Filtered := false;
@@ -87,7 +85,7 @@ end;
 
 procedure TformListarLotes.formatarValores;
 begin
-  with dbgLotes.DataSource.DataSet do
+  with vFDMRegistros do
   begin
     TFloatField(FieldByName('valor_unit')).DisplayFormat := 'R$ ###,###,##0.00';
     TFloatField(FieldByName('valor_total')).DisplayFormat := 'R$ ###,###,##0.00';
@@ -98,13 +96,8 @@ end;
 
 procedure TformListarLotes.editarDBGrid;
 begin
-  with dbgLotes.DataSource.DataSet do
+  with vFDMRegistros do
   begin
-    TCurrencyField(FieldByName('valor_unit')).DisplayFormat := 'R$ ###,###,##0.00';
-    TCurrencyField(FieldByName('valor_total')).DisplayFormat := 'R$ ###,###,##0.00';
-    TFloatField(FieldByName('tempo_min')).DisplayFormat := '###,###,##0.000';
-    TFloatField(FieldByName('tempo_total')).DisplayFormat := '###,###,##0.000';
-
     if esconderColunas then
     begin
       TField(FieldByName('valor_unit')).Visible := false;
@@ -112,8 +105,6 @@ begin
       TField(FieldByName('tempo_total')).Visible := false;
     end;
   end;
-
-  SISDBGridResizeColumns(dbgLotes);
 end;
 
 procedure TformListarLotes.btnAddClick(Sender: TObject);
@@ -135,7 +126,7 @@ procedure TformListarLotes.btnDeleteClick(Sender: TObject);
 var
   jsonResponse: TJSONObject;
 begin
-  with dbgLotes.DataSource.DataSet, classeLotes do
+  with vFDMRegistros, classeLotes do
   begin
     if loteIncluido then
       exit;
@@ -155,7 +146,7 @@ var
   vDicDadosLote: TDictionary<String, Variant>;
 begin
   try
-    with dbgLotes.DataSource.DataSet do
+    with vFDMRegistros do
     begin
       if RecordCount = 0 then
         exit;
@@ -208,7 +199,7 @@ end;
 
 procedure TformListarLotes.cbFiltroMesesChange(Sender: TObject);
 begin
-  with dbgLotes.DataSource.DataSet do
+  with vFDMRegistros do
   begin
     Filtered := false;
     Filter := 'month(data_entrada) = ' + IntToStr(cbFiltroMeses.ItemIndex + 1);
@@ -222,6 +213,28 @@ begin
   SISDBGridResizeColumns(dbgLotes);
 end;
 
+procedure TformListarLotes.configurarDataSet;
+begin
+  with vFDMRegistros do
+  begin
+    FieldDefs.Clear;
+    FieldDefs.Add('id', ftInteger);
+    FieldDefs.Add('id_empresa', ftInteger);
+    FieldDefs.Add('codigo', ftInteger);
+    FieldDefs.Add('op', ftInteger);
+    FieldDefs.Add('descricao', ftString, 100);
+    FieldDefs.Add('empresa', ftString, 100);
+    FieldDefs.Add('quantidade', ftInteger);
+    FieldDefs.Add('valor_unit', ftCurrency);
+    FieldDefs.Add('valor_total', ftCurrency);
+    FieldDefs.Add('tempo_min', ftFloat);
+    FieldDefs.Add('tempo_total', ftFloat);
+    FieldDefs.Add('data_entrada', ftDate);
+    FieldDefs.Add('pago', ftBoolean);
+    CreateDataSet;
+  end;
+end;
+
 procedure TformListarLotes.dbgLotesDblClick(Sender: TObject);
 begin
   if selecionar then
@@ -233,16 +246,12 @@ end;
 procedure TformListarLotes.FormCreate(Sender: TObject);
 begin
   classeLotes := TLotes.Create;
-
+  vFDMRegistros := BDCriarOuRetornarFDMemTable('vFDMLotes', Self);
   dbgLotes.DataSource := BDCriarOuRetornarDataSource('dsRegistrosLotes');
-  dbgLotes.DataSource.DataSet := BDCriarOuRetornarFDMemTable('vFDMRegistros', Self);
+  dbgLotes.DataSource.DataSet := vFDMRegistros;
 
+  configurarDataSet;
   SQL;
-end;
-
-procedure TformListarLotes.FormResize(Sender: TObject);
-begin
-//  functions.redimensionarGrid(DBGrid);
 end;
 
 function TformListarLotes.loteIncluido: boolean;
@@ -252,7 +261,7 @@ var
 begin
   //verificar lote na produção
   with BDBuscarRegistros('tab_controleproducao_corpo', ' id_lote ', EmptyStr,
-  ' id_lote = ' + dbgLotes.DataSource.DataSet.FieldByName('id').AsInteger.ToString, EmptyStr, EmptyStr, -1, 'fdqBuscaLote') do
+  ' id_lote = ' + vFDMRegistros.FieldByName('id').AsInteger.ToString, EmptyStr, EmptyStr, -1, 'fdqBuscaLote') do
   begin
     if RecordCount > 0 then
     begin
@@ -265,7 +274,7 @@ begin
 
   //verificar lote no contas a receber
   with BDBuscarRegistros('tab_contasreceber', ' id_lote ', EmptyStr,
-  ' id_lote = ' + dbgLotes.DataSource.DataSet.FieldByName('id').AsInteger.ToString, EmptyStr, EmptyStr, -1, 'fdqBuscaLote') do
+  ' id_lote = ' + vFDMRegistros.FieldByName('id').AsInteger.ToString, EmptyStr, EmptyStr, -1, 'fdqBuscaLote') do
   begin
     if RecordCount > 0 then
     begin
@@ -282,7 +291,9 @@ end;
 procedure TformListarLotes.SQL;
 begin
   try
-    dbgLotes.DataSource.DataSet := classeLotes.buscarDados;
+    vFDMRegistros.Close;
+    vFDMRegistros.Data := BDBuscarRegistros('tab_lotes tl', 'tl.*, te.nomefantasia empresa',
+    'left join tab_empresas te on te.id = tl.id_empresa', EmptyStr, EmptyStr, EmptyStr, -1, 'fdqBuscaLotes');
 
     editarDBGrid;
     cbFiltroMesesChange(Self);

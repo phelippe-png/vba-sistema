@@ -39,7 +39,7 @@ type
     procedure btnDeleteClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
-//    functions: TFunctions;
+    vFDMContas: TFDMemTable;
     classeContasReceber: TContasReceber;
 
     procedure SQL;
@@ -63,7 +63,7 @@ var
   vModalConfirmacao: TformConfirmarRecebimento;
 begin
   try
-    with dbgContasReceber.DataSource.DataSet do
+    with vFDMContas do
     begin
       vModalConfirmacao := TformConfirmarRecebimento.Create(self);
       vModalConfirmacao.idContaReceber := FieldByName('id').AsInteger;
@@ -84,7 +84,7 @@ begin
     exit;
 
   try
-    classeContasReceber.idContaReceber := dbgContasReceber.DataSource.DataSet.FieldByName('id').AsInteger;
+    classeContasReceber.idContaReceber := vFDMContas.FieldByName('id').AsInteger;
     classeContasReceber.excluirConta;
 
     Application.MessageBox('Conta excluída com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
@@ -99,7 +99,7 @@ procedure TformContasReceber.calcularTotais;
 var
   resultadoTotal: currency;
 begin
-  with dbgContasReceber.DataSource.DataSet do
+  with vFDMContas do
   begin
     resultadoTotal := 0;
 
@@ -119,30 +119,31 @@ end;
 procedure TformContasReceber.cbFiltroMesesChange(Sender: TObject);
 begin
   filtrarContas;
+  SISDBGridResizeColumns(dbgContasReceber);
 end;
 
 procedure TformContasReceber.configurarDataSet;
 begin
-//  with vFDMContas do
-//  begin
-//    FieldDefs.Clear;
-//    FieldDefs.Add('id', ftInteger);
-//    FieldDefs.Add('id_lote', ftInteger);
-//    FieldDefs.Add('situacao', ftString, 20);
-//    FieldDefs.Add('op', ftInteger);
-//    FieldDefs.Add('descricao', ftString, 50);
-//    FieldDefs.Add('empresa', ftString, 30);
-//    FieldDefs.Add('previsao_recebimento', ftDate);
-//    FieldDefs.Add('data_recebimento', ftString, 20);
-//    FieldDefs.Add('valor', ftCurrency);
-//    FieldDefs.Add('recebido', ftBoolean);
-//    CreateDataSet;
-//  end;
+  with vFDMContas do
+  begin
+    FieldDefs.Clear;
+    FieldDefs.Add('id', ftInteger);
+    FieldDefs.Add('id_lote', ftInteger);
+    FieldDefs.Add('situacao', ftString, 20);
+    FieldDefs.Add('op', ftInteger);
+    FieldDefs.Add('descricao', ftString, 50);
+    FieldDefs.Add('empresa', ftString, 30);
+    FieldDefs.Add('previsao_recebimento', ftDate);
+    FieldDefs.Add('data_recebimento', ftString, 20);
+    FieldDefs.Add('valor', ftCurrency);
+    FieldDefs.Add('recebido', ftBoolean);
+    CreateDataSet;
+  end;
 end;
 
 procedure TformContasReceber.dbgContasReceberCellClick(Column: TColumn);
 begin
-  with dbgContasReceber.DataSource.DataSet do
+  with vFDMContas do
   begin
     if FieldByName('recebido').AsBoolean then
     begin
@@ -171,7 +172,7 @@ end;
 
 procedure TformContasReceber.dbgContasReceberDblClick(Sender: TObject);
 begin
-  if (dbgContasReceber.DataSource.DataSet.FieldByName('recebido').AsBoolean = false) and (dbgContasReceber.DataSource.DataSet.RecordCount > 0) then
+  if (vFDMContas.FieldByName('recebido').AsBoolean = false) and (vFDMContas.RecordCount > 0) then
     btnConfirmarClick(Self);
 end;
 
@@ -202,7 +203,7 @@ end;
 
 procedure TformContasReceber.filtrarContas;
 begin
-  with dbgContasReceber.DataSource.DataSet do
+  with vFDMContas do
   begin
     Filtered := false;
     Filter := 'month(previsao_recebimento) = ' + IntToStr(cbFiltroMeses.ItemIndex + 1);
@@ -226,19 +227,18 @@ end;
 
 procedure TformContasReceber.formatarValores;
 begin
-  with dbgContasReceber.DataSource.DataSet do
-  begin
+  with vFDMContas do
     TFloatField(FieldByName('valor')).DisplayFormat := 'R$ ###,###,##0.00';
-  end;
 end;
 
 procedure TformContasReceber.FormCreate(Sender: TObject);
 begin
   classeContasReceber := TContasReceber.Create;
+  vFDMContas :=  BDCriarOuRetornarFDMemTable('FDMContasReceber', Self);
   dbgContasReceber.DataSource := BDCriarOuRetornarDataSource('DSContasReceber', Self);
-  dbgContasReceber.DataSource.DataSet := BDCriarOuRetornarFDMemTable('FDMContasReceber', Self);
+  dbgContasReceber.DataSource.DataSet := vFDMContas;
 
-//  configurarDataSet;
+  configurarDataSet;
   SQL;
   calcularTotais;
   cbFiltroMesesChange(Self);
@@ -256,7 +256,8 @@ end;
 
 procedure TformContasReceber.SQL;
 begin
-  dbgContasReceber.DataSource.DataSet := BDBuscarRegistros('tab_contasreceber tc',
+  vFDMContas.Close;
+  vFDMContas.Data := BDBuscarRegistros('tab_contasreceber tc',
   ' tc.id, tc.id_lote, tc.previsao_recebimento, tc.valor, tc.recebido, t.op, t.descricao, te.nomefantasia empresa, ' +
   ' case when recebido is false then ''A RECEBER'' else ''RECEBIDO'' end::varchar situacao, ' +
   ' case when data_recebimento is null then ''A CONFIRMAR'' else to_char(data_recebimento, ''DD/MM/YYYY'') end::varchar data_recebimento ',
@@ -264,6 +265,7 @@ begin
   ' left join tab_empresas te on te.id = t.id_empresa ',
   EmptyStr, EmptyStr, ' previsao_recebimento ', -1, 'FDQBuscaContasReceber');
 
+  filtrarContas;
   SISDBGridResizeColumns(dbgContasReceber);
   formatarValores;
 end;

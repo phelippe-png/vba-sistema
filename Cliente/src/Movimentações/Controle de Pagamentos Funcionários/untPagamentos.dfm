@@ -1,9 +1,11 @@
-object formControlePagamentos: TformControlePagamentos
+object formPagamentos: TformPagamentos
   Left = 0
   Top = 0
-  Caption = 'Controle de Pagamentos'
-  ClientHeight = 392
-  ClientWidth = 864
+  Align = alClient
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsNone
+  ClientHeight = 522
+  ClientWidth = 747
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,132 +15,218 @@ object formControlePagamentos: TformControlePagamentos
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
-    Top = 8
-    Width = 74
-    Height = 18
-    Caption = 'Pesquisar'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object SpeedButton1: TSpeedButton
-    Left = 88
-    Top = 8
-    Width = 23
-    Height = 22
-  end
-  object Label2: TLabel
-    Left = 8
-    Top = 56
-    Width = 126
-    Height = 24
-    Caption = 'Funcion'#225'rio:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label3: TLabel
-    Left = 8
-    Top = 86
-    Width = 83
-    Height = 24
-    Caption = 'Salario: '
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Edit1: TEdit
-    Left = 344
-    Top = 337
-    Width = 185
-    Height = 27
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 0
-    Text = 'Edit1'
-  end
-  object Panel4: TPanel
-    Left = 624
-    Top = 192
-    Width = 240
-    Height = 192
-    TabOrder = 1
-  end
-  object btnSave: TPanel
-    Left = 763
-    Top = 8
-    Width = 93
-    Height = 38
-    Cursor = crHandPoint
-    BevelOuter = bvNone
-    Caption = 'Confirmar'
-    Color = 489483
-    DragCursor = crDefault
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWhite
-    Font.Height = -16
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 2
-  end
-  object btnCancel: TPanel
-    Left = 763
-    Top = 52
-    Width = 93
-    Height = 38
-    Cursor = crHandPoint
-    BevelOuter = bvNone
-    Caption = 'Cancelar'
-    Color = clRed
-    DragCursor = crDefault
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWhite
-    Font.Height = -16
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 3
-  end
   object Panel1: TPanel
-    Left = 8
-    Top = 128
-    Width = 297
-    Height = 256
+    Left = 0
+    Top = 0
+    Width = 747
+    Height = 522
+    Align = alClient
     BevelOuter = bvNone
-    TabOrder = 4
-    object Panel2: TPanel
-      Left = 0
-      Top = 81
-      Width = 297
-      Height = 81
+    Color = clMenu
+    Padding.Left = 10
+    Padding.Right = 10
+    Padding.Bottom = 10
+    ParentBackground = False
+    TabOrder = 0
+    ExplicitLeft = -123
+    ExplicitWidth = 765
+    ExplicitHeight = 511
+    DesignSize = (
+      747
+      522)
+    object pnlTitle: TPanel
+      AlignWithMargins = True
+      Left = 13
+      Top = 3
+      Width = 721
+      Height = 38
       Align = alTop
+      BevelOuter = bvNone
+      Color = clMenu
+      ParentBackground = False
       TabOrder = 0
+      ExplicitWidth = 739
+      object Label2: TLabel
+        Left = 1
+        Top = 10
+        Width = 206
+        Height = 20
+        Caption = 'Pagamento de Funcion'#225'rios'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
     end
-    object Panel3: TPanel
-      Left = 0
-      Top = 0
-      Width = 297
-      Height = 81
-      Align = alTop
+    object pnlContainer: TPanel
+      AlignWithMargins = True
+      Left = 13
+      Top = 47
+      Width = 721
+      Height = 462
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      BevelOuter = bvNone
+      Color = clBtnHighlight
+      ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 739
+      ExplicitHeight = 451
+      DesignSize = (
+        721
+        462)
+      object Label1: TLabel
+        Left = 14
+        Top = 10
+        Width = 57
+        Height = 17
+        Caption = 'Pesquisar'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object edSearch: TEdit
+        Left = 14
+        Top = 31
+        Width = 339
+        Height = 27
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Product Sans'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
+      object pnlSearch: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 0
+        Width = 715
+        Height = 2
+        Anchors = [akLeft, akTop, akRight]
+        BevelOuter = bvNone
+        Color = 4210688
+        ParentBackground = False
+        TabOrder = 1
+        ExplicitWidth = 733
+      end
+      object Panel5: TPanel
+        AlignWithMargins = True
+        Left = 14
+        Top = 70
+        Width = 692
+        Height = 1
+        Anchors = [akLeft, akTop, akRight]
+        BevelOuter = bvNone
+        Color = clGray
+        ParentBackground = False
+        TabOrder = 2
+        ExplicitWidth = 710
+      end
+      object btnSelect: TPanel
+        Left = 520
+        Top = 21
+        Width = 90
+        Height = 30
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        BevelOuter = bvNone
+        Caption = 'Selecionar'
+        Color = clOlive
+        DragCursor = crDefault
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWhite
+        Font.Height = -15
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 3
+        Visible = False
+      end
+      object dbgEmpresas: TDBGrid
+        Left = 14
+        Top = 71
+        Width = 692
+        Height = 391
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        BorderStyle = bsNone
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Product Sans'
+        Font.Style = []
+        Options = [dgTitles, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgMultiSelect]
+        ParentFont = False
+        TabOrder = 4
+        TitleFont.Charset = ANSI_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -13
+        TitleFont.Name = 'Product Sans'
+        TitleFont.Style = [fsBold]
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'id'
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Title.Caption = 'FUNCION'#193'RIO'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'cpf'
+            Title.Caption = 'CPF'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'salario'
+            Title.Caption = 'SAL'#193'RIO FIXO'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'salario_receber'
+            Title.Caption = 'SAL'#193'RIO '#192' RECEBER'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'status'
+            Title.Caption = 'STATUS'
+            Visible = True
+          end>
+      end
+      object Panel2: TPanel
+        Left = 616
+        Top = 21
+        Width = 90
+        Height = 30
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        BevelOuter = bvNone
+        Caption = 'Visualizar'
+        Color = clOlive
+        DragCursor = crDefault
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWhite
+        Font.Height = -15
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 5
+        OnClick = Panel2Click
+      end
     end
   end
 end

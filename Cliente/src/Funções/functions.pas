@@ -26,6 +26,7 @@ procedure SisEditKeyPress(edit: TEdit; var Key: Char);
 function SisVerificarPosicaoCursor(campo: TEdit): boolean;
 function SisValidarCEP(stCEP: string): string;
 function SisPegarMes(vMes: integer): string;
+function SisVarIf(Condicao: Boolean; TrueValue, FalseValue: Variant): Variant overload;
 
 //procedure redimensionarGrid(const Grid: TDBGrid; const CoverWhiteSpace: Boolean = True);
 
@@ -102,6 +103,7 @@ function SisOnlyNumbers(str: string): string;
 var
   I: Integer;
 begin
+  Result := EmptyStr;
   for I := 1 to Length(str) do
     if str[I] in ['0' .. '9'] then
       Result := Result + str[I];
@@ -312,15 +314,12 @@ begin
   end;
 end;
 
-//procedure TFunctions.inicializarHttp;
-//var
-//  idSSL: TIdSSLIOHandlerSocketOpenSSL;
-//begin
-//  http := TIdHTTP.Create(nil);
-//  idSSL := TIdSSLIOHandlerSocketOpenSSL.Create(http);
-//
-//  idSSL.SSLOptions.SSLVersions := [sslvSSLv23];
-//  http.IOHandler := idSSL;
-//end;
+function SisVarIf(Condicao: Boolean; TrueValue, FalseValue: Variant): Variant;
+begin
+  if Condicao then
+    Result := TrueValue
+  else
+    Result := FalseValue;
+end;
 
 end.

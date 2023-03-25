@@ -16,7 +16,6 @@ object formListarLotes: TformListarLotes
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

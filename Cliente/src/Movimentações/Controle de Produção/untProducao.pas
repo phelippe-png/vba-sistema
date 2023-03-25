@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
   Vcl.StdCtrls, Vcl.ExtCtrls, untCadastrarProducao, Datasnap.DBClient, IdHTTP, DataSet.Serialize,
   functions, System.JSON, Vcl.Buttons, relatorioControleProducao,
-  untClasseProducao, DateUtils, System.Generics.Collections, BancoFuncoes;
+  untClasseProducao, DateUtils, System.Generics.Collections, BancoFuncoes,
+  FireDAC.Comp.Client;
 
 type
   TformListarProducoes = class(TForm)
@@ -42,9 +43,12 @@ type
     procedure FormShow(Sender: TObject);
   private
     classeProducao: TProducao;
+    vFDMProducao: TFDMemTable;
 
     procedure SQL;
     procedure calcularValores;
+    procedure configurarDataSet;
+    procedure formatarValores;
   public
     { Public declarations }
   end;
@@ -82,7 +86,7 @@ begin
   resultadoValorTotal := 0;
   resultadoTempoProduzir := 0;
 
-  with dbgProducao.DataSource.DataSet do
+  with vFDMProducao do
   begin
     First;
     for I := 0 to RecordCount - 1 do
@@ -106,7 +110,7 @@ end;
 
 procedure TformListarProducoes.cbFiltroMesProducaoChange(Sender: TObject);
 begin
-  with dbgProducao.DataSource.DataSet do
+  with vFDMProducao do
   begin
     Filtered := false;
     Filter := 'month(data_inicio) = ' + IntToStr(cbFiltroMesProducao.ItemIndex + 1);
@@ -115,6 +119,26 @@ begin
 
   calcularValores;
   SISDBGridResizeColumns(dbgProducao);
+end;
+
+procedure TformListarProducoes.configurarDataSet;
+begin
+  with vFDMProducao do
+  begin
+    FieldDefs.Clear;
+    FieldDefs.Add('situacao', ftString, 100);
+    FieldDefs.Add('id', ftInteger);
+    FieldDefs.Add('id_empresa', ftInteger);
+    FieldDefs.Add('empresa', ftString, 100);
+    FieldDefs.Add('data_inicio', ftDate);
+    FieldDefs.Add('data_final', ftDate);
+    FieldDefs.Add('status', ftString, 50);
+    FieldDefs.Add('quantidade_total', ftInteger);
+    FieldDefs.Add('quantidade_produzir', ftInteger);
+    FieldDefs.Add('valor_total', ftCurrency);
+    FieldDefs.Add('tempo_total', ftFloat);
+    CreateDataSet;
+  end;
 end;
 
 procedure TformListarProducoes.dbgProducaoDblClick(Sender: TObject);
@@ -130,7 +154,7 @@ var
   bcolor: TColor;
   SCapt: string;
 begin
-  with dbgProducao, DataSource.DataSet do
+  with dbgProducao, vFDMProducao do
   begin
     if RecordCount = 0 then
       exit;
@@ -157,6 +181,15 @@ begin
   dbgProducao.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
+procedure TformListarProducoes.formatarValores;
+begin
+  with vFDMProducao do
+  begin
+    TFloatField(FieldByName('valor_total')).DisplayFormat := 'R$ ###,###,##0.00';
+    TFloatField(FieldByName('tempo_total')).DisplayFormat := '###,###,##0.000';
+  end;
+end;
+
 procedure TformListarProducoes.FormCreate(Sender: TObject);
 begin
   classeProducao := TProducao.Create;
@@ -164,10 +197,13 @@ end;
 
 procedure TformListarProducoes.FormShow(Sender: TObject);
 begin
+  vFDMProducao := BDCriarOuRetornarFDMemTable('FDMProducao', Self);
   dbgProducao.DataSource := BDCriarOuRetornarDataSource('DSProducao', Self);
-  dbgProducao.DataSource.DataSet := BDCriarOuRetornarFDQuery('FDQProducao', Self);
+  dbgProducao.DataSource.DataSet := vFDMProducao;
 
+  configurarDataSet;
   SQL;
+  formatarValores;
   calcularValores;
   cbFiltroMesProducaoChange(Self);
 end;
@@ -179,7 +215,7 @@ var
 begin
   vDicDados := TDictionary<String, Variant>.Create;
   vFormCadastrarProducao := TformCadastrarProducao.Create(Self);
-  with dbgProducao.DataSource.DataSet, vDicDados, vFormCadastrarProducao do
+  with vFDMProducao, vDicDados, vFormCadastrarProducao do
   begin
     try
       if RecordCount = 0 then
@@ -205,7 +241,7 @@ end;
 
 procedure TformListarProducoes.Panel2Click(Sender: TObject);
 begin
-  with dbgProducao.DataSource.DataSet do
+  with vFDMProducao do
   begin
     if RecordCount = 0 then
       exit;
@@ -225,7 +261,7 @@ end;
 
 procedure TformListarProducoes.Panel5Click(Sender: TObject);
 begin
-  with dbgProducao.DataSource.DataSet do
+  with vFDMProducao do
   begin
     try
       if RecordCount = 0 then
@@ -281,7 +317,8 @@ end;
 
 procedure TformListarProducoes.SQL;
 begin
-  dbgProducao.DataSource.DataSet := BDBuscarRegistros('tab_controleproducao c',
+  vFDMProducao.Close;
+  vFDMProducao.Data := BDBuscarRegistros('tab_controleproducao c',
   ' e.nomefantasia empresa, c.*, ' +
   ' case when c.status = ''FINALIZADO'' then ''FINALIZADO'' ' +
   ' when c.data_final > current_date then ''EM DIA'' ' +
@@ -291,7 +328,6 @@ begin
   EmptyStr, EmptyStr, EmptyStr, -1, 'fdqBuscaProducao');
 
   SISDBGridResizeColumns(dbgProducao);
-//  inserirSituacao;
 end;
 
 end.

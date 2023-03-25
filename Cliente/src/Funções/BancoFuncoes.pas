@@ -108,58 +108,61 @@ var
   stSQL: string;
   vValueInsert: Variant;
 begin
-  with BDCriarOuRetornarFDQuery(EmptyStr), SQL do
-  begin
-    Connection := SisDataModule.fdConnection;
-    if dicDados.Count > 0 then
+  try
+    with BDCriarOuRetornarFDQuery(EmptyStr), SQL do
     begin
-      if nrColunaId = 0 then
+      Connection := SisDataModule.fdConnection;
+      if dicDados.Count > 0 then
       begin
+        if nrColunaId = 0 then
+        begin
+          Close;
+          Clear;
+          Add('select nextval(' + QuotedStr(stNomeSeq) + ')');
+          Open;
+          Result := FieldByName('nextval').AsInteger;
+        end else
+          Result := nrColunaId;
+
         Close;
         Clear;
-        Add('select nextval(' + QuotedStr(stNomeSeq) + ')');
-        Open;
-        Result := FieldByName('nextval').AsInteger;
-      end else
-        Result := nrColunaId;
+        stSQL := 'INSERT INTO ' + stTabela + '(' + stColunaId + ', ';
 
-      Close;
-      Clear;
-      stSQL := 'INSERT INTO ' + stTabela + '(' + stColunaId + ', ';
-
-      vArrayDicKeys := dicDados.Keys.ToArray;
-      for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
-      begin
-        stSQL := stSQL + vArrayDicKeys[I];
-        if I < High(vArrayDicKeys) then
-          stSQL := stSQL + ', ';
-      end;
-
-      stSQL := stSQL + ') VALUES (' + Result.ToString + ', ';
-
-      for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
-      begin
-        vValueInsert := dicDados.Items[vArrayDicKeys[I]];
-        case VarType(vValueInsert) of
-          varInteger: vValueInsert := IntToStr(dicDados.Items[vArrayDicKeys[I]]);
-          varDouble: vValueInsert := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
-          varCurrency: vValueInsert := CurrToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
-          varString: vValueInsert := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
-          varUString: vValueInsert := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
-          varBoolean: vValueInsert := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
+        vArrayDicKeys := dicDados.Keys.ToArray;
+        for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
+        begin
+          stSQL := stSQL + vArrayDicKeys[I];
+          if I < High(vArrayDicKeys) then
+            stSQL := stSQL + ', ';
         end;
 
-        stSQL := stSQL + vValueInsert;
-        if I < High(vArrayDicKeys) then
-          stSQL := stSQL + ', ';
-      end;
+        stSQL := stSQL + ') VALUES (' + Result.ToString + ', ';
 
-      stSQL := stSQL + ')';
-      Add(stSQL);
-      ExecSQL;
-    end
-    else
-      Application.MessageBox('TDictionary sem dados!', 'Atenção', MB_ICONWARNING);
+        for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
+        begin
+          vValueInsert := dicDados.Items[vArrayDicKeys[I]];
+          case VarType(vValueInsert) of
+            varInteger: vValueInsert := IntToStr(dicDados.Items[vArrayDicKeys[I]]);
+            varDouble, varCurrency: vValueInsert := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
+            varString, varUString: vValueInsert := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
+            varBoolean: vValueInsert := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
+            varDate: vValueInsert := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
+          end;
+
+          stSQL := stSQL + vValueInsert;
+          if I < High(vArrayDicKeys) then
+            stSQL := stSQL + ', ';
+        end;
+
+        stSQL := stSQL + ')';
+        Add(stSQL);
+        ExecSQL;
+      end
+      else
+        Application.MessageBox('TDictionary sem dados!', 'Atenção', MB_ICONWARNING);
+    end;
+  except on E: Exception do
+    raise Exception.Create('Erro ao inserir dados. Erro detalhado: ' + E.Message);
   end;
 end;
 
@@ -184,11 +187,10 @@ begin
       vValueUpdate := dicDados.Items[vArrayDicKeys[I]];
       case VarType(vValueUpdate) of
         varInteger: vValueUpdate := IntToStr(dicDados.Items[vArrayDicKeys[I]]);
-        varDouble: vValueUpdate := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
-        varCurrency: vValueUpdate := CurrToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
-        varString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
-        varUString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
+        varDouble, varCurrency: vValueUpdate := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
+        varString, varUString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
         varBoolean: vValueUpdate := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
+        varDate: vValueUpdate := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
       end;
 
       vSQL := vSQL + vArrayDicKeys[I] + ' = ' + vValueUpdate;

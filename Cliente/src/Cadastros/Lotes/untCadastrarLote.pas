@@ -193,7 +193,8 @@ end;
 
 procedure TformCadastrarLote.FormShow(Sender: TObject);
 begin
-  edDataEnt.Date := Now;
+  if not classeLotes.editar then
+    edDataEnt.Date := Now;
 end;
 
 procedure TformCadastrarLote.btnBuscarEmpresaClick(Sender: TObject);
