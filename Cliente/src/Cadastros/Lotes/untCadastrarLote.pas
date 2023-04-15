@@ -45,7 +45,6 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure edValorUnitChange(Sender: TObject);
-    procedure edQuantidadeExit(Sender: TObject);
     procedure edValorTotalChange(Sender: TObject);
     procedure edTempoMinChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -94,33 +93,29 @@ begin
 
   resultadoTempoTotal := StrToFloat(Trim(edTempoMin.Text).Replace('.', '')) * StrToInt(edQuantidade.Text);
 
-//  try
-    with classeLotes do
-    begin
-      idLote := vIdLote;
-      idEmpresa := vIdEmpresaSelecionada;
-      codigo := StrToInt(edCodigo.Text);
-      OP := StrToInt(edOP.Text);
-      descricao := edDescricao.Text;
-      empresa := classeEmpresas;
-      dataEntrada := edDataEnt.Date;
-      quantidade := StrToInt(edQuantidade.Text);
-      valorUnit := StrToCurr(Trim(edValorUnit.Text).Replace('.', ''));
-      valorTotal := StrToCurr(Trim(edValorTotal.Text).Replace('.', ''));
-      tempoMin := StrToFloat(Trim(edTempoMin.Text).Replace('.', ''));
-      tempoTotal := resultadoTempoTotal;
-      inserirDados;
+  with classeLotes do
+  begin
+    idLote := vIdLote;
+    idEmpresa := vIdEmpresaSelecionada;
+    codigo := StrToInt(edCodigo.Text);
+    OP := StrToInt(edOP.Text);
+    descricao := edDescricao.Text;
+    empresa := classeEmpresas;
+    dataEntrada := edDataEnt.Date;
+    quantidade := StrToInt(edQuantidade.Text);
+    valorUnit := StrToCurr(Trim(edValorUnit.Text).Replace('.', ''));
+    valorTotal := StrToCurr(Trim(edValorTotal.Text).Replace('.', ''));
+    tempoMin := StrToFloat(Trim(edTempoMin.Text).Replace('.', ''));
+    tempoTotal := resultadoTempoTotal;
+    inserirDados;
 
-      if classeLotes.editar = false then
-        Application.MessageBox('Lote cadastrado com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK)
-      else
-        Application.MessageBox('Dados editados com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
-    end;
+    if classeLotes.editar = false then
+      Application.MessageBox('Lote cadastrado com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK)
+    else
+      Application.MessageBox('Dados editados com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
+  end;
 
-    Self.Close;
-//  except on E: Exception do
-//    Application.MessageBox('Erro ao cadastrar lote!', 'Confirmação', MB_ICONINFORMATION + MB_OK);
-//  end;
+  Self.Close;
 end;
 
 procedure TformCadastrarLote.btnSaveMouseEnter(Sender: TObject);
@@ -147,9 +142,9 @@ begin
     edDataEnt.Date := Items['data_entrada'];
     edEmpresa.Text := Items['empresa'];
     edQuantidade.Text := Items['quantidade'];
-    edValorUnit.Text := Items['valor_unit'];
-    edValorTotal.Text := Items['valor_total'];
-    edTempoMin.Text := Items['tempo_min'];
+    edValorUnit.Text := FormatFloat('###,###,##0.00', Items['valor_unit']);
+    edValorTotal.Text := FormatFloat('###,###,##0.00', Items['valor_total']);
+    edTempoMin.Text := FormatFloat('###,###,##0.000', Items['tempo_min']);
   end;
 
   edCodigo.Enabled := false;
@@ -157,12 +152,6 @@ begin
   edEmpresa.Enabled := false;
   btnBuscarEmpresa.Enabled := false;
   pnlBtnBuscarEmpresa.Color := $00D6D5D3;
-end;
-
-procedure TformCadastrarLote.edQuantidadeExit(Sender: TObject);
-begin
-  if edQuantidade.Text = '' then
-    edQuantidade.Text := '1';
 end;
 
 procedure TformCadastrarLote.edTempoMinChange(Sender: TObject);
@@ -181,7 +170,7 @@ var
 begin
   SisEditFloatChange(edValorUnit);
 
-  resultado := StrToCurr(Trim(edValorUnit.Text).Replace('.', '')) * StrToInt(edQuantidade.Text);
+  resultado := StrToCurr(Trim(edValorUnit.Text).Replace('.', '')) * StrToIntDef(edQuantidade.Text, 0);
   edValorTotal.Text := FormatCurr('###,###,##0.00', resultado);
 end;
 

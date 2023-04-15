@@ -48,7 +48,7 @@ object formListarLotes: TformListarLotes
       object Label2: TLabel
         Left = 1
         Top = 11
-        Width = 41
+        Width = 44
         Height = 20
         Caption = 'Lotes'
         Font.Charset = ANSI_CHARSET
@@ -76,7 +76,7 @@ object formListarLotes: TformListarLotes
       object Label1: TLabel
         Left = 14
         Top = 10
-        Width = 54
+        Width = 59
         Height = 16
         Caption = 'Pesquisar'
         Font.Charset = ANSI_CHARSET

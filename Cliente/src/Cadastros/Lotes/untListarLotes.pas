@@ -162,10 +162,10 @@ begin
         Add('data_entrada', FieldByName('data_entrada').AsDateTime);
         Add('empresa', FieldByName('empresa').AsString);
         Add('quantidade', FieldByName('quantidade').AsString);
-        Add('valor_unit', FieldByName('valor_unit').AsString);
-        Add('valor_total', FieldByName('valor_total').AsString);
-        Add('tempo_min', FieldByName('tempo_min').AsString);
-        Add('tempo_total', FieldByName('tempo_total').AsString);
+        Add('valor_unit', FieldByName('valor_unit').AsFloat);
+        Add('valor_total', FieldByName('valor_total').AsFloat);
+        Add('tempo_min', FieldByName('tempo_min').AsFloat);
+        Add('tempo_total', FieldByName('tempo_total').AsFloat);
       end;
 
       modalCadastrarLote := TformCadastrarLote.Create(Self);

@@ -38,10 +38,10 @@ type
     edTelefone: TEdit;
     edLogradouro: TEdit;
     edNumero: TEdit;
-    edCidade: TEdit;
     edBairro: TEdit;
     edCEP: TEdit;
     cbUF: TComboBox;
+    cbCidade: TComboBox;
     procedure btnSaveClick(Sender: TObject);
     procedure btnSaveMouseEnter(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -55,6 +55,7 @@ type
     procedure edTelefoneChange(Sender: TObject);
     procedure edTelefoneKeyPress(Sender: TObject; var Key: Char);
     procedure edCEPKeyPress(Sender: TObject; var Key: Char);
+    procedure cbUFSelect(Sender: TObject);
   private
     classeEmpresas: TEmpresa;
     FidAtualizarEmpresa: integer;
@@ -82,7 +83,7 @@ begin
     (Trim(edCPF_CNPJ.Text) = '') or (Trim(edIE.Text) = '') or
     (Trim(edTelefone.Text) = '') or (Trim(edCEP.Text) = '') or
     (Trim(edLogradouro.Text) = '') or (Trim(edNumero.Text) = '') or
-    (Trim(edBairro.Text) = '') or (Trim(edCidade.Text) = '') or
+    (Trim(edBairro.Text) = '') or (Trim(cbCidade.Text) = '') or
     (Trim(cbUF.Text) = '') then
     begin
       Application.MessageBox('Preencha os campos vazios!', 'Atenção', MB_ICONWARNING + MB_OK);
@@ -92,39 +93,32 @@ begin
   if (existeEmpresaCadastrada) and (not classeEmpresas.editar) then
     exit;
 
-  cpf_cnpjOnlyNumbers := Trim(edCPF_CNPJ.Text).Replace('.', '').Replace('/', '').Replace('-', '');
-
-  if (classeEmpresas.validaCPF(cpf_cnpjOnlyNumbers) = false) and (classeEmpresas.validaCNPJ(cpf_cnpjOnlyNumbers) = false) then
+  if (not validaCPF(SisOnlyNumbers(Trim(edCPF_CNPJ.Text)))) and (not validaCNPJ(SisOnlyNumbers(Trim(edCPF_CNPJ.Text)))) then
   begin
     Application.MessageBox('CPF/CNPJ Inválido!', 'Atenção', MB_ICONWARNING + MB_OK);
     exit;
   end;
 
-  try
-    classeEmpresas.razaoSocial := edRazao.Text;
-    classeEmpresas.nomeFantasia := edFantasia.Text;
-    classeEmpresas.cpf_cnpj := edCPF_CNPJ.Text;
-    classeEmpresas.inscEstadual := edIE.Text;
-    classeEmpresas.telefone := edTelefone.Text;
-    classeEmpresas.cep := edCEP.Text;
-    classeEmpresas.logradouro := edLogradouro.Text;
-    classeEmpresas.numero := StrToInt(edNumero.Text);
-    classeEmpresas.bairro := edBairro.Text;
-    classeEmpresas.cidade := edCidade.Text;
-    classeEmpresas.uf := cbUF.Text;
-    classeEmpresas.idAtualizarEmpresa := FIDAtualizarEmpresa;
-    classeEmpresas.cadastrarDados;
+  classeEmpresas.razaoSocial := edRazao.Text;
+  classeEmpresas.nomeFantasia := edFantasia.Text;
+  classeEmpresas.cpf_cnpj := edCPF_CNPJ.Text;
+  classeEmpresas.inscEstadual := edIE.Text;
+  classeEmpresas.telefone := edTelefone.Text;
+  classeEmpresas.cep := edCEP.Text;
+  classeEmpresas.logradouro := edLogradouro.Text;
+  classeEmpresas.numero := StrToInt(edNumero.Text);
+  classeEmpresas.bairro := edBairro.Text;
+  classeEmpresas.cidade := cbCidade.Text;
+  classeEmpresas.uf := cbUF.Text;
+  classeEmpresas.idAtualizarEmpresa := FIDAtualizarEmpresa;
+  classeEmpresas.cadastrarDados;
 
-    if classeEmpresas.editar then
-      Application.MessageBox('Dados editados com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK)
-    else
-      Application.MessageBox('Empresa cadastrada com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
+  if classeEmpresas.editar then
+    Application.MessageBox('Dados editados com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK)
+  else
+    Application.MessageBox('Empresa cadastrada com sucesso.', 'Confirmação', MB_ICONINFORMATION + MB_OK);
 
-    Self.Close;
-  except on E:Exception do
-    Application.MessageBox('Erro ao cadastrar empresa!', 'Erro', MB_ICONERROR + MB_OK);
-  end;
-
+  Close;
 end;
 
 procedure TformCadastrarEmpresa.btnCancelClick(Sender: TObject);
@@ -147,8 +141,9 @@ begin
 
       edLogradouro.Text := jsonDadosCEP.GetValue<string>('logradouro');
       edBairro.Text := jsonDadosCEP.GetValue<string>('bairro');
-      edCidade.Text := jsonDadosCEP.GetValue<string>('localidade');
       cbUF.ItemIndex := cbUF.Items.IndexOf(jsonDadosCEP.GetValue<string>('uf'));
+      cbUFSelect(Self);
+      cbCidade.ItemIndex := cbCidade.Items.IndexOf(UpperCase(jsonDadosCEP.GetValue<string>('localidade')));
     end;
   except
     Application.MessageBox('CEP inválido!', 'Atenção', MB_ICONWARNING + MB_OK);
@@ -211,18 +206,15 @@ var
   ufs: TJSONArray;
   I: integer;
 begin
-  idHttp := TIdHTTP.Create;
   classeEmpresas := TEmpresa.Create;
-  ufs := TJSONArray.Create;
-  try
-    ufs := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes
-    (idHttp.Get('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')), 0) as TJSONArray;
 
-    for I := 0 to Pred(ufs.Count) do
-      cbUF.Items.Add(UFs.Get(I).GetValue<string>('sigla'));
-  finally
-    idHttp.Destroy;
-  end;
+  with BDBuscarRegistros('tab_cidades', 'uf', EmptyStr, EmptyStr, 'uf', 'uf', -1, 'FDQBuscaUFs') do
+    while not Eof do
+    begin
+      cbUF.Items.Add(FieldByName('uf').AsString);
+      Next;
+    end;
+
 end;
 
 procedure TformCadastrarEmpresa.btnCancelMouseEnter(Sender: TObject);
@@ -258,10 +250,23 @@ begin
     edLogradouro.Text := Items['logradouro'];
     edNumero.Text := Items['numero'];
     edBairro.Text := Items['bairro'];
-    edCidade.Text := Items['cidade'];
     cbUF.ItemIndex := cbUF.Items.IndexOf(Items['uf']);
+    cbUFSelect(Self);
+    cbCidade.ItemIndex := cbCidade.Items.IndexOf(Items['cidade']);
     classeEmpresas.editar := true;
   end;
+end;
+
+procedure TformCadastrarEmpresa.cbUFSelect(Sender: TObject);
+begin
+  cbCidade.Clear;
+  with BDBuscarRegistros('tab_cidades', 'nome cidade', EmptyStr,
+  ' uf = ' + QuotedStr(cbUF.Text), EmptyStr, 'nome', -1, 'FDQBuscaCidades') do
+    while not Eof do
+    begin
+      cbCidade.Items.Add(FieldByName('cidade').AsString);
+      Next;
+    end;
 end;
 
 end.

@@ -276,13 +276,19 @@ end;
 
 function SisValidarCEP(stCEP: string): string;
 var
-  idHttp: TIdHTTP;
+  IdHTTP: TIdHTTP;
+  IdSSL: TIdSSLIOHandlerSocketOpenSSL;
 begin
-  idHttp := TIdHTTP.Create;
+  IdHTTP := TIdHTTP.Create(nil);
+  IdSSL := TIdSSLIOHandlerSocketOpenSSL.Create(IdHTTP);
+
+  IdSSL.SSLOptions.SSLVersions := [sslvSSLv23];
+
   try
-    Result := idHttp.Get('https://viacep.com.br/ws/' + SisOnlyNumbers(stCEP) + '/json/');
+    IdHTTP.IOHandler := IdSSL;
+    Result := IdHTTP.Get('https://viacep.com.br/ws/' + SisOnlyNumbers(stCEP) + '/json');
   finally
-    idHttp.Destroy;
+    IdHTTP.Free;
   end;
 end;
 

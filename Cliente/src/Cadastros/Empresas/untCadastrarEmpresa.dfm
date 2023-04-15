@@ -59,7 +59,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label2: TLabel
           Left = 24
           Top = 8
-          Width = 68
+          Width = 78
           Height = 16
           Caption = 'Raz'#227'o Social'
           Font.Charset = ANSI_CHARSET
@@ -72,7 +72,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label1: TLabel
           Left = 24
           Top = 122
-          Width = 58
+          Width = 62
           Height = 16
           Caption = 'CPF/CNPJ'
           Font.Charset = ANSI_CHARSET
@@ -85,7 +85,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label3: TLabel
           Left = 24
           Top = 64
-          Width = 83
+          Width = 90
           Height = 16
           Caption = 'Nome Fantasia'
           Font.Charset = ANSI_CHARSET
@@ -98,7 +98,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label4: TLabel
           Left = 169
           Top = 122
-          Width = 101
+          Width = 112
           Height = 16
           Caption = 'Inscri'#231#227'o Estadual'
           Font.Charset = ANSI_CHARSET
@@ -111,7 +111,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label5: TLabel
           Left = 321
           Top = 122
-          Width = 49
+          Width = 51
           Height = 16
           Caption = 'Telefone'
           Font.Charset = ANSI_CHARSET
@@ -221,9 +221,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         BevelOuter = bvNone
         TabOrder = 0
         object Label10: TLabel
-          Left = 382
+          Left = 235
           Top = 61
-          Width = 38
+          Width = 42
           Height = 16
           Caption = 'Estado'
           Font.Charset = ANSI_CHARSET
@@ -236,7 +236,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label11: TLabel
           Left = 24
           Top = 61
-          Width = 34
+          Width = 37
           Height = 16
           Caption = 'Bairro'
           Font.Charset = ANSI_CHARSET
@@ -249,7 +249,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object Label6: TLabel
           Left = 24
           Top = 7
-          Width = 23
+          Width = 26
           Height = 16
           Caption = 'CEP'
           Font.Charset = ANSI_CHARSET
@@ -260,9 +260,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           ParentFont = False
         end
         object Label7: TLabel
-          Left = 169
+          Left = 137
           Top = 7
-          Width = 64
+          Width = 72
           Height = 16
           Caption = 'Logradouro'
           Font.Charset = ANSI_CHARSET
@@ -273,9 +273,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           ParentFont = False
         end
         object Label8: TLabel
-          Left = 382
+          Left = 368
           Top = 7
-          Width = 46
+          Width = 48
           Height = 16
           Caption = 'N'#250'mero'
           Font.Charset = ANSI_CHARSET
@@ -286,9 +286,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           ParentFont = False
         end
         object Label9: TLabel
-          Left = 238
+          Left = 311
           Top = 61
-          Width = 39
+          Width = 44
           Height = 16
           Caption = 'Cidade'
           Font.Charset = ANSI_CHARSET
@@ -299,9 +299,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           ParentFont = False
         end
         object edLogradouro: TEdit
-          Left = 169
+          Left = 137
           Top = 26
-          Width = 186
+          Width = 225
           Height = 24
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -312,9 +312,9 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           TabOrder = 1
         end
         object edNumero: TEdit
-          Left = 382
+          Left = 368
           Top = 26
-          Width = 67
+          Width = 81
           Height = 24
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -325,23 +325,10 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           ParentFont = False
           TabOrder = 2
         end
-        object edCidade: TEdit
-          Left = 238
-          Top = 80
-          Width = 117
-          Height = 24
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Product Sans'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 4
-        end
         object edBairro: TEdit
           Left = 24
           Top = 80
-          Width = 186
+          Width = 201
           Height = 24
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -354,7 +341,7 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
         object edCEP: TEdit
           Left = 24
           Top = 26
-          Width = 117
+          Width = 105
           Height = 24
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
@@ -369,9 +356,24 @@ object formCadastrarEmpresa: TformCadastrarEmpresa
           OnKeyPress = edCEPKeyPress
         end
         object cbUF: TComboBox
-          Left = 382
+          Left = 235
           Top = 80
           Width = 67
+          Height = 24
+          Style = csDropDownList
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Product Sans'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+          OnSelect = cbUFSelect
+        end
+        object cbCidade: TComboBox
+          Left = 311
+          Top = 80
+          Width = 138
           Height = 24
           Style = csDropDownList
           Font.Charset = ANSI_CHARSET

@@ -244,9 +244,7 @@ object formCadastrarLote: TformCadastrarLote
           Font.Style = []
           NumbersOnly = True
           ParentFont = False
-          TabOrder = 4
-          Text = '1'
-          OnExit = edQuantidadeExit
+          TabOrder = 5
         end
         object edValorUnit: TEdit
           Left = 208
@@ -262,13 +260,13 @@ object formCadastrarLote: TformCadastrarLote
           MaxLength = 15
           NumbersOnly = True
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 7
           OnChange = edValorUnitChange
         end
         object edValorTotal: TEdit
           Left = 392
           Top = 145
-          Width = 156
+          Width = 153
           Height = 24
           Alignment = taRightJustify
           Font.Charset = ANSI_CHARSET
@@ -279,7 +277,7 @@ object formCadastrarLote: TformCadastrarLote
           MaxLength = 15
           NumbersOnly = True
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 8
           OnChange = edValorTotalChange
         end
         object edTempoMin: TEdit
@@ -296,7 +294,7 @@ object formCadastrarLote: TformCadastrarLote
           MaxLength = 15
           NumbersOnly = True
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 6
           OnChange = edTempoMinChange
         end
         object edEmpresa: TEdit
@@ -310,7 +308,7 @@ object formCadastrarLote: TformCadastrarLote
           Font.Name = 'Product Sans'
           Font.Style = []
           ParentFont = False
-          TabOrder = 8
+          TabOrder = 4
         end
         object pnlBtnBuscarEmpresa: TPanel
           Left = 355
