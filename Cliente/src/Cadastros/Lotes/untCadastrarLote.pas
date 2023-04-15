@@ -94,7 +94,7 @@ begin
 
   resultadoTempoTotal := StrToFloat(Trim(edTempoMin.Text).Replace('.', '')) * StrToInt(edQuantidade.Text);
 
-  try
+//  try
     with classeLotes do
     begin
       idLote := vIdLote;
@@ -118,9 +118,9 @@ begin
     end;
 
     Self.Close;
-  except
-    Application.MessageBox('Erro ao cadastrar lote!', 'Confirmação', MB_ICONINFORMATION + MB_OK);
-  end;
+//  except on E: Exception do
+//    Application.MessageBox('Erro ao cadastrar lote!', 'Confirmação', MB_ICONINFORMATION + MB_OK);
+//  end;
 end;
 
 procedure TformCadastrarLote.btnSaveMouseEnter(Sender: TObject);

@@ -36,11 +36,11 @@
     <Transaction>2023/03/24 22:17:55.000.721,=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
     <Transaction>2023/03/24 22:18:36.000.627,C:\vba-sistema\Cliente\src\Cadastros\Ponto de Funcionario\untCadastroPonto.pas=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
     <Transaction>2023/03/24 22:18:36.000.627,C:\vba-sistema\Cliente\src\Cadastros\Ponto de Funcionario\untCadastroPonto.dfm=C:\vba-sistema\Cliente\Unit1.dfm</Transaction>
-    <Transaction>2023/03/25 09:57:01.853,=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
-    <Transaction>2023/03/25 09:58:04.537,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.dfm=C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.dfm</Transaction>
-    <Transaction>2023/03/25 09:58:04.537,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.pas=C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas</Transaction>
-    <Transaction>2023/03/25 09:58:26.140,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
-    <Transaction>2023/03/25 09:58:26.140,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.dfm=C:\vba-sistema\Cliente\Unit1.dfm</Transaction>
+    <Transaction>2023/03/25 09:57:01.000.853,=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
+    <Transaction>2023/03/25 09:58:04.000.537,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.dfm=C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.dfm</Transaction>
+    <Transaction>2023/03/25 09:58:04.000.537,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untControlePagamento.pas=C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas</Transaction>
+    <Transaction>2023/03/25 09:58:26.000.140,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas=C:\vba-sistema\Cliente\Unit1.pas</Transaction>
+    <Transaction>2023/03/25 09:58:26.000.140,C:\vba-sistema\Cliente\src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.dfm=C:\vba-sistema\Cliente\Unit1.dfm</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="img"/>

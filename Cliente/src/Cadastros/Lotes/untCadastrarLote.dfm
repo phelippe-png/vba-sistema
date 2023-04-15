@@ -61,7 +61,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label2: TLabel
           Left = 16
           Top = 8
-          Width = 40
+          Width = 46
           Height = 16
           Caption = 'C'#243'digo'
           Font.Charset = ANSI_CHARSET
@@ -74,7 +74,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label1: TLabel
           Left = 112
           Top = 8
-          Width = 17
+          Width = 19
           Height = 16
           Caption = 'OP'
           Font.Charset = ANSI_CHARSET
@@ -87,7 +87,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label3: TLabel
           Left = 208
           Top = 8
-          Width = 57
+          Width = 60
           Height = 16
           Caption = 'Descri'#231#227'o'
           Font.Charset = ANSI_CHARSET
@@ -100,7 +100,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label4: TLabel
           Left = 16
           Top = 66
-          Width = 89
+          Width = 99
           Height = 16
           Caption = 'Data de Entrada'
           Font.Charset = ANSI_CHARSET
@@ -113,7 +113,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label6: TLabel
           Left = 392
           Top = 66
-          Width = 65
+          Width = 73
           Height = 16
           Caption = 'Quantidade'
           Font.Charset = ANSI_CHARSET
@@ -126,7 +126,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label7: TLabel
           Left = 208
           Top = 128
-          Width = 75
+          Width = 85
           Height = 16
           Caption = 'Valor Unit'#225'rio'
           Font.Charset = ANSI_CHARSET
@@ -139,7 +139,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label8: TLabel
           Left = 392
           Top = 128
-          Width = 58
+          Width = 64
           Height = 16
           Caption = 'Valor Total'
           Font.Charset = ANSI_CHARSET
@@ -152,7 +152,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label9: TLabel
           Left = 16
           Top = 128
-          Width = 107
+          Width = 116
           Height = 16
           Caption = 'Tempo em Minutos'
           Font.Charset = ANSI_CHARSET
@@ -165,7 +165,7 @@ object formCadastrarLote: TformCadastrarLote
         object Label10: TLabel
           Left = 208
           Top = 66
-          Width = 49
+          Width = 52
           Height = 16
           Caption = 'Empresa'
           Font.Charset = ANSI_CHARSET

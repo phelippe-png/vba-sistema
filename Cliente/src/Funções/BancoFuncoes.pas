@@ -14,6 +14,7 @@ function BDBuscarRegistros(stTabela, stAtributos, stJoins, stCondicoes, stGroup,
 function BDInserirRegistros(stTabela, stColunaId, stNomeSeq: string; dicDados: TDictionary<string, Variant>; nrColunaId: Integer = 0): Integer;
 function BDAtualizarRegistros(stTabela, stCondicoes: string; dicDados: TDictionary<string, Variant>): Boolean;
 function BDExcluirRegistro(stTabela, stCondicoes: string): boolean;
+procedure BDCriarArquivoTexto(StrNomeArquivo, StrConteudo: string; InRewrite: Boolean; StrCaminho: string = '');
 
 implementation
 
@@ -75,29 +76,36 @@ end;
 
 function BDBuscarRegistros(stTabela, stAtributos, stJoins, stCondicoes, stGroup, stOrder: string; nrLimit: integer; stNomeDataSet: string): TFDQuery;
 var
-  stSQL: string;
+  stSQL, vStrErro: string;
   vFDQuery: TFDQuery;
 begin
   Result := BDCriarOuRetornarFDQuery(stNomeDataSet);
-//  Result.Connection := SisDataModule.fdConnection;
 
-  stSQL := 'SELECT ';
-  if stAtributos = EmptyStr then
-    stAtributos := ' * ';
-  stSQL := stSQL + stAtributos;
-  stSQL := stSQL + ' FROM ' + stTabela + ' ';
-  if stJoins <> EmptyStr then
-    stSQL := stSQL + stJoins + ' ';
-  if stCondicoes <> EmptyStr then
-    stSQL := stSQL + ' WHERE ' + stCondicoes;
-  if stGroup <> EmptyStr then
-    stSQL := stSQL + ' GROUP BY ' + stGroup;
-  if stOrder <> EmptyStr then
-    stSQL := stSQL + ' ORDER BY ' + stOrder;
-  if nrLimit > 0 then
-    stSQL := stSQL + ' LIMIT ' + nrLimit.ToString;
+  try
+    stSQL := 'SELECT ';
+    if stAtributos = EmptyStr then
+      stAtributos := ' * ';
+    stSQL := stSQL + stAtributos;
+    stSQL := stSQL + ' FROM ' + stTabela + ' ';
+    if stJoins <> EmptyStr then
+      stSQL := stSQL + stJoins + ' ';
+    if stCondicoes <> EmptyStr then
+      stSQL := stSQL + ' WHERE ' + stCondicoes;
+    if stGroup <> EmptyStr then
+      stSQL := stSQL + ' GROUP BY ' + stGroup;
+    if stOrder <> EmptyStr then
+      stSQL := stSQL + ' ORDER BY ' + stOrder;
+    if nrLimit > 0 then
+      stSQL := stSQL + ' LIMIT ' + nrLimit.ToString;
 
-  Result.Open(stSQL);
+    Result.Open(stSQL);
+  except on E: Exception do
+    begin
+      vStrErro := 'Erro na função BDBuscarRegistros -> ' + E.Message + sLineBreak + Result.SQL.Text;
+      BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
+      raise Exception.Create('Erro ao buscar registros, confira o arquivo de Log!');
+    end;
+  end;
 end;
 
 function BDInserirRegistros(stTabela, stColunaId, stNomeSeq: string; dicDados: TDictionary<string, Variant>; nrColunaId: Integer = 0): Integer;
@@ -105,11 +113,12 @@ var
   vFDQInsert: TFDQuery;
   I: Integer;
   vArrayDicKeys: TArray<string>;
-  stSQL: string;
+  stSQL, vStrErro: string;
   vValueInsert: Variant;
 begin
+  vFDQInsert := BDCriarOuRetornarFDQuery(EmptyStr);
   try
-    with BDCriarOuRetornarFDQuery(EmptyStr), SQL do
+    with vFDQInsert, SQL do
     begin
       Connection := SisDataModule.fdConnection;
       if dicDados.Count > 0 then
@@ -162,59 +171,105 @@ begin
         Application.MessageBox('TDictionary sem dados!', 'Atenção', MB_ICONWARNING);
     end;
   except on E: Exception do
-    raise Exception.Create('Erro ao inserir dados. Erro detalhado: ' + E.Message);
+    begin
+      vStrErro := 'Erro na função BDInserirRegistros -> ' + E.Message + sLineBreak + vFDQInsert.SQL.Text;
+      BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
+      raise Exception.Create('Erro ao inserir registro, confira o arquivo de Log!');
+    end;
   end;
 end;
 
 function BDAtualizarRegistros(stTabela, stCondicoes: string; dicDados: TDictionary<string, Variant>): Boolean;
 var
+  vFDQUpdate: TFDQuery;
   I: Integer;
   vArrayDicKeys: TArray<string>;
   vValueUpdate: Variant;
-  vSQL: string;
+  vSQL, vStrErro: string;
 begin
-  with BDCriarOuRetornarFDQuery(EmptyStr), SQL do
-  begin
-    Connection := SisDataModule.fdConnection;
-
-    Close;
-    Clear;
-    vSQL := 'UPDATE ' + stTabela + ' SET ';
-
-    vArrayDicKeys := dicDados.Keys.ToArray;
-    for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
+  vFDQUpdate := BDCriarOuRetornarFDQuery(EmptyStr);
+  try
+    with vFDQUpdate, SQL do
     begin
-      vValueUpdate := dicDados.Items[vArrayDicKeys[I]];
-      case VarType(vValueUpdate) of
-        varInteger: vValueUpdate := IntToStr(dicDados.Items[vArrayDicKeys[I]]);
-        varDouble, varCurrency: vValueUpdate := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
-        varString, varUString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
-        varBoolean: vValueUpdate := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
-        varDate: vValueUpdate := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
+      Connection := SisDataModule.fdConnection;
+
+      Close;
+      Clear;
+      vSQL := 'UPDATE ' + stTabela + ' SET ';
+
+      vArrayDicKeys := dicDados.Keys.ToArray;
+      for I := Low(vArrayDicKeys) to High(vArrayDicKeys) do
+      begin
+        vValueUpdate := dicDados.Items[vArrayDicKeys[I]];
+        case VarType(vValueUpdate) of
+          varInteger: vValueUpdate := IntToStr(dicDados.Items[vArrayDicKeys[I]]);
+          varDouble, varCurrency: vValueUpdate := FloatToStr(dicDados.Items[vArrayDicKeys[I]]).Replace('.', '').Replace(',', '.');
+          varString, varUString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
+          varBoolean: vValueUpdate := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
+          varDate: vValueUpdate := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
+        end;
+
+        vSQL := vSQL + vArrayDicKeys[I] + ' = ' + vValueUpdate;
+        if I < High(vArrayDicKeys) then
+          vSQL := vSQL + ', ';
       end;
 
-      vSQL := vSQL + vArrayDicKeys[I] + ' = ' + vValueUpdate;
-      if I < High(vArrayDicKeys) then
-        vSQL := vSQL + ', ';
+      vSQL := vSQL + ' WHERE ' + stCondicoes;
+      Add(vSQL);
+      ExecSQL;
     end;
-
-    vSQL := vSQL + ' WHERE ' + stCondicoes;
-    Add(vSQL);
-    ExecSQL;
+  except on E: Exception do
+    begin
+      vStrErro := 'Erro na função BDAtualizarRegistros -> ' + E.Message + sLineBreak + vFDQUpdate.SQL.Text;
+      BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
+      raise Exception.Create('Erro ao atualizar registro, confira o arquivo de Log!');
+    end;
   end;
 end;
 
 function BDExcluirRegistro(stTabela, stCondicoes: string): boolean;
+var
+  vStrErro: string;
+  vFDQDelete: TFDQuery;
 begin
-  with BDCriarOuRetornarFDQuery(EmptyStr), SQL do
-  begin
-    Connection := SisDataModule.fdConnection;
+  vFDQDelete := BDCriarOuRetornarFDQuery(EmptyStr);
+  try
+    with vFDQDelete, SQL do
+    begin
+      Connection := SisDataModule.fdConnection;
 
-    Close;
-    Clear;
-    Add('DELETE FROM ' + stTabela + ' WHERE ' + stCondicoes);
-    ExecSQL;
+      Close;
+      Clear;
+      Add('DELETE FROM ' + stTabela + ' WHERE ' + stCondicoes);
+      ExecSQL;
+    end;
+  except on E: Exception do
+    begin
+      vStrErro := 'Erro na função BDExcluirRegistro -> ' + E.Message + sLineBreak + vFDQDelete.SQL.Text;
+      BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
+      raise Exception.Create('Erro ao excluir registro, confira o arquivo de Log!');
+    end;
   end;
+end;
+
+procedure BDCriarArquivoTexto(StrNomeArquivo, StrConteudo: string; InRewrite: Boolean; StrCaminho: string = '');
+var
+  vArquivo: TextFile;
+begin
+  if StrCaminho = EmptyStr then
+    StrCaminho := ExtractFilePath(Application.ExeName) + StrNomeArquivo;
+
+  AssignFile(vArquivo, StrCaminho);
+  if not FileExists(StrCaminho) then
+    Rewrite(vArquivo);
+
+  if InRewrite then
+    Rewrite(vArquivo)
+  else
+    Append(vArquivo);
+
+  Writeln(vArquivo, StrConteudo);
+  CloseFile(vArquivo);
 end;
 
 end.

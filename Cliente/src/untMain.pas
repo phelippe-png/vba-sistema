@@ -237,8 +237,8 @@ end;
 
 procedure TformMain.btnCadastrarPontoClick(Sender: TObject);
 begin
-  formCadastrarPonto := TformCadastrarPonto.Create(Self);
-  abrirTelas(formCadastrarPonto);
+//  formCadastrarPonto := TformCadastrarPonto.Create(Self);
+//  abrirTelas(formCadastrarPonto);
 end;
 
 procedure TformMain.btnCadastrarPontoMouseLeave(Sender: TObject);
@@ -495,8 +495,8 @@ end;
 
 procedure TformMain.btnControlePagamentoClick(Sender: TObject);
 begin
-  formpagamentos := tformpagamentos.Create(Self);
-  abrirTelas(formpagamentos);
+//  formpagamentos := tformpagamentos.Create(Self);
+//  abrirTelas(formpagamentos);
 end;
 
 procedure TformMain.btnControlePagamentoMouseLeave(Sender: TObject);

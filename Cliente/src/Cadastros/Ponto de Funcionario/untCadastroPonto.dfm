@@ -9,22 +9,22 @@ object formCadastrarPonto: TformCadastrarPonto
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Name = 'Product Sans'
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
   WindowState = wsMaximized
+  OnCreate = FormCreate
   DesignSize = (
     732
     479)
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   object lblTime: TLabel
     Left = 8
     Top = 45
     Width = 88
     Height = 35
-    Anchors = [akTop, akRight]
     Caption = 'Tempo'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -59,22 +59,46 @@ object formCadastrarPonto: TformCadastrarPonto
     Font.Style = []
     ParentFont = False
   end
-  object edtCPF: TEdit
-    Left = 129
-    Top = 247
-    Width = 473
-    Height = 48
-    Anchors = [akLeft, akTop, akRight]
+  object btnObservacoes: TSpeedButton
+    Left = 600
+    Top = 440
+    Width = 124
+    Height = 31
+    Anchors = [akRight, akBottom]
+    Caption = 'Observa'#231#245'es'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -15
+    Font.Name = 'Product Sans'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 289
+    Top = 301
+    Width = 6
+    Height = 24
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
     Font.Name = 'Tahoma'
     Font.Style = []
-    MaxLength = 14
     ParentFont = False
-    TabOrder = 0
-    OnChange = edtCPFChange
-    OnKeyPress = edtCPFKeyPress
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 532
+    Top = 242
+    Width = 70
+    Height = 48
+    Anchors = [akTop, akRight]
+    Caption = 'Inserir'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Product Sans'
+    Font.Style = []
+    ParentFont = False
+    OnClick = SpeedButton1Click
   end
   object Panel1: TPanel
     Left = 664
@@ -90,7 +114,25 @@ object formCadastrarPonto: TformCadastrarPonto
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
+    TabOrder = 0
+    OnClick = Panel1Click
+  end
+  object edtCPF: TEdit
+    Left = 129
+    Top = 242
+    Width = 400
+    Height = 48
+    Anchors = [akLeft, akTop, akRight]
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -33
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    MaxLength = 14
+    ParentFont = False
     TabOrder = 1
+    OnChange = edtCPFChange
+    OnKeyPress = edtCPFKeyPress
   end
   object Timer: TTimer
     OnTimer = TimerTimer

@@ -27,6 +27,8 @@ function SisVerificarPosicaoCursor(campo: TEdit): boolean;
 function SisValidarCEP(stCEP: string): string;
 function SisPegarMes(vMes: integer): string;
 function SisVarIf(Condicao: Boolean; TrueValue, FalseValue: Variant): Variant overload;
+function validaCPF(CPF: string): boolean;
+function validaCNPJ(CNPJ: string): boolean;
 
 //procedure redimensionarGrid(const Grid: TDBGrid; const CoverWhiteSpace: Boolean = True);
 
@@ -320,6 +322,130 @@ begin
     Result := TrueValue
   else
     Result := FalseValue;
+end;
+
+function validaCPF(CPF: string): boolean;
+var
+  digito10, digito11: string;
+  s, I, r, peso: integer;
+begin
+  if ((CPF = '00000000000') or (CPF = '11111111111') or (CPF = '22222222222') or
+    (CPF = '33333333333') or (CPF = '44444444444') or (CPF = '55555555555') or
+    (CPF = '66666666666') or (CPF = '77777777777') or (CPF = '88888888888') or
+    (CPF = '99999999999') or (length(CPF) <> 11)) then
+  begin
+    result := false;
+    exit;
+  end;
+
+  try
+    // calculo do primeiro dígito
+    s := 0;
+    peso := 10;
+
+    for I := 1 to 9 do
+    begin
+      s := s + (StrToInt(CPF[I]) * peso);
+      peso := peso - 1;
+    end;
+
+    r := 11 - (s mod 11);
+
+    if (r = 10) or (r = 11) then
+      digito10 := '0'
+    else
+      str(r: 1, digito10);
+
+    // calculo do segundo dígito
+    s := 0;
+    peso := 11;
+
+    for I := 1 to 10 do
+    begin
+      s := s + (StrToInt(CPF[I]) * peso);
+      peso := peso - 1;
+    end;
+
+    r := 11 - (s mod 11);
+
+    if (r = 10) or (r = 11) then
+      digito11 := '0'
+    else
+      str(r: 1, digito11);
+
+    // verifica se os digitos calculados conferem com os digitos informados
+    if ((digito10 = CPF[10]) and (digito11 = CPF[11])) then
+      result := true
+    else
+      result := false;
+  except
+    result := false
+  end;
+end;
+
+function validaCNPJ(CNPJ: string): boolean;
+var
+  digito13, digito14: string;
+  sm, I, r, peso: integer;
+begin
+  if ((CNPJ = '00000000000000') or (CNPJ = '11111111111111') or
+    (CNPJ = '22222222222222') or (CNPJ = '33333333333333') or
+    (CNPJ = '44444444444444') or (CNPJ = '55555555555555') or
+    (CNPJ = '66666666666666') or (CNPJ = '77777777777777') or
+    (CNPJ = '88888888888888') or (CNPJ = '99999999999999') or
+    (length(CNPJ) <> 14)) then
+  begin
+    result := false;
+    exit;
+  end;
+
+  try
+    //calculo do primeiro dígito
+    sm := 0;
+    peso := 2;
+
+    for I := 12 downto 1 do
+    begin
+      sm := sm + (StrToInt(CNPJ[I]) * peso);
+      peso := peso + 1;
+      if (peso = 10) then
+        peso := 2;
+    end;
+
+    r := sm mod 11;
+
+    if (r = 0) or (r = 1) then
+      digito13 := '0'
+    else
+      str((11 - r): 1, digito13);
+
+    //calculo do segundo dígito
+    sm := 0;
+    peso := 2;
+
+    for I := 13 downto 1 do
+    begin
+      sm := sm + (StrToInt(CNPJ[I]) * peso);
+      peso := peso + 1;
+      if (peso = 10) then
+        peso := 2;
+    end;
+
+    r := sm mod 11;
+
+    if (r = 0) or (r = 1) then
+      digito14 := '0'
+    else
+      str((11 - r): 1, digito14);
+
+    // verifica se os digitos calculados conferem com os digitos informados
+    if ((digito13 = CNPJ[13]) and (digito14 = CNPJ[14])) then
+      result := true
+    else
+      result := false;
+  except
+    result := false
+  end;
 end;
 
 end.
