@@ -229,48 +229,44 @@ begin
     classProducao.valorTotal := resultadoValor;
     classProducao.tempoTotal := resultadoTempo;
 
-    try
-      if classProducao.modo = 'editar' then
-        classProducao.enviarDadosProducao
-      else
-        classProducao.idProducao := classProducao.enviarDadosProducao;
+    if classProducao.modo = 'editar' then
+      classProducao.enviarDadosProducao
+    else
+      classProducao.idProducao := classProducao.enviarDadosProducao;
 
-      for I := 0 to arrayLotesAdicionados.Count - 1 do
-      begin
-        classProducao.modo := 'adicionar';
-        classProducao.idLote := arrayLotesAdicionados.Get(I).GetValue<integer>('id_lote');
-        classProducao.finalizado := arrayLotesAdicionados.Get(I).GetValue<boolean>('finalizado');
-        classProducao.enviarDadosCorpoProducao;
-      end;
-
-      for I := 0 to arrayLotesConcluidos.Count - 1 do
-      begin
-        classProducao.modo := 'editar';
-        classProducao.idLote := arrayLotesConcluidos.Get(I).GetValue<integer>('id_lote');
-        classProducao.finalizado := true;
-        classProducao.idCorpoProducao := arrayLotesConcluidos.Get(I).GetValue<integer>('id_corpoproducao');
-        classProducao.valorLote := arrayLotesConcluidos.Get(I).GetValue<currency>('valor');
-        classProducao.enviarDadosCorpoProducao;
-        classProducao.enviarDadosContasReceber;
-      end;
-
-      for I := 0 to arrayLotesExcluidos.Count - 1 do
-      begin
-        classProducao.modo := 'excluir';
-  //      classProducao.idLote := arrayLotesExcluidos.Get(I).GetValue<integer>('id_lote');
-  //      classProducao.idCorpoProducao := arrayLotesExcluidos.Get(I).GetValue<integer>('id_corpoproducao');
-        classProducao.excluirCorpoProducao(arrayLotesExcluidos.Get(I).GetValue<integer>('id_corpoproducao'));
-      end;
-
-      if not editar then
-        Application.MessageBox('Cadastro efetuado com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK)
-      else
-        Application.MessageBox('Alteração efetuada com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK);
-
-      Self.Close;
-    except
-      Application.MessageBox('Erro ao cadastrar produção!', 'Erro', MB_ICONERROR + MB_OK);
+    for I := 0 to arrayLotesAdicionados.Count - 1 do
+    begin
+      classProducao.modo := 'adicionar';
+      classProducao.idLote := arrayLotesAdicionados.Get(I).GetValue<integer>('id_lote');
+      classProducao.finalizado := arrayLotesAdicionados.Get(I).GetValue<boolean>('finalizado');
+      classProducao.enviarDadosCorpoProducao;
     end;
+
+    for I := 0 to arrayLotesConcluidos.Count - 1 do
+    begin
+      classProducao.modo := 'editar';
+      classProducao.idLote := arrayLotesConcluidos.Get(I).GetValue<integer>('id_lote');
+      classProducao.finalizado := true;
+      classProducao.idCorpoProducao := arrayLotesConcluidos.Get(I).GetValue<integer>('id_corpoproducao');
+      classProducao.valorLote := arrayLotesConcluidos.Get(I).GetValue<currency>('valor');
+      classProducao.enviarDadosCorpoProducao;
+      classProducao.enviarDadosContasReceber;
+    end;
+
+    for I := 0 to arrayLotesExcluidos.Count - 1 do
+    begin
+      classProducao.modo := 'excluir';
+//      classProducao.idLote := arrayLotesExcluidos.Get(I).GetValue<integer>('id_lote');
+//      classProducao.idCorpoProducao := arrayLotesExcluidos.Get(I).GetValue<integer>('id_corpoproducao');
+      classProducao.excluirCorpoProducao(arrayLotesExcluidos.Get(I).GetValue<integer>('id_corpoproducao'));
+    end;
+
+    if not editar then
+      Application.MessageBox('Cadastro efetuado com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK)
+    else
+      Application.MessageBox('Alteração efetuada com sucesso.', 'Sucesso', MB_ICONINFORMATION + MB_OK);
+
+    Self.Close;
   end;
 end;
 

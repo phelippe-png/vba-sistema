@@ -36,7 +36,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object Label1: TLabel
       Left = 254
       Top = 13
-      Width = 76
+      Width = 86
       Height = 16
       Anchors = [akTop, akRight]
       Caption = 'Data de In'#237'cio'
@@ -50,7 +50,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object Label2: TLabel
       Left = 13
       Top = 9
-      Width = 66
+      Width = 69
       Height = 20
       Caption = 'Empresa'
       Font.Charset = ANSI_CHARSET
@@ -63,7 +63,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object Label3: TLabel
       Left = 410
       Top = 13
-      Width = 107
+      Width = 120
       Height = 16
       Anchors = [akTop, akRight]
       Caption = 'Data de Finaliza'#231#227'o'
@@ -90,7 +90,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object lblRazao: TLabel
       Left = 96
       Top = 30
-      Width = 114
+      Width = 122
       Height = 19
       Caption = 'N'#227'o selecionado'
       Font.Charset = ANSI_CHARSET
@@ -103,7 +103,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object lblFantasia: TLabel
       Left = 110
       Top = 44
-      Width = 114
+      Width = 122
       Height = 19
       Caption = 'N'#227'o selecionado'
       Font.Charset = ANSI_CHARSET
@@ -154,7 +154,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object Label5: TLabel
       Left = 28
       Top = 100
-      Width = 53
+      Width = 55
       Height = 26
       Caption = 'Lotes'
       Font.Charset = ANSI_CHARSET
@@ -238,7 +238,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object Label14: TLabel
       Left = 615
       Top = 13
-      Width = 36
+      Width = 39
       Height = 16
       Anchors = [akTop, akRight]
       Caption = 'Status'
@@ -252,7 +252,7 @@ object formCadastrarProducao: TformCadastrarProducao
     object lblStatus: TLabel
       Left = 615
       Top = 28
-      Width = 106
+      Width = 114
       Height = 16
       Anchors = [akTop, akRight]
       Caption = 'Em cadastramento'
@@ -641,9 +641,9 @@ object formCadastrarProducao: TformCadastrarProducao
       ParentFont = False
     end
     object lblValorTotal: TLabel
-      Left = 385
+      Left = 381
       Top = 34
-      Width = 63
+      Width = 67
       Height = 21
       Alignment = taRightJustify
       Anchors = [akLeft, akTop, akRight]
@@ -656,9 +656,9 @@ object formCadastrarProducao: TformCadastrarProducao
       ParentFont = False
     end
     object lblTempo: TLabel
-      Left = 792
+      Left = 789
       Top = 34
-      Width = 38
+      Width = 41
       Height = 21
       Alignment = taRightJustify
       Anchors = [akTop, akRight]

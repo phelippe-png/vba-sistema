@@ -147,20 +147,12 @@ end;
 
 procedure TProducao.excluirCorpoProducao(id: integer);
 begin
-  try
-    BDExcluirRegistro('tab_controleproducao_corpo', ' id_producao = ' + id.ToString);
-  except on E: Exception do
-    raise Exception.Create('Erro ao excluir registro!' + sLineBreak + 'Erro detalhado: ' + E.Message);
-  end;
+  BDExcluirRegistro('tab_controleproducao_corpo', ' id_producao = ' + id.ToString);
 end;
 
 procedure TProducao.excluirProducao(id: integer);
 begin
-  try
-    BDExcluirRegistro('tab_controleproducao', ' id = ' + id.ToString);
-  except on E: Exception do
-    raise Exception.Create('Erro ao excluir registro!' + sLineBreak + 'Erro detalhado: ' + E.Message);
-  end;
+  BDExcluirRegistro('tab_controleproducao', ' id = ' + id.ToString);
 end;
 
 end.

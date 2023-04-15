@@ -60,6 +60,9 @@ procedure TformFuncionarios.btnEditClick(Sender: TObject);
 var
   vFormCadastrarFuncionario: TformCadastrarFuncionario;
 begin
+  if vFDMFuncionarios.RecordCount = 0 then
+    Exit;
+
   vFormCadastrarFuncionario := TformCadastrarFuncionario.Create(Self);
   vFormCadastrarFuncionario.CarregarDados(vFDMFuncionarios.FieldByName('id').AsInteger);
   vFormCadastrarFuncionario.ShowModal;
@@ -79,6 +82,9 @@ end;
 procedure TformFuncionarios.dbgFuncionariosDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
+  if vFDMFuncionarios.RecordCount = 0 then
+    Exit;
+
   with vFDMFuncionarios, dbgFuncionarios do
   begin
     if Column.FieldName = 'status' then

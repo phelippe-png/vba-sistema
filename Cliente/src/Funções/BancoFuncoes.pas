@@ -101,7 +101,7 @@ begin
     Result.Open(stSQL);
   except on E: Exception do
     begin
-      vStrErro := 'Erro na função BDBuscarRegistros -> ' + E.Message + sLineBreak + Result.SQL.Text;
+      vStrErro := 'Erro na função BDBuscarRegistros -> ' + E.Message + sLineBreak + Result.SQL.Text + sLineBreak;
       BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
       raise Exception.Create('Erro ao buscar registros, confira o arquivo de Log!');
     end;
@@ -172,7 +172,7 @@ begin
     end;
   except on E: Exception do
     begin
-      vStrErro := 'Erro na função BDInserirRegistros -> ' + E.Message + sLineBreak + vFDQInsert.SQL.Text;
+      vStrErro := 'Erro na função BDInserirRegistros -> ' + E.Message + sLineBreak + vFDQInsert.SQL.Text + sLineBreak;
       BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
       raise Exception.Create('Erro ao inserir registro, confira o arquivo de Log!');
     end;
@@ -220,7 +220,7 @@ begin
     end;
   except on E: Exception do
     begin
-      vStrErro := 'Erro na função BDAtualizarRegistros -> ' + E.Message + sLineBreak + vFDQUpdate.SQL.Text;
+      vStrErro := 'Erro na função BDAtualizarRegistros -> ' + E.Message + sLineBreak + vFDQUpdate.SQL.Text + sLineBreak;
       BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
       raise Exception.Create('Erro ao atualizar registro, confira o arquivo de Log!');
     end;
@@ -245,7 +245,7 @@ begin
     end;
   except on E: Exception do
     begin
-      vStrErro := 'Erro na função BDExcluirRegistro -> ' + E.Message + sLineBreak + vFDQDelete.SQL.Text;
+      vStrErro := 'Erro na função BDExcluirRegistro -> ' + E.Message + sLineBreak + vFDQDelete.SQL.Text + sLineBreak;
       BDCriarArquivoTexto('SistemaLogErro.txt', vStrErro, False);
       raise Exception.Create('Erro ao excluir registro, confira o arquivo de Log!');
     end;
