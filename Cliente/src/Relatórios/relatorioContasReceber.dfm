@@ -14,7 +14,7 @@ object formRelatContasReceber: TformRelatContasReceber
   PixelsPerInch = 96
   TextHeight = 13
   object RLReport1: TRLReport
-    Left = -8
+    Left = 0
     Top = -1
     Width = 794
     Height = 1123

@@ -194,6 +194,18 @@
             <Form>formPagamentos</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Cadastros\Ponto de Funcionario\untObservacoesDias.pas">
+            <Form>formObservacoesDias</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Movimentações\Controle de Pagamentos Funcionários\untPagamentosAnteriores.pas">
+            <Form>formPagamentosAnteriores</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Relatórios\relatorioControlePagamento.pas">
+            <Form>formRelatorioControlePagamento</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <RcItem Include="img\trash.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>ICOTrash</ResourceId>

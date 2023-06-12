@@ -20,50 +20,53 @@ uses
 
 type
   TformMain = class(TForm)
-    pnlMenu: TPanel;
-    Image1: TImage;
+    pnlContainer: TPanel;
     Panel1: TPanel;
     Panel2: TPanel;
     Label1: TLabel;
     Image2: TImage;
+    pnlMenu: TPanel;
+    Image1: TImage;
     pnlMenus: TPanel;
     pnlProcessos: TPanel;
-    pnlCadastros: TPanel;
-    Image3: TImage;
     Image4: TImage;
     Label3: TLabel;
+    SpeedButton5: TSpeedButton;
+    pnlCadastros: TPanel;
+    Image3: TImage;
     Label4: TLabel;
+    SpeedButton4: TSpeedButton;
     pnlRelatorios: TPanel;
     Image5: TImage;
     Label2: TLabel;
-    pnlCadastrosMenu: TPanel;
-    menuContasReceber: TPanel;
-    menuLotes: TPanel;
-    menuEmpresa: TPanel;
-    pnlProcessosMenu: TPanel;
-    pnlRelatoriosMenu: TPanel;
-    menuRelatControleProducao: TPanel;
-    menuRelatContasReceber: TPanel;
-    menuRelatContasPagar: TPanel;
-    btnEmpresas: TSpeedButton;
-    btnLotes: TSpeedButton;
-    SpeedButton4: TSpeedButton;
-    SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
+    pnlProcessosMenu: TPanel;
     menuControleProducao: TPanel;
     btnControleProducao: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
-    SpeedButton7: TSpeedButton;
-    menuFuncionarios: TPanel;
-    btnContasReceber: TSpeedButton;
-    menuContasPagar: TPanel;
-    btnContasPagar: TSpeedButton;
-    btnFuncionarios: TSpeedButton;
     menuControlePagamento: TPanel;
     btnControlePagamento: TSpeedButton;
+    pnlRelatoriosMenu: TPanel;
+    menuRelatControleProducao: TPanel;
+    SpeedButton7: TSpeedButton;
+    menuRelatContasReceber: TPanel;
+    SpeedButton3: TSpeedButton;
+    menuRelatContasPagar: TPanel;
+    SpeedButton2: TSpeedButton;
+    pnlCadastrosMenu: TPanel;
+    menuContasReceber: TPanel;
+    btnContasReceber: TSpeedButton;
+    menuLotes: TPanel;
+    btnLotes: TSpeedButton;
+    menuEmpresa: TPanel;
+    btnEmpresas: TSpeedButton;
+    menuFuncionarios: TPanel;
+    btnFuncionarios: TSpeedButton;
+    menuContasPagar: TPanel;
+    btnContasPagar: TSpeedButton;
     menuCadastroPonto: TPanel;
     btnCadastrarPonto: TSpeedButton;
+    menuRelatControlePagamento: TPanel;
+    btnRelatControlePagamento: TSpeedButton;
     procedure Image2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -96,6 +99,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnCadastrarPontoMouseLeave(Sender: TObject);
     procedure btnCadastrarPontoClick(Sender: TObject);
+    procedure btnRelatControlePagamentoMouseLeave(Sender: TObject);
+    procedure btnRelatControlePagamentoClick(Sender: TObject);
   private
     formContasPagar: TformContasPagar;
     formProducao: TformListarProducoes;
@@ -237,8 +242,9 @@ end;
 
 procedure TformMain.btnCadastrarPontoClick(Sender: TObject);
 begin
-//  formCadastrarPonto := TformCadastrarPonto.Create(Self);
-//  abrirTelas(formCadastrarPonto);
+  formCadastrarPonto := TformCadastrarPonto.Create(Self);
+  formCadastrarPonto.Parent := Self;
+  formCadastrarPonto.Show;
 end;
 
 procedure TformMain.btnCadastrarPontoMouseLeave(Sender: TObject);
@@ -298,7 +304,8 @@ begin
 
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
-  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) then
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -332,6 +339,15 @@ begin
   abrirMenus(pnlRelatorios);
 end;
 
+procedure TformMain.btnRelatControlePagamentoClick(Sender: TObject);
+var
+  modalRelatorios: TformModalRelatorios;
+begin
+  modalRelatorios := TformModalRelatorios.Create(self);
+  modalRelatorios.tipoRelatorio := controlePagamento;
+  modalRelatorios.ShowModal;
+end;
+
 //mouseleave
 procedure TformMain.btnLotesMouseLeave(Sender: TObject);
 begin
@@ -344,6 +360,21 @@ begin
     exit
   else
     pnlCadastrosMenu.Visible := false;
+end;
+
+procedure TformMain.btnRelatControlePagamentoMouseLeave(Sender: TObject);
+begin
+  pnlRelatorios.Color := $00404000;
+
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
+    exit
+  else
+    pnlRelatoriosMenu.Visible := false;
 end;
 
 procedure TformMain.btnContasPagarMouseLeave(Sender: TObject);
@@ -418,7 +449,8 @@ begin
 
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
-  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) then
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -441,7 +473,8 @@ begin
 
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
-  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) then
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -495,8 +528,8 @@ end;
 
 procedure TformMain.btnControlePagamentoClick(Sender: TObject);
 begin
-//  formpagamentos := tformpagamentos.Create(Self);
-//  abrirTelas(formpagamentos);
+  formpagamentos := tformpagamentos.Create(Self);
+  abrirTelas(formpagamentos);
 end;
 
 procedure TformMain.btnControlePagamentoMouseLeave(Sender: TObject);

@@ -31,7 +31,10 @@ uses
   untFuncionarios in 'src\Cadastros\Funcionários\untFuncionarios.pas' {formFuncionarios},
   untCadastrarFuncionario in 'src\Cadastros\Funcionários\untCadastrarFuncionario.pas' {formCadastrarFuncionario},
   untCadastroPonto in 'src\Cadastros\Ponto de Funcionario\untCadastroPonto.pas' {formCadastrarPonto},
-  untPagamentos in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas' {formPagamentos};
+  untPagamentos in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentos.pas' {formPagamentos},
+  untObservacoesDias in 'src\Cadastros\Ponto de Funcionario\untObservacoesDias.pas' {formObservacoesDias},
+  untPagamentosAnteriores in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentosAnteriores.pas' {formPagamentosAnteriores},
+  relatorioControlePagamento in 'src\Relatórios\relatorioControlePagamento.pas' {formRelatorioControlePagamento};
 
 {$R *.res}
 
@@ -42,5 +45,8 @@ begin
   Application.CreateForm(TSisDataModule, SisDataModule);
   Application.CreateForm(TformCadastrarPonto, formCadastrarPonto);
   Application.CreateForm(TformPagamentos, formPagamentos);
+  Application.CreateForm(TformObservacoesDias, formObservacoesDias);
+  Application.CreateForm(TformPagamentosAnteriores, formPagamentosAnteriores);
+  Application.CreateForm(TformRelatorioControlePagamento, formRelatorioControlePagamento);
   Application.Run;
 end.

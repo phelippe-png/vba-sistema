@@ -2,7 +2,7 @@ object formFuncionarios: TformFuncionarios
   Left = 0
   Top = 0
   Align = alClient
-  BorderIcons = [biSystemMenu, biMinimize]
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsNone
   Caption = 'Funcion'#225'rios'
   ClientHeight = 533
@@ -48,7 +48,7 @@ object formFuncionarios: TformFuncionarios
       object Label2: TLabel
         Left = 1
         Top = 11
-        Width = 102
+        Width = 95
         Height = 20
         Caption = 'Funcion'#225'rios'
         Font.Charset = ANSI_CHARSET
@@ -76,7 +76,7 @@ object formFuncionarios: TformFuncionarios
       object Label1: TLabel
         Left = 142
         Top = 13
-        Width = 59
+        Width = 54
         Height = 16
         Caption = 'Pesquisar'
         Font.Charset = ANSI_CHARSET
@@ -89,7 +89,7 @@ object formFuncionarios: TformFuncionarios
       object Label3: TLabel
         Left = 14
         Top = 13
-        Width = 65
+        Width = 59
         Height = 16
         Caption = 'Filtrar por:'
         Font.Charset = ANSI_CHARSET

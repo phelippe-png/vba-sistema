@@ -14,6 +14,7 @@ object formModalRelatorios: TformModalRelatorios
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,7 +24,7 @@ object formModalRelatorios: TformModalRelatorios
     Width = 504
     Height = 209
     Align = alTop
-    ActiveCard = cardContasPagar
+    ActiveCard = cardControlePagamento
     BevelOuter = bvNone
     Caption = 'CardPanel1'
     TabOrder = 0
@@ -793,6 +794,180 @@ object formModalRelatorios: TformModalRelatorios
           TabOrder = 8
           OnClick = ckbEmpresaProducaoClick
         end
+      end
+    end
+    object cardControlePagamento: TCard
+      Left = 0
+      Top = 0
+      Width = 504
+      Height = 209
+      Caption = 'relatorioControlePagamento'
+      CardIndex = 3
+      TabOrder = 3
+      DesignSize = (
+        504
+        209)
+      object Label18: TLabel
+        Left = 0
+        Top = 1
+        Width = 504
+        Height = 29
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Selecione os filtros para gera'#231#227'o do relat'#243'rio'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -23
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label19: TLabel
+        Left = 18
+        Top = 28
+        Width = 207
+        Height = 21
+        AutoSize = False
+        Caption = 'Controle de Pagamento'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clMaroon
+        Font.Height = -16
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Panel11: TPanel
+        AlignWithMargins = True
+        Left = 0
+        Top = 50
+        Width = 251
+        Height = 159
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        BevelOuter = bvNone
+        Color = clBtnHighlight
+        ParentBackground = False
+        TabOrder = 0
+        object lblFuncionario: TLabel
+          Left = 4
+          Top = 5
+          Width = 101
+          Height = 21
+          Caption = 'Funcion'#225'rio: '
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -17
+          Font.Name = 'Product Sans'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object pnlBtnBuscarEmpresa: TPanel
+          Left = 105
+          Top = 6
+          Width = 20
+          Height = 20
+          Cursor = crHandPoint
+          BevelOuter = bvNone
+          Color = clSilver
+          DragCursor = crDefault
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Name = 'Product Sans'
+          Font.Style = [fsBold]
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 0
+          object btnBuscarFuncionario: TImage
+            Left = 0
+            Top = 0
+            Width = 20
+            Height = 20
+            Cursor = crHandPoint
+            Align = alClient
+            Center = True
+            Picture.Data = {
+              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000100000
+              00100804000000B5FA37EA0000000273424954080855EC460400000009704859
+              73000003E3000003E3013C487B630000001974455874536F6674776172650077
+              77772E696E6B73636170652E6F72679BEE3C1A0000012C4944415478DA75D14F
+              28844118C7F1EFB8509652BB9693C346A1780FBC6752928BC392DC3729C79556
+              29FF0E28B988B6B40717CA4AEB808BC8C58D62C36589E396C31E44A11EF37AD7
+              F4EE5BFBBB4C3DF39967A66794E0448599A21B8B3CD7EC4B0613E50015254990
+              02B78469A1825D26A56080EAE19C3726E4B0D86B9328A732580404C812C2929C
+              A7ED3631629272C13069E2B28E27AA96275EA5CB05CB246893474AA28E182020
+              DF0E48EB1BABE4CB07D688D3EC5CAB5862960EC9FAC031FD543BC71443649893
+              C592ED20395EC472DF50C90D116CB933DB8A3D46199183FF39D85CF1C1343BF2
+              A90BED6CD0CBB344BC93EC2345133F3CD040BD2EE4F544572561805E6A18FFFB
+              8B778DB6B8E70C9B059937C01F55C7059DCCC84A19A049884B5A192B0B3469E4
+              84E42F7E945FC2E0B0294F0000000049454E44AE426082}
+            Proportional = True
+            OnClick = btnBuscarFuncionarioClick
+            ExplicitLeft = -40
+            ExplicitTop = -40
+            ExplicitWidth = 105
+            ExplicitHeight = 105
+          end
+        end
+      end
+      object Panel13: TPanel
+        AlignWithMargins = True
+        Left = 253
+        Top = 50
+        Width = 251
+        Height = 159
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        BevelOuter = bvNone
+        Color = clBtnHighlight
+        ParentBackground = False
+        TabOrder = 1
+        object Label22: TLabel
+          Left = 4
+          Top = 1
+          Width = 48
+          Height = 16
+          Caption = 'M'#234's/ano'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Product Sans'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object dtpMesAnoPagamento: TDatePicker
+          Left = 4
+          Top = 17
+          Width = 117
+          Date = 45063.000000000000000000
+          DateFormat = 'MM/yyyy'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          TabOrder = 0
+        end
+        object ckbFiltrarPorMesAno: TCheckBox
+          Left = 58
+          Top = 0
+          Width = 119
+          Height = 17
+          Caption = 'Ativar'
+          TabOrder = 1
+          OnClick = ckbFiltrarPorMesAnoClick
+        end
+      end
+      object Panel14: TPanel
+        AlignWithMargins = True
+        Left = -4
+        Top = 48
+        Width = 600
+        Height = 2
+        Anchors = [akLeft, akTop, akRight]
+        BevelOuter = bvNone
+        Color = 4210688
+        ParentBackground = False
+        TabOrder = 2
       end
     end
   end

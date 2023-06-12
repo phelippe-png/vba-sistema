@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.WinXPanels,
   Vcl.StdCtrls, Vcl.ComCtrls, relatorioContasPagar, functions, System.JSON,
   relatorioContasReceber, relatorioControleProducao, Vcl.Imaging.pngimage,
-  untListarEmpresas;
+  untListarEmpresas, relatorioControlePagamento, Vcl.Buttons, Vcl.WinXPickers,
+  untFuncionarios, System.DateUtils;
 
 type
   TformModalRelatorios = class(TForm)
@@ -68,6 +69,18 @@ type
     lblTituloFantasia: TLabel;
     lblRazao: TLabel;
     lblFantasia: TLabel;
+    cardControlePagamento: TCard;
+    Label18: TLabel;
+    Label19: TLabel;
+    Panel11: TPanel;
+    pnlBtnBuscarEmpresa: TPanel;
+    btnBuscarFuncionario: TImage;
+    lblFuncionario: TLabel;
+    Panel13: TPanel;
+    Panel14: TPanel;
+    dtpMesAnoPagamento: TDatePicker;
+    Label22: TLabel;
+    ckbFiltrarPorMesAno: TCheckBox;
     procedure rbMesContasPagarClick(Sender: TObject);
     procedure rbDataContasPagarClick(Sender: TObject);
     procedure btnGerarClick(Sender: TObject);
@@ -78,16 +91,21 @@ type
     procedure ckbEmpresaProducaoClick(Sender: TObject);
     procedure rbDataProducaoClick(Sender: TObject);
     procedure rbMesProducaoClick(Sender: TObject);
+    procedure btnBuscarFuncionarioClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ckbFiltrarPorMesAnoClick(Sender: TObject);
   private
     relatorioContasPagar: TformRelatContasPagar;
     relatorioContasReceber: TformRelatContasReceber;
     relatorioControleProducao: TformRelatControleProducao;
+    relatorioControlePagamento: TformRelatorioControlePagamento;
     stream: TStream;
-    idEmpresa: integer;
+    idEmpresa, vIdFuncionario: integer;
+    vStrListSQL: TStringList;
 
     function montarQuery: string;
   public
-    tipoRelatorio: (contasPagar, contasReceber, controleProducao);
+    tipoRelatorio: (contasPagar, contasReceber, controleProducao, controlePagamento, pontoFuncionario);
   end;
 
 var
@@ -118,6 +136,27 @@ begin
   end;
 end;
 
+procedure TformModalRelatorios.btnBuscarFuncionarioClick(Sender: TObject);
+begin
+  with TformFuncionarios.Create(Self) do
+  begin
+    WindowState := wsNormal;
+    Align := alNone;
+    BorderStyle := bsSingle;
+    btnSelect.Visible := True;
+    ShowModal;
+
+    if Selecionado then
+    begin
+      lblFuncionario.WordWrap := False;
+      lblFuncionario.Caption := 'Funcionário: '+dbgFuncionarios.DataSource.DataSet.FieldByName('nome').AsString;
+      vIdFuncionario := dbgFuncionarios.DataSource.DataSet.FieldByName('id').AsInteger;
+      btnBuscarFuncionario.Left := lblFuncionario.Left+5;
+      lblFuncionario.WordWrap := True;
+    end;
+  end;
+end;
+
 procedure TformModalRelatorios.btnGerarClick(Sender: TObject);
 begin
   if (idEmpresa = 0) and (ckbEmpresaProducao.Checked) then
@@ -129,15 +168,16 @@ begin
   relatorioContasPagar := TformRelatContasPagar.Create(self);
   relatorioContasReceber := TformRelatContasReceber.Create(self);
   relatorioControleProducao := TformRelatControleProducao.Create(self);
+  relatorioControlePagamento := TformRelatorioControlePagamento.Create(Self);
 
   if tipoRelatorio = contasPagar then
     relatorioContasPagar.imprimirRelatorio(montarQuery);
-
   if tipoRelatorio = contasReceber then
     relatorioContasReceber.imprimirRelatorio(montarQuery);
-
   if tipoRelatorio = controleProducao then
     relatorioControleProducao.imprimirRelatorio(montarQuery);
+  if tipoRelatorio = controlePagamento then
+    relatorioControlePagamento.imprimirRelatorio(montarQuery);
 end;
 
 procedure TformModalRelatorios.ckbEmpresaProducaoClick(Sender: TObject);
@@ -167,6 +207,16 @@ begin
   end;
 end;
 
+procedure TformModalRelatorios.ckbFiltrarPorMesAnoClick(Sender: TObject);
+begin
+  dtpMesAnoPagamento.Enabled := ckbFiltrarPorMesAno.Checked;
+end;
+
+procedure TformModalRelatorios.FormCreate(Sender: TObject);
+begin
+  vStrListSQL := TStringList.Create;
+end;
+
 procedure TformModalRelatorios.FormShow(Sender: TObject);
 begin
   dataInicialContasPagar.Date := Now;
@@ -184,69 +234,86 @@ begin
 
   if tipoRelatorio = controleProducao then
     CardPanel1.ActiveCard := cardControleProducao;
+
+  if tipoRelatorio = controlePagamento then
+    CardPanel1.ActiveCard := cardControlePagamento;
 end;
 
 function TformModalRelatorios.montarQuery: string;
 begin
-  Result := EmptyStr;
-
-  if tipoRelatorio = contasPagar then
+  with vStrListSQL do
   begin
-    if rbDataContasPagar.Checked then
-      Result := Result + ' and data_venc between ' + QuotedStr(DateToStr(dataInicialContasPagar.Date)) +
-        ' and ' + QuotedStr(DateToStr(dataFinalContasPagar.Date));
+    Clear;
 
-    if rbMesContasPagar.Checked then
-      Result := Result + ' and extract(''month'' from data_venc) = ' +
-        IntToStr(cbFiltroMesesContasPagar.ItemIndex + 1);
+    if tipoRelatorio = contasPagar then
+    begin
+      if rbDataContasPagar.Checked then
+        Add(' and data_venc between ' + QuotedStr(DateToStr(dataInicialContasPagar.Date)) +
+          ' and ' + QuotedStr(DateToStr(dataFinalContasPagar.Date)));
 
-    if rgSituacoesContasPagar.ItemIndex = 1 then
-      Result := Result + ' and pago is true ';
-    if rgSituacoesContasPagar.ItemIndex = 2 then
-      Result := Result + ' and pago is not true ';
-    if rgSituacoesContasPagar.ItemIndex = 3 then
-      Result := Result + ' and data_venc > current_date and pago is not true ';
-    if rgSituacoesContasPagar.ItemIndex = 4 then
-      Result := Result + ' and data_venc = current_date and pago is not true ';
-    if rgSituacoesContasPagar.ItemIndex = 5 then
-      Result := Result + ' and data_venc < current_date and pago is not true ';
-  end;
+      if rbMesContasPagar.Checked then
+        Add(' and extract(''month'' from data_venc) = ' +
+          IntToStr(cbFiltroMesesContasPagar.ItemIndex + 1));
 
-  if tipoRelatorio = contasReceber then
-  begin
-    if rbDataContasReceber.Checked then
-      Result := Result + ' and previsao_recebimento between ' + QuotedStr(DateToStr(dataInicialContasReceber.Date)) +
-        ' and ' + QuotedStr(DateToStr(dataFinalContasReceber.Date));
+      if rgSituacoesContasPagar.ItemIndex = 1 then
+        Add(' and pago is true ');
+      if rgSituacoesContasPagar.ItemIndex = 2 then
+        Add(' and pago is not true ');
+      if rgSituacoesContasPagar.ItemIndex = 3 then
+        Add(' and data_venc > current_date and pago is not true ');
+      if rgSituacoesContasPagar.ItemIndex = 4 then
+        Add(' and data_venc = current_date and pago is not true ');
+      if rgSituacoesContasPagar.ItemIndex = 5 then
+        Add(' and data_venc < current_date and pago is not true ');
+    end;
 
-    if rbMesContasReceber.Checked then
-      Result := Result + ' and extract(''month'' from previsao_recebimento) = ' +
-        IntToStr(cbFiltroMesContasReceber.ItemIndex + 1);
+    if tipoRelatorio = contasReceber then
+    begin
+      if rbDataContasReceber.Checked then
+        Add(' and previsao_recebimento between ' + QuotedStr(DateToStr(dataInicialContasReceber.Date)) +
+          ' and ' + QuotedStr(DateToStr(dataFinalContasReceber.Date)));
 
-    if rgContasReceber.ItemIndex = 1 then
-      Result := Result + ' and recebido is true ';
-    if rgContasReceber.ItemIndex = 2 then
-      Result := Result + ' and recebido is not true ';
-  end;
+      if rbMesContasReceber.Checked then
+        Add(' and extract(''month'' from previsao_recebimento) = ' +
+          IntToStr(cbFiltroMesContasReceber.ItemIndex + 1));
 
-  if tipoRelatorio = controleProducao then
-  begin
-    if rbDataProducao.Checked then
-      Result := Result + ' and data_inicio between ' + QuotedStr(DateToStr(dataInicialProducao.Date)) +
-        ' and ' + QuotedStr(DateToStr(dataFinalProducao.Date));
+      if rgContasReceber.ItemIndex = 1 then
+        Add(' and recebido is true ');
+      if rgContasReceber.ItemIndex = 2 then
+        Add(' and recebido is not true ');
+    end;
 
-    if rbMesProducao.Checked then
-      Result := Result + ' and extract(''month'' from data_inicio) = ' +
-        IntToStr(cbFiltroMesProducao.ItemIndex + 1);
+    if tipoRelatorio = controleProducao then
+    begin
+      if rbDataProducao.Checked then
+        Add(' and data_inicio between ' + QuotedStr(DateToStr(dataInicialProducao.Date)) +
+        ' and ' + QuotedStr(DateToStr(dataFinalProducao.Date)));
 
-    if ckbEmpresaProducao.Checked then
-      Result := Result + ' and cp.id_empresa = ' + IntToStr(idEmpresa);
+      if rbMesProducao.Checked then
+        Add(' and extract(''month'' from data_inicio) = ' + IntToStr(cbFiltroMesProducao.ItemIndex + 1));
 
-    if rgStatusProducao.ItemIndex = 1 then
-      Result := Result + ' and status = ''EM ABERTO'' ';
-    if rgStatusProducao.ItemIndex = 2 then
-      Result := Result + ' and status = ''EM PRODUÇÃO'' ';
-    if rgStatusProducao.ItemIndex = 3 then
-      Result := Result + ' and status = ''FINALIZADO'' ';
+      if ckbEmpresaProducao.Checked then
+        Add(' and cp.id_empresa = ' + IntToStr(idEmpresa));
+
+      if rgStatusProducao.ItemIndex = 1 then
+        Add(' and status = ''EM ABERTO'' ');
+      if rgStatusProducao.ItemIndex = 2 then
+        Add(' and status = ''EM PRODUÇÃO'' ');
+      if rgStatusProducao.ItemIndex = 3 then
+        Add(' and status = ''FINALIZADO'' ');
+    end;
+
+    if tipoRelatorio = controlePagamento then
+    begin
+      if ckbFiltrarPorMesAno.Checked then
+        Add(' and extract(month from pag.data_pagamento)||''/''||extract(year from pag.data_pagamento) = '+
+                  QuotedStr(MonthOf(dtpMesAnoPagamento.Date).ToString+'/'+YearOf(dtpMesAnoPagamento.Date).ToString));
+
+      if vIdFuncionario <> 0 then
+        Add(' and f.id = '+vIdFuncionario.ToString);
+    end;
+
+    Result := Text;
   end;
 end;
 

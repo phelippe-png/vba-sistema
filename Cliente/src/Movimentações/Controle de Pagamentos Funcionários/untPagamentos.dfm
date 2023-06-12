@@ -13,6 +13,8 @@ object formPagamentos: TformPagamentos
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -28,9 +30,6 @@ object formPagamentos: TformPagamentos
     Padding.Bottom = 10
     ParentBackground = False
     TabOrder = 0
-    ExplicitLeft = -123
-    ExplicitWidth = 765
-    ExplicitHeight = 511
     DesignSize = (
       747
       522)
@@ -45,7 +44,6 @@ object formPagamentos: TformPagamentos
       Color = clMenu
       ParentBackground = False
       TabOrder = 0
-      ExplicitWidth = 739
       object Label2: TLabel
         Left = 1
         Top = 10
@@ -71,8 +69,6 @@ object formPagamentos: TformPagamentos
       Color = clBtnHighlight
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 739
-      ExplicitHeight = 451
       DesignSize = (
         721
         462)
@@ -113,7 +109,6 @@ object formPagamentos: TformPagamentos
         Color = 4210688
         ParentBackground = False
         TabOrder = 1
-        ExplicitWidth = 733
       end
       object Panel5: TPanel
         AlignWithMargins = True
@@ -126,10 +121,9 @@ object formPagamentos: TformPagamentos
         Color = clGray
         ParentBackground = False
         TabOrder = 2
-        ExplicitWidth = 710
       end
       object btnSelect: TPanel
-        Left = 520
+        Left = 616
         Top = 21
         Width = 90
         Height = 30
@@ -148,8 +142,9 @@ object formPagamentos: TformPagamentos
         ParentFont = False
         TabOrder = 3
         Visible = False
+        OnClick = btnSelectClick
       end
-      object dbgEmpresas: TDBGrid
+      object dbgPagamentos: TDBGrid
         Left = 14
         Top = 71
         Width = 692
@@ -169,6 +164,8 @@ object formPagamentos: TformPagamentos
         TitleFont.Height = -13
         TitleFont.Name = 'Product Sans'
         TitleFont.Style = [fsBold]
+        OnDrawColumnCell = dbgPagamentosDrawColumnCell
+        OnDblClick = dbgPagamentosDblClick
         Columns = <
           item
             Expanded = False
@@ -178,7 +175,7 @@ object formPagamentos: TformPagamentos
           item
             Expanded = False
             FieldName = 'nome'
-            Title.Caption = 'FUNCION'#193'RIO'
+            Title.Caption = 'Funcion'#225'rio'
             Visible = True
           end
           item
@@ -190,42 +187,32 @@ object formPagamentos: TformPagamentos
           item
             Expanded = False
             FieldName = 'salario'
-            Title.Caption = 'SAL'#193'RIO FIXO'
+            Title.Caption = 'Sal'#225'rio'
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'salario_receber'
-            Title.Caption = 'SAL'#193'RIO '#192' RECEBER'
+            FieldName = 'data_pagamento'
+            Title.Caption = 'Data Pagamento'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'status_descricao'
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Product Sans'
+            Font.Style = [fsBold]
+            Title.Caption = 'Status'
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'status'
-            Title.Caption = 'STATUS'
-            Visible = True
+            Title.Caption = 'Status'
+            Visible = False
           end>
-      end
-      object Panel2: TPanel
-        Left = 616
-        Top = 21
-        Width = 90
-        Height = 30
-        Cursor = crHandPoint
-        Anchors = [akTop, akRight]
-        BevelOuter = bvNone
-        Caption = 'Visualizar'
-        Color = clOlive
-        DragCursor = crDefault
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWhite
-        Font.Height = -15
-        Font.Name = 'Product Sans'
-        Font.Style = [fsBold]
-        ParentBackground = False
-        ParentFont = False
-        TabOrder = 5
-        OnClick = Panel2Click
       end
     end
   end

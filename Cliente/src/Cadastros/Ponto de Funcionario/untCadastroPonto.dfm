@@ -15,6 +15,7 @@ object formCadastrarPonto: TformCadastrarPonto
   Position = poScreenCenter
   WindowState = wsMaximized
   OnCreate = FormCreate
+  OnShow = FormShow
   DesignSize = (
     732
     479)
@@ -24,54 +25,55 @@ object formCadastrarPonto: TformCadastrarPonto
     Left = 8
     Top = 45
     Width = 88
-    Height = 35
+    Height = 37
     Caption = 'Tempo'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -29
-    Font.Name = 'Tahoma'
+    Font.Name = 'Product Sans'
     Font.Style = []
     ParentFont = False
   end
   object Label1: TLabel
     Left = 8
     Top = 6
-    Width = 184
-    Height = 33
+    Width = 181
+    Height = 34
     Caption = 'Registrar Ponto'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
-    Font.Name = 'Tahoma'
+    Font.Name = 'Product Sans'
     Font.Style = []
     ParentFont = False
   end
   object Label2: TLabel
     Left = 129
-    Top = 217
-    Width = 146
-    Height = 24
+    Top = 203
+    Width = 151
+    Height = 25
     Caption = 'Informe seu CPF'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -20
-    Font.Name = 'Tahoma'
-    Font.Style = []
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
     ParentFont = False
   end
   object btnObservacoes: TSpeedButton
-    Left = 600
+    Left = 592
     Top = 440
-    Width = 124
+    Width = 132
     Height = 31
     Anchors = [akRight, akBottom]
-    Caption = 'Observa'#231#245'es'
+    Caption = 'Gerenciar pontos'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
     Font.Name = 'Product Sans'
     Font.Style = []
     ParentFont = False
+    OnClick = btnObservacoesClick
   end
   object Label3: TLabel
     Left = 289
@@ -85,11 +87,11 @@ object formCadastrarPonto: TformCadastrarPonto
     Font.Style = []
     ParentFont = False
   end
-  object SpeedButton1: TSpeedButton
+  object btnInserir: TSpeedButton
     Left = 532
-    Top = 242
+    Top = 228
     Width = 70
-    Height = 48
+    Height = 50
     Anchors = [akTop, akRight]
     Caption = 'Inserir'
     Font.Charset = DEFAULT_CHARSET
@@ -98,40 +100,55 @@ object formCadastrarPonto: TformCadastrarPonto
     Font.Name = 'Product Sans'
     Font.Style = []
     ParentFont = False
-    OnClick = SpeedButton1Click
+    OnClick = btnInserirClick
+  end
+  object lblAviso: TLabel
+    Left = 129
+    Top = 277
+    Width = 4
+    Height = 25
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -20
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object Panel1: TPanel
-    Left = 664
-    Top = 8
+    Left = 682
+    Top = 1
     Width = 60
     Height = 41
+    Cursor = crHandPoint
     Anchors = [akTop, akRight]
     BevelOuter = bvNone
     Caption = 'X'
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clSilver
+    Font.Color = clRed
     Font.Height = -31
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
+    ParentBackground = False
     ParentFont = False
     TabOrder = 0
     OnClick = Panel1Click
   end
   object edtCPF: TEdit
     Left = 129
-    Top = 242
+    Top = 228
     Width = 400
-    Height = 48
+    Height = 50
     Anchors = [akLeft, akTop, akRight]
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -33
-    Font.Name = 'Tahoma'
+    Font.Name = 'Product Sans'
     Font.Style = []
     MaxLength = 14
     ParentFont = False
     TabOrder = 1
     OnChange = edtCPFChange
+    OnKeyDown = edtCPFKeyDown
     OnKeyPress = edtCPFKeyPress
   end
   object Timer: TTimer

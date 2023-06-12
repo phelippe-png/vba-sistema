@@ -2,11 +2,11 @@ object formControlePagamentos: TformControlePagamentos
   Left = 0
   Top = 0
   Align = alClient
-  BorderIcons = [biSystemMenu, biMinimize]
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsNone
   Caption = 'Controle de Pagamentos'
-  ClientHeight = 526
-  ClientWidth = 880
+  ClientHeight = 564
+  ClientWidth = 927
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,243 +15,357 @@ object formControlePagamentos: TformControlePagamentos
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  WindowState = wsMaximized
+  OnCreate = FormCreate
   OnShow = FormShow
-  DesignSize = (
-    880
-    526)
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
-    Top = 8
-    Width = 66
-    Height = 19
-    Caption = 'Pesquisar'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object btnProcurarFuncionario: TSpeedButton
-    Left = 80
-    Top = 8
-    Width = 23
-    Height = 22
-    OnClick = btnProcurarFuncionarioClick
-  end
-  object lblFuncionario: TLabel
-    Left = 8
-    Top = 56
-    Width = 113
-    Height = 25
-    Caption = 'Funcion'#225'rio:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object lblSalario: TLabel
-    Left = 8
-    Top = 86
-    Width = 73
-    Height = 25
-    Caption = 'Salario: '
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label2: TLabel
-    Left = 8
-    Top = 196
-    Width = 97
-    Height = 25
-    Anchors = [akLeft, akBottom]
-    Caption = 'Benef'#237'cios'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label3: TLabel
-    Left = 325
-    Top = 353
-    Width = 93
-    Height = 16
-    Caption = 'Valor antecipado'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label4: TLabel
-    Left = 325
-    Top = 404
-    Width = 68
-    Height = 16
-    Caption = 'Observa'#231#227'o'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object btnSave: TPanel
-    Left = 779
-    Top = 8
-    Width = 93
-    Height = 38
-    Cursor = crHandPoint
-    Anchors = [akTop, akRight]
-    BevelOuter = bvNone
-    Caption = 'Confirmar'
-    Color = 489483
-    DragCursor = crDefault
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWhite
-    Font.Height = -16
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 0
-  end
-  object btnCancel: TPanel
-    Left = 779
-    Top = 52
-    Width = 93
-    Height = 38
-    Cursor = crHandPoint
-    Anchors = [akTop, akRight]
-    BevelOuter = bvNone
-    Caption = 'Cancelar'
-    Color = clRed
-    DragCursor = crDefault
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWhite
-    Font.Height = -16
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 1
-    OnClick = btnCancelClick
-  end
-  object Panel5: TPanel
+  object pnlPrincipal: TPanel
     Left = 0
-    Top = 220
-    Width = 320
-    Height = 306
-    Anchors = [akLeft, akBottom]
+    Top = 0
+    Width = 927
+    Height = 564
+    Align = alClient
     BevelOuter = bvNone
-    TabOrder = 2
-    object Panel1: TPanel
-      Left = 319
-      Top = 1
-      Width = 1
-      Height = 304
-      Align = alRight
-      TabOrder = 0
-    end
-    object Panel2: TPanel
-      Left = 0
-      Top = 0
-      Width = 320
-      Height = 1
+    Color = clMenu
+    Padding.Left = 10
+    Padding.Right = 10
+    Padding.Bottom = 10
+    ParentBackground = False
+    TabOrder = 0
+    DesignSize = (
+      927
+      564)
+    object pnlTitle: TPanel
+      AlignWithMargins = True
+      Left = 13
+      Top = 3
+      Width = 901
+      Height = 50
       Align = alTop
-      TabOrder = 1
-    end
-    object Panel3: TPanel
-      Left = 0
-      Top = 1
-      Width = 1
-      Height = 304
-      Align = alLeft
-      TabOrder = 2
-    end
-    object Panel4: TPanel
-      Left = 0
-      Top = 305
-      Width = 320
-      Height = 1
-      Align = alBottom
-      TabOrder = 3
-    end
-    object sbxBeneficios: TScrollBox
-      Left = 1
-      Top = 1
-      Width = 318
-      Height = 304
-      Align = alClient
-      BevelInner = bvNone
       BevelOuter = bvNone
-      BorderStyle = bsNone
-      TabOrder = 4
+      Color = clMenu
+      ParentBackground = False
+      TabOrder = 0
+      DesignSize = (
+        901
+        50)
+      object lblFuncionario: TLabel
+        Left = 1
+        Top = -2
+        Width = 117
+        Height = 25
+        Caption = 'Funcion'#225'rio: '
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblDataOcorrencia: TLabel
+        Left = 1
+        Top = 23
+        Width = 220
+        Height = 25
+        Caption = 'M'#234's/ano de ocorr'#234'ncia: '
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object btnConfirmarPagamento: TPanel
+        Left = 620
+        Top = 3
+        Width = 177
+        Height = 38
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        BevelOuter = bvNone
+        Caption = 'Confirmar pagamento'
+        Color = 489483
+        DragCursor = crDefault
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 0
+        OnClick = btnConfirmarPagamentoClick
+      end
+      object btnCancel: TPanel
+        Left = 803
+        Top = 3
+        Width = 93
+        Height = 38
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        BevelOuter = bvNone
+        Caption = 'Cancelar'
+        Color = clRed
+        DragCursor = crDefault
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 1
+        OnClick = btnCancelClick
+      end
     end
-  end
-  object edSearch: TEdit
-    Left = 325
-    Top = 371
-    Width = 263
-    Height = 27
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Product Sans'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 3
-  end
-  object Memo1: TMemo
-    Left = 325
-    Top = 422
-    Width = 263
-    Height = 97
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Product Sans'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 4
-  end
-  object cvwCalendario: TCalendarView
-    Left = 595
-    Top = 228
-    Width = 285
-    Height = 298
-    Anchors = [akRight, akBottom]
-    BorderStyle = bsNone
-    Date = 45007.000000000000000000
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Product Sans'
-    Font.Style = []
-    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
-    HeaderInfo.DaysOfWeekFont.Color = clWindowText
-    HeaderInfo.DaysOfWeekFont.Height = -13
-    HeaderInfo.DaysOfWeekFont.Name = 'Product Sans'
-    HeaderInfo.DaysOfWeekFont.Style = []
-    HeaderInfo.Font.Charset = DEFAULT_CHARSET
-    HeaderInfo.Font.Color = clWindowText
-    HeaderInfo.Font.Height = -20
-    HeaderInfo.Font.Name = 'Segoe UI'
-    HeaderInfo.Font.Style = []
-    HighlightColor = clGray
-    OnDrawDayItem = cvwCalendarioDrawDayItem
-    ParentFont = False
-    TabOrder = 5
+    object pnlContainer: TPanel
+      AlignWithMargins = True
+      Left = 14
+      Top = 50
+      Width = 901
+      Height = 504
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      BevelOuter = bvNone
+      Color = clBtnHighlight
+      ParentBackground = False
+      TabOrder = 1
+      DesignSize = (
+        901
+        504)
+      object Label2: TLabel
+        Left = 338
+        Top = 231
+        Width = 123
+        Height = 25
+        Anchors = [akLeft, akBottom]
+        Caption = 'Observa'#231#245'es'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label7: TLabel
+        Left = 751
+        Top = 239
+        Width = 146
+        Height = 17
+        Cursor = crHandPoint
+        Anchors = [akRight, akBottom]
+        Caption = 'Observa'#231#245'es detalhadas'
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 8404992
+        Font.Height = -13
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object lblSalario: TLabel
+        Left = 3
+        Top = 5
+        Width = 69
+        Height = 25
+        Caption = 'Sal'#225'rio:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object btnAlterarSalario: TSpeedButton
+        Left = 78
+        Top = 7
+        Width = 23
+        Height = 22
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Product Sans'
+        Font.Style = []
+        Glyph.Data = {
+          E6040000424DE604000000000000360000002800000014000000140000000100
+          180000000000B0040000C40E0000C40E00000000000000000000F5F5F5C9C9C9
+          F4F4F4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC5C5C50000002D2D2D67
+          6767ABABABDFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4F4F42929297C7C7C7D7D7D4040
+          403C3C3C636363AEAEAEFCFCFCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFE646464828282FFFFFFF0F0F0C4C4C4
+          3F3F3F000000747474FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFA8A8A8424242F2F2F2FFFFFFB8B8B810101098
+          9898252525646464FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFDCDCDC3C3C3CC7C7C7B8B8B8000000C9C9C9FFFFFFFAFA
+          FA131313646464FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFF5E5E5E414141111111C9C9C9FFFFFFFFFFFFFFFFFFFAFAFA
+          1C1C1C6A6A6AFCFCFCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFA9A9A9000000989898FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDF34
+          34346A6A6AFDFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FBFBFB6E6E6E232323F8F8F8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD7D7D73636
+          36696969FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFF5F5F5F111111F7F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFDF1C1C1C
+          646464FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FF5F5F5F191919DCDCDCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFAFA13131364
+          6464FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          666666323232D6D6D6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFAFA1C1C1C6B6B
+          6BFDFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFB67
+          6767333333DFDFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE2E2E23737376D6D6D
+          FCFCFCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFC6666
+          661C1C1CFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFF4F4F42C2C2C0000007F7F7FFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF606060
+          151515FBFBFBFFFFFFFFFFFFFFFFFF1313135A5A5ACFCFCF1A1A1AE1E1E1FFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6060601D
+          1D1DE3E3E3F4F4F41313135E5E5EFFFFFFFFFFFF2E2E2EB5B5B5FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6868683838
+          382D2D2D5A5A5AFFFFFFFFFFFFB3B3B3202020E8E8E8FFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFC6A6A6A000000
+          D4D4D4FFFFFFB2B2B2292929979797FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFB7B7B7B1A1A1A31
+          3131212121989898FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCDCDCAFAFAFE6E6
+          E6FFFFFFFFFFFFFFFFFF}
+        ParentFont = False
+        OnClick = btnAlterarSalarioClick
+      end
+      object pnlLine: TPanel
+        AlignWithMargins = True
+        Left = -20
+        Top = 1
+        Width = 1000
+        Height = 2
+        Anchors = [akLeft, akTop, akRight]
+        BevelOuter = bvNone
+        Color = 4210688
+        ParentBackground = False
+        TabOrder = 0
+      end
+      object cvCalendarioPagAtual: TCalendarView
+        Left = 3
+        Top = 228
+        Width = 329
+        Height = 273
+        Anchors = [akLeft, akBottom]
+        Date = 45046.000000000000000000
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Product Sans'
+        Font.Style = []
+        HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+        HeaderInfo.DaysOfWeekFont.Color = clWindowText
+        HeaderInfo.DaysOfWeekFont.Height = -13
+        HeaderInfo.DaysOfWeekFont.Name = 'Product Sans'
+        HeaderInfo.DaysOfWeekFont.Style = []
+        HeaderInfo.Font.Charset = DEFAULT_CHARSET
+        HeaderInfo.Font.Color = clWindowText
+        HeaderInfo.Font.Height = -20
+        HeaderInfo.Font.Name = 'Product Sans'
+        HeaderInfo.Font.Style = []
+        OnChange = cvCalendarioPagAtualChange
+        OnDrawDayItem = cvCalendarioPagAtualDrawDayItem
+        ParentFont = False
+        TabOrder = 1
+      end
+      object mmObservacao: TMemo
+        Left = 338
+        Top = 254
+        Width = 559
+        Height = 247
+        Anchors = [akLeft, akRight, akBottom]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -17
+        Font.Name = 'Product Sans'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 2
+      end
+      object Panel5: TPanel
+        Left = 3
+        Top = 32
+        Width = 336
+        Height = 186
+        Anchors = [akLeft, akTop, akBottom]
+        BevelOuter = bvNone
+        TabOrder = 3
+        object Panel1: TPanel
+          Left = 335
+          Top = 1
+          Width = 1
+          Height = 184
+          Align = alRight
+          TabOrder = 0
+          Visible = False
+        end
+        object Panel2: TPanel
+          Left = 0
+          Top = 0
+          Width = 336
+          Height = 1
+          Align = alTop
+          TabOrder = 1
+          Visible = False
+        end
+        object Panel3: TPanel
+          Left = 0
+          Top = 1
+          Width = 1
+          Height = 184
+          Align = alLeft
+          TabOrder = 2
+          Visible = False
+        end
+        object Panel4: TPanel
+          Left = 0
+          Top = 185
+          Width = 336
+          Height = 1
+          Align = alBottom
+          TabOrder = 3
+          Visible = False
+        end
+        object sbxBeneficios: TScrollBox
+          Left = 1
+          Top = 1
+          Width = 334
+          Height = 184
+          Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clWhite
+          ParentColor = False
+          TabOrder = 4
+        end
+      end
+      object btnPagamentosAnteriores: TPanel
+        Left = 619
+        Top = 9
+        Width = 276
+        Height = 38
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        BevelOuter = bvNone
+        Caption = 'Verificar pagamentos anteriores'
+        Color = 12615680
+        DragCursor = crDefault
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Product Sans'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 4
+        OnClick = btnPagamentosAnterioresClick
+      end
+    end
   end
 end
