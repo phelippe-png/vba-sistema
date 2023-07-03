@@ -16,7 +16,7 @@ uses
   relatorioControleProducao, functions, untContasReceber,
   relatorioContasReceber, untModalRelatorios, ShellAPI, MidasLib, MidasCon, Midas,
   BancoFuncoes, System.Generics.Collections, untFuncionarios, untPagamentos, untCadastroPonto,
-  untcontrolepagamento;
+  untcontrolepagamento, relatorioPontoFuncionarios;
 
 type
   TformMain = class(TForm)
@@ -67,6 +67,8 @@ type
     btnCadastrarPonto: TSpeedButton;
     menuRelatControlePagamento: TPanel;
     btnRelatControlePagamento: TSpeedButton;
+    menuRelatPontoFuncionario: TPanel;
+    btnRelatPontoFuncionario: TSpeedButton;
     procedure Image2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -101,6 +103,8 @@ type
     procedure btnCadastrarPontoClick(Sender: TObject);
     procedure btnRelatControlePagamentoMouseLeave(Sender: TObject);
     procedure btnRelatControlePagamentoClick(Sender: TObject);
+    procedure btnRelatPontoFuncionarioMouseLeave(Sender: TObject);
+    procedure btnRelatPontoFuncionarioClick(Sender: TObject);
   private
     formContasPagar: TformContasPagar;
     formProducao: TformListarProducoes;
@@ -305,7 +309,8 @@ begin
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) or
+  (WindowFromPoint(Pt) = menuRelatPontoFuncionario.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -371,7 +376,34 @@ begin
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) or
+  (WindowFromPoint(Pt) = menuRelatPontoFuncionario.Handle) then
+    exit
+  else
+    pnlRelatoriosMenu.Visible := false;
+end;
+
+procedure TformMain.btnRelatPontoFuncionarioClick(Sender: TObject);
+begin
+  with TformModalRelatorios.Create(Self) do
+  begin
+    tipoRelatorio := pontoFuncionario;
+    ShowModal;
+    Destroy;
+  end;
+end;
+
+procedure TformMain.btnRelatPontoFuncionarioMouseLeave(Sender: TObject);
+begin
+  pnlRelatorios.Color := $00404000;
+
+  GetCursorPos(Pt);
+
+  if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
+  (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) or
+  (WindowFromPoint(Pt) = menuRelatPontoFuncionario.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -450,7 +482,8 @@ begin
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) or
+  (WindowFromPoint(Pt) = menuRelatPontoFuncionario.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;
@@ -474,7 +507,8 @@ begin
   if (WindowFromPoint(Pt) = menuRelatControleProducao.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasReceber.Handle) or
   (WindowFromPoint(Pt) = menuRelatContasPagar.Handle) or
-  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) then
+  (WindowFromPoint(Pt) = menuRelatControlePagamento.Handle) or
+  (WindowFromPoint(Pt) = menuRelatPontoFuncionario.Handle) then
     exit
   else
     pnlRelatoriosMenu.Visible := false;

@@ -61,12 +61,12 @@ object formCadastrarPonto: TformCadastrarPonto
     ParentFont = False
   end
   object btnObservacoes: TSpeedButton
-    Left = 592
+    Left = 576
     Top = 440
-    Width = 132
+    Width = 148
     Height = 31
     Anchors = [akRight, akBottom]
-    Caption = 'Gerenciar pontos'
+    Caption = 'Aplicar observa'#231#245'es'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15

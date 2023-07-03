@@ -171,4 +171,25 @@ object formObservacoesDias: TformObservacoesDias
       TabOrder = 1
     end
   end
+  object Panel1: TPanel
+    Left = 4
+    Top = 64
+    Width = 137
+    Height = 26
+    Cursor = crHandPoint
+    Anchors = [akTop, akRight]
+    BevelOuter = bvNone
+    Caption = 'Salvar observa'#231#227'o'
+    Color = 12615680
+    DragCursor = crDefault
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWhite
+    Font.Height = -15
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
+    TabOrder = 3
+    OnClick = Panel1Click
+  end
 end

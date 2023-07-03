@@ -17,6 +17,7 @@ type
     sbxContainerObservacao: TScrollBox;
     cvCalendario: TCalendarView;
     mmObservacao: TMemo;
+    Panel1: TPanel;
     procedure SpeedButton1Click(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure cvCalendarioChange(Sender: TObject);
@@ -26,6 +27,7 @@ type
     procedure cvCalendarioDrawDayItem(Sender: TObject;
       DrawParams: TDrawViewInfoParams; CalendarViewViewInfo: TCellItemViewInfo);
     procedure btnSaveClick(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
   private
     vIdFuncionarioSelecionado: Integer;
     vDiaSelecionado: TDate;
@@ -115,38 +117,7 @@ begin
   end;
 
   with vFDMObservacaoDias do
-  begin
-    //aplicar observação do dia anterior selecionado
-    if (vDiaSelecionado <> StrToDate('01/01/2000')) and (vFDMDiasComPontos.Locate('data', vDiaSelecionado, [])) and (Trim(mmObservacao.Lines.Text) <> EmptyStr) then
-    begin
-      if Locate('dia', vDiaSelecionado, []) then Edit else Append;
-      FieldByName('observacao').AsString := mmObservacao.Lines.Text;
-      FieldByName('dia').AsDateTime := vDiaSelecionado;
-      Post;
-    end;
-
-    //pegar próximo dia selecionado
-    ClearMemo;
-    vDiaSelecionado := StrToDateDef(DateToStr(cvCalendario.Date), StrToDate('01/01/2000'));
-
-    //se existir observação no dia selecionado, aplicará no memo
-    if Locate('dia', vDiaSelecionado, []) then
-      mmObservacao.Lines.Add(FieldByName('observacao').AsString)
-    else
-      ClearMemo;
-  end;
-
-  //ativar ou desativar memo
-  if (not vFDMDiasComPontos.Locate('data', vDiaSelecionado, [])) or (vDiaSelecionado = StrToDate('01/01/2000')) then
-  begin
-    mmObservacao.Enabled := False;
-    mmObservacao.Color := $00E1E1E1;
-    ClearMemo;
-  end else
-  begin
-    mmObservacao.Enabled := True;
-    mmObservacao.Color := clWindow;
-  end;
+    mmObservacao.Lines.Add(FieldByName('observacao').AsString);
 end;
 
 procedure TformObservacoesDias.cvCalendarioClick(Sender: TObject);
@@ -200,6 +171,17 @@ begin
   vDiaSelecionado := cvCalendario.Date;
 end;
 
+procedure TformObservacoesDias.Panel1Click(Sender: TObject);
+begin
+  with vFDMObservacaoDias do
+  begin
+    if Locate('dia', cvCalendario.Date) then Edit else Append;
+    FieldByName('observacao').AsString := mmObservacao.Lines.Text;
+    FieldByName('dia').AsDateTime := cvCalendario.Date;
+    Post;
+  end;
+end;
+
 procedure TformObservacoesDias.SpeedButton1Click(Sender: TObject);
 begin
   with TformFuncionarios.Create(Self) do
@@ -208,6 +190,7 @@ begin
     WindowState := wsNormal;
     Align := alNone;
     BorderStyle := bsSizeable;
+    TelaInModal := True;
     ShowModal;
 
     if Selecionado then
@@ -226,8 +209,8 @@ begin
           begin
             vFDMDiasComPontos.Append;
             vFDMDiasComPontos.FieldByName('data').AsDateTime := FieldByName('data').AsDateTime;
-            vFDMDiasComPontos.FieldByName('mes').AsInteger := MonthOf(FieldByName('data').AsDateTime);   
-            vFDMDiasComPontos.FieldByName('ano').AsInteger := YearOf(FieldByName('data').AsDateTime);       
+            vFDMDiasComPontos.FieldByName('mes').AsInteger := MonthOf(FieldByName('data').AsDateTime);
+            vFDMDiasComPontos.FieldByName('ano').AsInteger := YearOf(FieldByName('data').AsDateTime);
             vFDMDiasComPontos.Post;
 
             vFDMObservacaoDias.Append;

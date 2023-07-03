@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ExtCtrls, untCadastrarFuncionario, FireDAC.Comp.Client, BancoFuncoes, functions;
+  Vcl.DBGrids, Vcl.ExtCtrls, untCadastrarFuncionario, FireDAC.Comp.Client, BancoFuncoes, functions, DM;
 
 type
   TformFuncionarios = class(TForm)
@@ -37,7 +37,7 @@ type
     procedure SQL;
 //    procedure ConfigurarDataSet;
   public
-    Selecionado: boolean;
+    Selecionado, TelaInModal: boolean;
   end;
 
 var
@@ -60,8 +60,12 @@ procedure TformFuncionarios.btnEditClick(Sender: TObject);
 var
   vFormCadastrarFuncionario: TformCadastrarFuncionario;
 begin
-  if vFDMFuncionarios.RecordCount = 0 then
+  if vFDMFuncionarios.RecordCount = 0 then Exit;
+  if TelaInModal then
+  begin
+    btnSelectClick(Self);
     Exit;
+  end;
 
   vFormCadastrarFuncionario := TformCadastrarFuncionario.Create(Self);
   vFormCadastrarFuncionario.CarregarDados(vFDMFuncionarios.FieldByName('id').AsInteger);

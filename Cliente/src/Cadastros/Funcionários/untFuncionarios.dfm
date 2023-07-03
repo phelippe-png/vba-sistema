@@ -102,7 +102,7 @@ object formFuncionarios: TformFuncionarios
       object edSearch: TEdit
         Left = 142
         Top = 31
-        Width = 339
+        Width = 283
         Height = 27
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText

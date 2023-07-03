@@ -8,7 +8,7 @@ uses
   Vcl.StdCtrls, Vcl.ComCtrls, relatorioContasPagar, functions, System.JSON,
   relatorioContasReceber, relatorioControleProducao, Vcl.Imaging.pngimage,
   untListarEmpresas, relatorioControlePagamento, Vcl.Buttons, Vcl.WinXPickers,
-  untFuncionarios, System.DateUtils;
+  untFuncionarios, System.DateUtils, relatorioPontoFuncionarios;
 
 type
   TformModalRelatorios = class(TForm)
@@ -74,13 +74,23 @@ type
     Label19: TLabel;
     Panel11: TPanel;
     pnlBtnBuscarEmpresa: TPanel;
-    btnBuscarFuncionario: TImage;
     lblFuncionario: TLabel;
-    Panel13: TPanel;
     Panel14: TPanel;
-    dtpMesAnoPagamento: TDatePicker;
+    cardPontoFuncionario: TCard;
+    btnBuscarFuncionario: TSpeedButton;
     Label22: TLabel;
     ckbFiltrarPorMesAno: TCheckBox;
+    dtpMesAnoPagamento: TDatePicker;
+    Label20: TLabel;
+    Label21: TLabel;
+    Panel12: TPanel;
+    lblPontoFuncionario: TLabel;
+    Panel13: TPanel;
+    btnPontoBuscarFuncionario: TSpeedButton;
+    Panel15: TPanel;
+    dtpPontoMes: TDatePicker;
+    dtpPontoAno: TDatePicker;
+    rgpPontoFiltros: TRadioGroup;
     procedure rbMesContasPagarClick(Sender: TObject);
     procedure rbDataContasPagarClick(Sender: TObject);
     procedure btnGerarClick(Sender: TObject);
@@ -91,14 +101,17 @@ type
     procedure ckbEmpresaProducaoClick(Sender: TObject);
     procedure rbDataProducaoClick(Sender: TObject);
     procedure rbMesProducaoClick(Sender: TObject);
-    procedure btnBuscarFuncionarioClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ckbFiltrarPorMesAnoClick(Sender: TObject);
+    procedure btnBuscarFuncionarioClick(Sender: TObject);
+    procedure Panel2Click(Sender: TObject);
+    procedure rgpPontoFiltrosClick(Sender: TObject);
   private
     relatorioContasPagar: TformRelatContasPagar;
     relatorioContasReceber: TformRelatContasReceber;
     relatorioControleProducao: TformRelatControleProducao;
     relatorioControlePagamento: TformRelatorioControlePagamento;
+    relatorioPontoFuncionario: TformRelatPontoFuncionarios;
     stream: TStream;
     idEmpresa, vIdFuncionario: integer;
     vStrListSQL: TStringList;
@@ -136,27 +149,6 @@ begin
   end;
 end;
 
-procedure TformModalRelatorios.btnBuscarFuncionarioClick(Sender: TObject);
-begin
-  with TformFuncionarios.Create(Self) do
-  begin
-    WindowState := wsNormal;
-    Align := alNone;
-    BorderStyle := bsSingle;
-    btnSelect.Visible := True;
-    ShowModal;
-
-    if Selecionado then
-    begin
-      lblFuncionario.WordWrap := False;
-      lblFuncionario.Caption := 'Funcionário: '+dbgFuncionarios.DataSource.DataSet.FieldByName('nome').AsString;
-      vIdFuncionario := dbgFuncionarios.DataSource.DataSet.FieldByName('id').AsInteger;
-      btnBuscarFuncionario.Left := lblFuncionario.Left+5;
-      lblFuncionario.WordWrap := True;
-    end;
-  end;
-end;
-
 procedure TformModalRelatorios.btnGerarClick(Sender: TObject);
 begin
   if (idEmpresa = 0) and (ckbEmpresaProducao.Checked) then
@@ -169,6 +161,7 @@ begin
   relatorioContasReceber := TformRelatContasReceber.Create(self);
   relatorioControleProducao := TformRelatControleProducao.Create(self);
   relatorioControlePagamento := TformRelatorioControlePagamento.Create(Self);
+  relatorioPontoFuncionario := TformRelatPontoFuncionarios.Create(Self);
 
   if tipoRelatorio = contasPagar then
     relatorioContasPagar.imprimirRelatorio(montarQuery);
@@ -178,6 +171,16 @@ begin
     relatorioControleProducao.imprimirRelatorio(montarQuery);
   if tipoRelatorio = controlePagamento then
     relatorioControlePagamento.imprimirRelatorio(montarQuery);
+
+  if tipoRelatorio = pontoFuncionario then
+  begin
+    if vIdFuncionario = 0 then
+    begin
+      Application.MessageBox('Selecione um funcionário!', 'Atenção', MB_ICONWARNING);
+      Exit;
+    end;
+    relatorioPontoFuncionario.imprimirRelatorio(SisVarIf(dtpPontoMes.Enabled, MonthOf(dtpPontoMes.Date), 0), YearOf(dtpPontoAno.Date), vIdFuncionario);
+  end;
 end;
 
 procedure TformModalRelatorios.ckbEmpresaProducaoClick(Sender: TObject);
@@ -236,7 +239,16 @@ begin
     CardPanel1.ActiveCard := cardControleProducao;
 
   if tipoRelatorio = controlePagamento then
+  begin
+    Self.Height := 190;
     CardPanel1.ActiveCard := cardControlePagamento;
+  end;
+
+  if tipoRelatorio = pontoFuncionario then
+  begin
+    Self.Height := 210;
+    CardPanel1.ActiveCard := cardPontoFuncionario;
+  end;
 end;
 
 function TformModalRelatorios.montarQuery: string;
@@ -317,6 +329,11 @@ begin
   end;
 end;
 
+procedure TformModalRelatorios.Panel2Click(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TformModalRelatorios.rbDataContasPagarClick(Sender: TObject);
 begin
   cbFiltroMesesContasPagar.Enabled := false;
@@ -369,6 +386,37 @@ begin
 
   cbFiltroMesProducao.Enabled := true;
   cbFiltroMesProducao.ItemIndex := 0;
+end;
+
+procedure TformModalRelatorios.rgpPontoFiltrosClick(Sender: TObject);
+begin
+  dtpPontoMes.Enabled := True;
+  dtpPontoMes.Color := clWindow;
+
+  if rgpPontoFiltros.ItemIndex = 1 then
+  begin
+    dtpPontoMes.Enabled := False;
+    dtpPontoMes.Color := $00B7B7B7;
+    Refresh;
+  end;
+end;
+
+procedure TformModalRelatorios.btnBuscarFuncionarioClick(Sender: TObject);
+begin
+  with TformFuncionarios.Create(Self) do
+  begin
+    WindowState := wsNormal;
+    Align := alNone;
+    BorderStyle := bsSingle;
+    btnSelect.Visible := True;
+    ShowModal;
+
+    if Selecionado then
+    begin
+      lblFuncionario.Caption := 'Funcionário: '+dbgFuncionarios.DataSource.DataSet.FieldByName('nome').AsString;
+      vIdFuncionario := dbgFuncionarios.DataSource.DataSet.FieldByName('id').AsInteger;
+    end;
+  end;
 end;
 
 end.

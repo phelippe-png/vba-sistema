@@ -206,6 +206,10 @@
             <Form>formRelatorioControlePagamento</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Relatórios\relatorioPontoFuncionarios.pas">
+            <Form>formRelatPontoFuncionarios</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <RcItem Include="img\trash.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>ICOTrash</ResourceId>
