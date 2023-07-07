@@ -2493,6 +2493,24 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
           Borders.DrawRight = False
           Borders.DrawBottom = False
           Transparent = False
+          object RLDBMemo1: TRLDBMemo
+            Left = 0
+            Top = 0
+            Width = 300
+            Height = 24
+            Align = faClient
+            Alignment = taCenter
+            Behavior = [beSiteExpander]
+            DataField = 'observacao'
+            DataSource = DataSource
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -9
+            Font.Name = 'Arial'
+            Font.Style = []
+            Layout = tlJustify
+            ParentFont = False
+          end
         end
         object RLDBText1: TRLDBText
           Left = 288
@@ -2584,7 +2602,7 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
         Transparent = False
       end
       object RLDBText16: TRLDBText
-        Left = 158
+        Left = 148
         Top = 5
         Width = 72
         Height = 15
@@ -2600,7 +2618,7 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
         Transparent = False
       end
       object RLLabel29: TRLLabel
-        Left = 78
+        Left = 68
         Top = 5
         Width = 81
         Height = 15

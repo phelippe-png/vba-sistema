@@ -2,7 +2,7 @@ object formObservacoesDias: TformObservacoesDias
   Left = 0
   Top = 0
   Caption = 'Observa'#231#245'es dos dias de trabalho'
-  ClientHeight = 378
+  ClientHeight = 367
   ClientWidth = 622
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,14 +15,40 @@ object formObservacoesDias: TformObservacoesDias
   OnShow = FormShow
   DesignSize = (
     622
-    378)
+    367)
   PixelsPerInch = 96
   TextHeight = 19
-  object SpeedButton1: TSpeedButton
-    Left = 8
+  object lblFuncionario: TLabel
+    Left = 171
     Top = 8
-    Width = 33
-    Height = 31
+    Width = 363
+    Height = 70
+    AutoSize = False
+    Caption = 'Selecionar funcion'#225'rio'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -17
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
+    ParentFont = False
+    WordWrap = True
+  end
+  object btnBuscarFuncionario: TSpeedButton
+    Left = 6
+    Top = 5
+    Width = 159
+    Height = 29
+    Cursor = crHandPoint
+    AllowAllUp = True
+    GroupIndex = 1
+    Down = True
+    Caption = 'Buscar funcion'#225'rio'
+    Flat = True
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
     Glyph.Data = {
       36030000424D3603000000000000360000002800000010000000100000000100
       18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -50,24 +76,12 @@ object formObservacoesDias: TformObservacoesDias
       ACACAC1414140000001010103F3F3F2828280202020000005A5A5AEFEFEFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE8E8E87474743F3F3F0F0F0F26
       2626595959AFAFAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    OnClick = SpeedButton1Click
-  end
-  object lblFuncionario: TLabel
-    Left = 47
-    Top = 13
-    Width = 175
-    Height = 21
-    Caption = 'Selecionar funcion'#225'rio'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clMaroon
-    Font.Height = -17
-    Font.Name = 'Product Sans'
-    Font.Style = [fsBold]
     ParentFont = False
+    OnClick = btnBuscarFuncionarioClick
   end
   object btnSave: TPanel
     Left = 540
-    Top = 9
+    Top = 5
     Width = 74
     Height = 30
     Cursor = crHandPoint
@@ -88,7 +102,7 @@ object formObservacoesDias: TformObservacoesDias
   end
   object btnCancel: TPanel
     Left = 540
-    Top = 45
+    Top = 39
     Width = 74
     Height = 30
     Cursor = crHandPoint
@@ -109,9 +123,9 @@ object formObservacoesDias: TformObservacoesDias
   end
   object sbxContainerObservacao: TScrollBox
     Left = 0
-    Top = 96
+    Top = 85
     Width = 623
-    Height = 285
+    Height = 308
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
@@ -120,12 +134,13 @@ object formObservacoesDias: TformObservacoesDias
     TabOrder = 2
     DesignSize = (
       623
-      285)
+      308)
     object cvCalendario: TCalendarView
-      Left = 360
-      Top = 0
+      Left = 359
+      Top = -1
       Width = 263
       Height = 283
+      Cursor = crHandPoint
       Anchors = [akRight, akBottom]
       BorderStyle = bsNone
       Date = 45032.000000000000000000
@@ -156,12 +171,13 @@ object formObservacoesDias: TformObservacoesDias
       TabOrder = 0
     end
     object mmObservacao: TMemo
-      Left = 0
+      Left = -3
       Top = 0
       Width = 353
       Height = 283
       BevelInner = bvNone
       BorderStyle = bsNone
+      Color = 14342874
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -15
@@ -171,9 +187,9 @@ object formObservacoesDias: TformObservacoesDias
       TabOrder = 1
     end
   end
-  object Panel1: TPanel
-    Left = 4
-    Top = 64
+  object btnSalvarObservacao: TPanel
+    Left = 8
+    Top = 53
     Width = 137
     Height = 26
     Cursor = crHandPoint
@@ -190,6 +206,6 @@ object formObservacoesDias: TformObservacoesDias
     ParentBackground = False
     ParentFont = False
     TabOrder = 3
-    OnClick = Panel1Click
+    OnClick = btnSalvarObservacaoClick
   end
 end

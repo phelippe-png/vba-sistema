@@ -91,6 +91,11 @@ type
     procedure edtValorBeneficiosChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbxStatusChange(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure sbxBeneficiosMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure sbxBeneficiosMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     vJSArrayBeneficios: TJSONArray;
     vIdFuncionario, vIdEndereco, vCodigoCidade: Integer;
@@ -119,6 +124,20 @@ procedure TformCadastrarFuncionario.btnSaveClick(Sender: TObject);
 var
   vDicDados: TDictionary<String, Variant>;
 begin
+  if not validaCPF(SisOnlyNumbers(Trim(edtCPF.Text))) then
+  begin
+    Application.MessageBox('CPF inválido!', 'Atenção', MB_ICONWARNING);
+    Exit;
+  end;
+
+  if vIdFuncionario = 0 then
+    with BDBuscarRegistros('tab_funcionario', EmptyStr, EmptyStr, ' cpf = '+QuotedStr(Trim(edtCPF.Text)), EmptyStr, EmptyStr, -1, 'FDQBuscarCPFFuncionario') do
+      if RecordCount > 0 then
+      begin
+        Application.MessageBox('O CPF informado já está cadastrado!', 'Atenção', MB_ICONWARNING);
+        Exit;
+      end;
+
   if (Trim(edtNome.Text) = EmptyStr) or (Trim(edtCPF.Text) = EmptyStr) or (Trim(edtTelefone.Text) = EmptyStr) or
   (Trim(edtFuncao.Text) = EmptyStr) or (Trim(edtSalario.Text) = EmptyStr) then
   begin
@@ -139,18 +158,16 @@ begin
     Add('nome', Trim(edtNome.Text));
     Add('cpf', Trim(edtCPF.Text));
     Add('dt_admissao', DateToStr(dtpAdmissao.Date));
+    Add('dt_demissao', SisVarIf(cbxStatus.Text = 'Bloqueado', DateToStr(dtpDemissao.Date), Null));
     Add('funcao', Trim(edtFuncao.Text));
     Add('salario', StrToFloat(Trim(edtSalario.Text).Replace('.', '')));
     Add('telefone', Trim(edtTelefone.Text));
-    Add('email', Trim(edtEmail.Text));
+    Add('email', LowerCase(Trim(edtEmail.Text)));
     Add('dt_nascimento', DateToStr(dtpNascimento.Date));
     Add('sexo', cbxSexo.Text);
     Add('beneficios', vJSArrayBeneficios.ToJSON);
     Add('nome_mae', Trim(edtNomeMae.Text));
     Add('ativo', SisVarIf(cbxStatus.Text = 'Ativo', True, False));
-
-    if cbxStatus.Text = 'Bloqueado' then
-      Add('dt_demissao', DateToStr(dtpDemissao.Date));
   end;
   if vIdFuncionario = 0 then
     vIdFuncionario := BDInserirRegistros('tab_funcionario', 'id', 'tab_funcionarios_id_seq', vDicDados)
@@ -300,8 +317,8 @@ begin
     edtSalario.Text := FormatFloat('###,###,##0.00', FieldByName('salario').AsCurrency);
     edtEmail.Text := FieldByName('email').AsString;
     edtNomeMae.Text := FieldByName('nome_mae').AsString;
-    dtpAdmissao.Date := FieldByName('dt_admissao').AsDateTime;
-    dtpDemissao.Date := FieldByName('dt_demissao').AsDateTime;
+    dtpAdmissao.Date := StrToDateDef(FieldByName('dt_admissao').AsString, StrToDate('01/01/2000'));
+    dtpDemissao.Date := StrToDateDef(FieldByName('dt_demissao').AsString, StrToDate('01/01/2000'));
     cbxSexo.ItemIndex := cbxSexo.Items.IndexOf(FieldByName('sexo').AsString);
     cbxStatus.ItemIndex := SisVarIf(FieldByName('ativo').AsBoolean, 0, 1);
     vJSArrayBeneficios := TJSONObject.ParseJSONValue(FieldByName('beneficios').AsString) as TJSONArray;
@@ -334,15 +351,24 @@ var
   ComponentPanel: TPanel;
   ComponentGridPanel: TGridPanel;
   ComponentLabel: TLabel;
+  ComponentButton: TSpeedButton;
 begin
   vCount := 1;
   for I := 1 to sbxBeneficios.ControlCount + 1 do
   begin
-    ComponentLabel := TLabel(Self.FindComponent('lblCount_' + I.ToString) as TLabel);
-    if ComponentLabel <> nil then
+    ComponentLabel := TLabel(Self.FindComponent('lblCount_'+I.ToString) as TLabel);
+    ComponentPanel := TPanel(Self.FindComponent('PContainer_'+I.ToString) as TPanel);
+    ComponentGridPanel := TGridPanel(Self.FindComponent('GPBeneficios_'+I.ToString) as TGridPanel);
+    ComponentButton := TSpeedButton(Self.FindComponent('btnExcluirBeneficio_'+I.ToString) as TSpeedButton);
+
+    if ComponentPanel <> nil then
     begin
-      ComponentLabel.Caption := vCount.ToString;
+      ComponentPanel.Name := Trim(ComponentPanel.Name).Replace(SisOnlyNumbers(ComponentPanel.Name), '') + vCount.ToString;
+      ComponentGridPanel.Name := Trim(ComponentGridPanel.Name).Replace(SisOnlyNumbers(ComponentGridPanel.Name), '') + vCount.ToString;
       ComponentLabel.Name := Trim(ComponentLabel.Name).Replace(SisOnlyNumbers(ComponentLabel.Name), '') + vCount.ToString;
+      ComponentButton.Name := Trim(ComponentButton.Name).Replace(SisOnlyNumbers(ComponentButton.Name), '') + vCount.ToString;
+
+      ComponentLabel.Caption := vCount.ToString;
       Inc(vCount);
     end;
   end;
@@ -378,12 +404,10 @@ end;
 
 procedure TformCadastrarFuncionario.cbxStatusChange(Sender: TObject);
 begin
-//  dtpDemissao.Enabled := ;
-
   if cbxStatus.Text = 'Ativo' then
-    dtpDemissao.Enabled := True
-  else
     dtpDemissao.Enabled := False
+  else
+    dtpDemissao.Enabled := True;
 end;
 
 procedure TformCadastrarFuncionario.edtCEPChange(Sender: TObject);
@@ -391,8 +415,28 @@ begin
   SisFormatarEdit(edtCEP, tpFormatCep);
 end;
 
-procedure TformCadastrarFuncionario.edtCEPKeyPress(Sender: TObject;
-  var Key: Char);
+procedure TformCadastrarFuncionario.edtCEPExit(Sender: TObject);
+var
+  vJSONInformacoesCEP: TJSONObject;
+begin
+  try
+    if Length(edtCEP.Text) = 10 then
+    begin
+      vJSONInformacoesCEP := TJSONObject.Create;
+      vJSONInformacoesCEP := TJSONObject.ParseJSONValue(SisBuscarCEP(edtCEP.Text)) as TJSONObject;
+
+      edtEndereco.Text := UpperCase(vJSONInformacoesCEP.GetValue<string>('logradouro'));
+      edtBairro.Text := UpperCase(vJSONInformacoesCEP.GetValue<string>('bairro'));
+      cbxEstado.ItemIndex := cbxEstado.Items.IndexOf(vJSONInformacoesCEP.GetValue<string>('uf'));
+      cbxEstadoChange(Self);
+      cbxCidade.ItemIndex := cbxCidade.Items.IndexOf(UpperCase(vJSONInformacoesCEP.GetValue<string>('localidade')));
+    end;
+  except
+    Application.MessageBox('CEP inválido!', 'Atenção', MB_ICONWARNING + MB_OK);
+  end;
+end;
+
+procedure TformCadastrarFuncionario.edtCEPKeyPress(Sender: TObject; var Key: Char);
 begin
   SisEditKeyPress(edtCEP, Key);
 end;
@@ -431,6 +475,9 @@ end;
 
 procedure TformCadastrarFuncionario.FormCreate(Sender: TObject);
 begin
+  dtpNascimento.Date := Now;
+  dtpAdmissao.Date := Now;
+  dtpDemissao.Date := Now;
   vJSArrayBeneficios := TJSONArray.Create;
   CarregarUFs;
 end;
@@ -438,9 +485,7 @@ end;
 procedure TformCadastrarFuncionario.FormShow(Sender: TObject);
 begin
   btnAdicionarBeneficio.Glyph.LoadFromResourceName(HInstance, 'ICOAdd');
-  dtpNascimento.Date := Now;
-  dtpAdmissao.Date := Now;
-  dtpDemissao.Date := Now;
+  cbxStatusChange(Self);
 end;
 
 procedure TformCadastrarFuncionario.OnClickDeleteBeneficio(Sender: TObject);
@@ -460,6 +505,18 @@ begin
       Break;
     end;
   end;
+end;
+
+procedure TformCadastrarFuncionario.sbxBeneficiosMouseWheelDown(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  sbxBeneficios.VertScrollBar.Position := sbxBeneficios.VertScrollBar.Position + 5;
+end;
+
+procedure TformCadastrarFuncionario.sbxBeneficiosMouseWheelUp(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  sbxBeneficios.VertScrollBar.Position := sbxBeneficios.VertScrollBar.Position - 5;
 end;
 
 procedure TformCadastrarFuncionario.btnAdicionarBeneficioClick(Sender: TObject);

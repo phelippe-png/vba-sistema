@@ -1,12 +1,11 @@
 object formControlePagamentos: TformControlePagamentos
   Left = 0
   Top = 0
-  Align = alClient
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsNone
-  Caption = 'Controle de Pagamentos'
-  ClientHeight = 564
-  ClientWidth = 927
+  BorderStyle = bsSingle
+  Caption = 'Controle de Pagamento'
+  ClientHeight = 571
+  ClientWidth = 994
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +14,6 @@ object formControlePagamentos: TformControlePagamentos
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
-  WindowState = wsMaximized
   OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
@@ -23,8 +21,8 @@ object formControlePagamentos: TformControlePagamentos
   object pnlPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 927
-    Height = 564
+    Width = 994
+    Height = 571
     Align = alClient
     BevelOuter = bvNone
     Color = clMenu
@@ -33,22 +31,25 @@ object formControlePagamentos: TformControlePagamentos
     Padding.Bottom = 10
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 927
+    ExplicitHeight = 564
     DesignSize = (
-      927
-      564)
+      994
+      571)
     object pnlTitle: TPanel
       AlignWithMargins = True
       Left = 13
       Top = 3
-      Width = 901
+      Width = 968
       Height = 50
       Align = alTop
       BevelOuter = bvNone
       Color = clMenu
       ParentBackground = False
       TabOrder = 0
+      ExplicitWidth = 901
       DesignSize = (
-        901
+        968
         50)
       object lblFuncionario: TLabel
         Left = 1
@@ -77,7 +78,7 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
       end
       object btnConfirmarPagamento: TPanel
-        Left = 620
+        Left = 687
         Top = 3
         Width = 177
         Height = 38
@@ -96,9 +97,10 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 0
         OnClick = btnConfirmarPagamentoClick
+        ExplicitLeft = 620
       end
       object btnCancel: TPanel
-        Left = 803
+        Left = 870
         Top = 3
         Width = 93
         Height = 38
@@ -117,25 +119,28 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 1
         OnClick = btnCancelClick
+        ExplicitLeft = 803
       end
     end
     object pnlContainer: TPanel
       AlignWithMargins = True
       Left = 14
       Top = 50
-      Width = 901
-      Height = 504
+      Width = 968
+      Height = 511
       Anchors = [akLeft, akTop, akRight, akBottom]
       BevelOuter = bvNone
       Color = clBtnHighlight
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 901
+      ExplicitHeight = 504
       DesignSize = (
-        901
-        504)
+        968
+        511)
       object Label2: TLabel
         Left = 338
-        Top = 231
+        Top = 238
         Width = 123
         Height = 25
         Anchors = [akLeft, akBottom]
@@ -146,10 +151,11 @@ object formControlePagamentos: TformControlePagamentos
         Font.Name = 'Product Sans'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 231
       end
       object Label7: TLabel
-        Left = 751
-        Top = 239
+        Left = 818
+        Top = 246
         Width = 146
         Height = 17
         Cursor = crHandPoint
@@ -163,6 +169,9 @@ object formControlePagamentos: TformControlePagamentos
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
+        OnClick = Label7Click
+        ExplicitLeft = 751
+        ExplicitTop = 239
       end
       object lblSalario: TLabel
         Left = 3
@@ -236,17 +245,18 @@ object formControlePagamentos: TformControlePagamentos
         AlignWithMargins = True
         Left = -20
         Top = 1
-        Width = 1000
+        Width = 1067
         Height = 2
         Anchors = [akLeft, akTop, akRight]
         BevelOuter = bvNone
         Color = 4210688
         ParentBackground = False
         TabOrder = 0
+        ExplicitWidth = 1000
       end
       object cvCalendarioPagAtual: TCalendarView
         Left = 3
-        Top = 228
+        Top = 235
         Width = 329
         Height = 273
         Anchors = [akLeft, akBottom]
@@ -270,11 +280,12 @@ object formControlePagamentos: TformControlePagamentos
         OnDrawDayItem = cvCalendarioPagAtualDrawDayItem
         ParentFont = False
         TabOrder = 1
+        ExplicitTop = 228
       end
       object mmObservacao: TMemo
         Left = 338
-        Top = 254
-        Width = 559
+        Top = 261
+        Width = 626
         Height = 247
         Anchors = [akLeft, akRight, akBottom]
         Font.Charset = DEFAULT_CHARSET
@@ -286,23 +297,27 @@ object formControlePagamentos: TformControlePagamentos
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 2
+        ExplicitTop = 254
+        ExplicitWidth = 559
       end
       object Panel5: TPanel
         Left = 3
-        Top = 32
+        Top = 34
         Width = 336
-        Height = 186
+        Height = 193
         Anchors = [akLeft, akTop, akBottom]
         BevelOuter = bvNone
         TabOrder = 3
+        ExplicitHeight = 222
         object Panel1: TPanel
           Left = 335
           Top = 1
           Width = 1
-          Height = 184
+          Height = 191
           Align = alRight
           TabOrder = 0
           Visible = False
+          ExplicitHeight = 184
         end
         object Panel2: TPanel
           Left = 0
@@ -317,25 +332,27 @@ object formControlePagamentos: TformControlePagamentos
           Left = 0
           Top = 1
           Width = 1
-          Height = 184
+          Height = 191
           Align = alLeft
           TabOrder = 2
           Visible = False
+          ExplicitHeight = 184
         end
         object Panel4: TPanel
           Left = 0
-          Top = 185
+          Top = 192
           Width = 336
           Height = 1
           Align = alBottom
           TabOrder = 3
           Visible = False
+          ExplicitTop = 185
         end
         object sbxBeneficios: TScrollBox
           Left = 1
           Top = 1
           Width = 334
-          Height = 184
+          Height = 191
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -343,10 +360,13 @@ object formControlePagamentos: TformControlePagamentos
           Color = clWhite
           ParentColor = False
           TabOrder = 4
+          OnMouseWheelDown = sbxBeneficiosMouseWheelDown
+          OnMouseWheelUp = sbxBeneficiosMouseWheelUp
+          ExplicitHeight = 184
         end
       end
       object btnPagamentosAnteriores: TPanel
-        Left = 619
+        Left = 686
         Top = 9
         Width = 276
         Height = 38
@@ -365,6 +385,7 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 4
         OnClick = btnPagamentosAnterioresClick
+        ExplicitLeft = 619
       end
     end
   end

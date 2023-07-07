@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
   Vcl.DBGrids, Vcl.WinXCalendars, Vcl.ExtCtrls, functions, BancoFuncoes,
-  FireDAC.Comp.Client, System.DateUtils, Vcl.WinXPickers;
+  FireDAC.Comp.Client, System.DateUtils, Vcl.WinXPickers, DM,
+  untInformarValorPagar, System.Generics.Collections;
 
 type
   TformPagamentosAnteriores = class(TForm)
@@ -23,7 +24,7 @@ type
     lblValorPago: TLabel;
     mmObservacaoPagAnterior: TMemo;
     Panel7: TPanel;
-    btnSave: TPanel;
+    btnConfirmarPagamento: TPanel;
     Label2: TLabel;
     lblStatus: TLabel;
     dtpFiltroAno: TDatePicker;
@@ -36,6 +37,10 @@ type
     procedure cvCalendarioPagAnteriorChange(Sender: TObject);
     procedure Label8Click(Sender: TObject);
     procedure dtpFiltroAnoChange(Sender: TObject);
+    procedure dbgPagamentosAnterioresDrawColumnCell(Sender: TObject;
+      const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure btnConfirmarPagamentoClick(Sender: TObject);
   private
     vFDMObservacoesPagAnteriores: TFDMemTable;
 
@@ -54,6 +59,37 @@ implementation
 
 {$R *.dfm}
 
+procedure TformPagamentosAnteriores.btnConfirmarPagamentoClick(Sender: TObject);
+var
+  vNumeroMes: Integer;
+  vDataOcorrencia: string;
+  vDicDados: TDictionary<String, Variant>;
+begin
+  with TformInformarValorPagar.Create(Self) do
+  begin
+    vNumeroMes := dbgPagamentosAnteriores.DataSource.DataSet.FieldByName('numero_mes').AsInteger;
+    lblFuncionario.Caption := 'Funcionário: '+BDBuscarRegistros('tab_funcionario', EmptyStr, EmptyStr, ' id = '+IdFuncionario.ToString).FieldByName('nome').AsString;
+    lblMesAno.Caption := 'Data: '+SisVarIf(Length(vNumeroMes.ToString) = 1, '0'+vNumeroMes.ToString, vNumeroMes.ToString)+'/'+YearOf(dtpFiltroAno.Date).ToString;
+    ShowModal;
+
+    if Confirmar then
+    begin
+      vDataOcorrencia := SisVarIf(Length(vNumeroMes.ToString) = 1, '0'+vNumeroMes.ToString, vNumeroMes.ToString)+'/'+YearOf(dtpFiltroAno.Date).ToString;
+      vDicDados := TDictionary<String, Variant>.Create;
+      with vDicDados do
+      begin
+        Add('id_funcionario', IdFuncionario);
+        Add('valor_pago', StrToFloat(Trim(edtValorPagar.Text).Replace('.', '')));
+        Add('data_pagamento', Now);
+        Add('data_ocorrencia', vDataOcorrencia);
+      end;
+      BDInserirRegistros('tab_controlepagamento', 'id', 'tab_controlepagamento_id_seq', vDicDados);
+
+      SQL;
+    end;
+  end;
+end;
+
 procedure TformPagamentosAnteriores.ConfigurarDataSet;
 begin
   with vFDMObservacoesPagAnteriores do
@@ -68,37 +104,73 @@ end;
 procedure TformPagamentosAnteriores.cvCalendarioPagAnteriorChange(
   Sender: TObject);
 begin
-  ExibirObservacaoIndividual(mmObservacaoPagAnterior, vFDMObservacoesPagAnteriores, cvCalendarioPagAnterior);
+  mmObservacaoPagAnterior.Lines.Text := EmptyStr;
+  with vFDMObservacoesPagAnteriores do
+    if (Locate('data', SisTratarDate(DateToStr(cvCalendarioPagAnterior.Date)))) and (FieldByName('observacao').AsString <> EmptyStr) then
+      ExibirObservacaoIndividual(mmObservacaoPagAnterior, vFDMObservacoesPagAnteriores, cvCalendarioPagAnterior);
 end;
 
 procedure TformPagamentosAnteriores.cvCalendarioPagAnteriorDrawDayItem(
   Sender: TObject; DrawParams: TDrawViewInfoParams;
   CalendarViewViewInfo: TCellItemViewInfo);
 begin
-  if vFDMObservacoesPagAnteriores.Locate('data', CalendarViewViewInfo.Date) then
-    DrawParams.BkColor := $009FFF80;
+  with vFDMObservacoesPagAnteriores do
+    if (Locate('data', CalendarViewViewInfo.Date)) and (FieldByName('observacao').AsString <> EmptyStr) then
+      DrawParams.BkColor := $009FFF80;
 end;
 
-procedure TformPagamentosAnteriores.dbgPagamentosAnterioresCellClick(
-  Column: TColumn);
+procedure TformPagamentosAnteriores.dbgPagamentosAnterioresCellClick(Column: TColumn);
+var
+  vDate: TDateTime;
 begin
-  mmObservacaoPagAnterior.Clear;
+  mmObservacaoPagAnterior.Lines.Text := EmptyStr;
 
   with dbgPagamentosAnteriores.DataSource.DataSet do
   begin
+    vDate := StrToDate('01/'+FieldByName('numero_mes').AsInteger.ToString+'/'+YearOf(dtpFiltroAno.Date).ToString);
+
     vFDMObservacoesPagAnteriores.Close;
     vFDMObservacoesPagAnteriores.Data := BDBuscarRegistros('tab_pontofuncionario', ' data, observacao ', EmptyStr,
     ' id_funcionario = '+IdFuncionario.ToString+
     ' and (extract(''month'' from data)||''/''||extract(''year'' from data)) = '+
-    ' (extract(''month'' from '+QuotedStr(DateToStr(FieldByName('data_pagamento').AsDateTime))+'::date)||''/''||extract(''year'' from '+QuotedStr(DateToStr(FieldByName('data_pagamento').AsDateTime))+'::date)) ',
+    ' (extract(''month'' from '+QuotedStr(DateToStr(vDate))+'::date)||''/''|| ' +
+    ' extract(''year'' from '+QuotedStr(DateToStr(vDate))+'::date)) ',
     EmptyStr, EmptyStr, -1, 'FDQBuscaObservacoesAnteriores');
 
-    lblDataPagamento.Caption := FormatDateTime('dd/mm/yyyy', FieldByName('data_pagamento').AsDateTime);
+    lblDataPagamento.Caption := SisVarIf(SisTratarDate(FieldByName('data_pagamento').AsString) = StrToDate('01/01/2000'),
+                                'NÃO DEFINIDO', FormatDateTime('dd/mm/yyyy', SisTratarDate(FieldByName('data_pagamento').AsString)));
     lblFaltas.Caption := FieldByName('faltas').AsInteger.ToString;
     lblValorPago.Caption := FormatFloat('R$ ###,###,##0.00', FieldByName('valor_pago').AsFloat);
     lblStatus.Caption := FieldByName('status').AsString;
-    cvCalendarioPagAnterior.Date := FieldByName('data_pagamento').AsDateTime;
+    cvCalendarioPagAnterior.Date := vDate;
+
+    if FieldByName('data_pagamento').AsString = 'NÃO DEFINIDO' then
+    begin
+      btnConfirmarPagamento.Enabled := True;
+      btnConfirmarPagamento.Color := $0007780B;
+    end else
+    begin
+      btnConfirmarPagamento.Enabled := False;
+      btnConfirmarPagamento.Color := $00A2A2A2;
+    end;
   end;
+end;
+
+procedure TformPagamentosAnteriores.dbgPagamentosAnterioresDrawColumnCell(
+  Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if Column.FieldName = 'status' then
+  begin
+    dbgPagamentosAnteriores.Canvas.Font.Color := clWhite;
+    dbgPagamentosAnteriores.Canvas.Font.Style := [fsBold];
+    if dbgPagamentosAnteriores.DataSource.DataSet.FieldByName('status').AsString = 'PAGO' then
+      dbgPagamentosAnteriores.Canvas.Brush.Color := clGreen;
+    if dbgPagamentosAnteriores.DataSource.DataSet.FieldByName('status').AsString = 'PENDENTE' then
+      dbgPagamentosAnteriores.Canvas.Brush.Color := $005959FF;
+  end;
+
+  dbgPagamentosAnteriores.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
 procedure TformPagamentosAnteriores.dtpFiltroAnoChange(Sender: TObject);
@@ -126,32 +198,33 @@ end;
 procedure TformPagamentosAnteriores.SQL;
 begin
   dbgPagamentosAnteriores.DataSource.DataSet := BDBuscarRegistros('tab_meses m',
-  ' m.mes, ' +
-  ' coalesce((select pg.valor_pago from tab_controlepagamento pg where extract(month from pg.data_pagamento)||''/''||extract(year from pg.data_pagamento) = ' +
-  ' m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+'), 0) valor_pago, ' +
-  ' (select pg.data_pagamento from tab_controlepagamento pg where extract(month from pg.data_pagamento)||''/''||extract(year from pg.data_pagamento) = ' +
-  ' m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+'), ' +
-  ' (extract(''day'' from (date_trunc(''month'',CURRENT_DATE)+interval ''1 month''-interval ''1 day'')::date) - ( ' +
-  ' select count(p.id) from tab_pontofuncionario p where extract(month from p.data)||''/''||extract(year from p.data) = m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and p.id_funcionario = '+IdFuncionario.ToString+
-  ' )) faltas, ' +
-  ' case when (select extract(month from pg.data_pagamento)||''/''||extract(year from pg.data_pagamento) from tab_controlepagamento pg ' +
-  ' where extract(month from pg.data_pagamento)||''/''||extract(year from pg.data_pagamento) = m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+') = ' +
-  ' m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' then ''PAGO'' else ''PAGAMENTO PENDENTE'' end::varchar status ',
-  ' left join tab_funcionario f on f.id = '+IdFuncionario.ToString+' ' +
+  ' m.numero_mes, m.mes, ' +sLineBreak+
+  ' coalesce((select pg.valor_pago from tab_controlepagamento pg where pg.data_ocorrencia = ' +sLineBreak+
+  ' lpad(m.numero_mes::varchar, 2, ''0'')||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+'), 0) valor_pago, ' +sLineBreak+
+  ' coalesce(to_char((select pg.data_pagamento from tab_controlepagamento pg where pg.data_ocorrencia = ' +sLineBreak+
+  ' lpad(m.numero_mes::varchar, 2, ''0'')||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+'), ''dd/mm/yyyy''), ''NÃO DEFINIDO'')::varchar data_pagamento, ' +sLineBreak+
+  ' (extract(''day'' from (date_trunc(''month'', (''01/''||lpad(m.numero_mes::varchar, 2, ''0'')||''/2000'')::date)+interval ''1 month''-interval ''1 day'')::date) - ( ' +sLineBreak+
+  ' select count(p.id) from tab_pontofuncionario p where extract(month from p.data)||''/''||extract(year from p.data) = m.numero_mes||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and p.id_funcionario = '+IdFuncionario.ToString+sLineBreak+
+  ' )) faltas, ' +sLineBreak+
+  ' case when (select pg.data_ocorrencia from tab_controlepagamento pg ' +sLineBreak+
+  ' where pg.data_ocorrencia = lpad(m.numero_mes::varchar, 2, ''0'')||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' and pg.id_funcionario = '+IdFuncionario.ToString+') = ' +sLineBreak+
+  ' lpad(m.numero_mes::varchar, 2, ''0'')||''/''||'+YearOf(dtpFiltroAno.Date).ToString+' then ''PAGO'' else ''PENDENTE'' end::varchar status ',
+  ' left join tab_funcionario f on f.id = '+IdFuncionario.ToString+' ' +sLineBreak+
   ' left join tab_controlepagamento pag on pag.id_funcionario = f.id ',
-  ' m.numero_mes < extract(month from now()) and f.ativo is true and ' +
-  ' case when extract(year from f.dt_admissao) = '+YearOf(dtpFiltroAno.Date).ToString+' then m.numero_mes >= extract(month from f.dt_admissao) ' +
-  ' when '+YearOf(dtpFiltroAno.Date).ToString+' < extract(year from f.dt_admissao) then 1=2 ' +
-  ' when '+YearOf(dtpFiltroAno.Date).ToString+' > extract(year from now()) then 1=2 else 1=1 end and ' +
-  ' case when extract(year from f.dt_demissao) = '+YearOf(dtpFiltroAno.Date).ToString+' and f.ativo is false then m.numero_mes <= extract(month from f.dt_demissao) else 1=1 end ',
+  ' case when '+YearOf(dtpFiltroAno.Date).ToString+' < extract(year from f.dt_admissao) then 1=2 else 1=1 end and ' +sLineBreak+
+  ' case when '+YearOf(dtpFiltroAno.Date).ToString+' > extract(year from now()) then 1=2 else 1=1 end and ' +sLineBreak+
+  ' case when extract(year from f.dt_admissao) = '+YearOf(dtpFiltroAno.Date).ToString+' then m.numero_mes >= extract(month from f.dt_admissao) else 1=1 end and ' +sLineBreak+
+  ' case when '+YearOf(dtpFiltroAno.Date).ToString+' = extract(year from now()) then m.numero_mes < extract(month from now()) else 1=1 end ',
   ' m.numero_mes, m.mes ', ' m.numero_mes ', -1, 'FDQBuscaPagamentosAnteriores');
 
+  TNumericField(dbgPagamentosAnteriores.DataSource.DataSet.FieldByName('valor_pago')).DisplayFormat := 'R$ ###,###,##0.00';
+  BDCriarArquivoTexto('TESTE.txt', TFDQuery(SisDataModule.FindComponent('FDQBuscaPagamentosAnteriores')).SQL.Text+sLineBreak, False, 'C:\vba-sistema\Executaveis\');
   SISDBGridResizeColumns(dbgPagamentosAnteriores);
 end;
 
 procedure TformPagamentosAnteriores.ExibirObservacaoIndividual(Memo: TMemo; MemTable: TFDMemTable; Calendar: TCalendarView);
 begin
-  Memo.Clear;
+  Memo.Lines.Text := EmptyStr;
 
   with MemTable do
     if (MonthOf(Calendar.Date) = MonthOf(FieldByName('data').AsDateTime)) and (Locate('data', Calendar.Date)) then
@@ -164,7 +237,7 @@ procedure TformPagamentosAnteriores.ExibirObservacoesDetalhadas(Memo: TMemo; Mem
 var
   Count: Integer;
 begin
-  Memo.Clear;
+  Memo.Lines.Text := EmptyStr;
 
   with MemTable do
   begin

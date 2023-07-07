@@ -2,7 +2,7 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
   Left = 0
   Top = 0
   BorderStyle = bsSingle
-  Caption = 'Pagamento anteriores'
+  Caption = 'Pagamentos Anteriores'
   ClientHeight = 517
   ClientWidth = 985
   Color = clBtnFace
@@ -73,7 +73,7 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentFont = False
     end
     object Label8: TLabel
-      Left = 640
+      Left = 631
       Top = 269
       Width = 146
       Height = 17
@@ -240,7 +240,13 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       TitleFont.Name = 'Product Sans'
       TitleFont.Style = [fsBold]
       OnCellClick = dbgPagamentosAnterioresCellClick
+      OnDrawColumnCell = dbgPagamentosAnterioresDrawColumnCell
       Columns = <
+        item
+          Expanded = False
+          FieldName = 'numero_mes'
+          Visible = False
+        end
         item
           Expanded = False
           FieldName = 'mes'
@@ -275,7 +281,7 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
     object mmObservacaoPagAnterior: TMemo
       Left = 259
       Top = 287
-      Width = 527
+      Width = 518
       Height = 230
       Anchors = [akLeft, akRight, akBottom]
       Font.Charset = DEFAULT_CHARSET
@@ -300,7 +306,7 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentBackground = False
       TabOrder = 3
     end
-    object btnSave: TPanel
+    object btnConfirmarPagamento: TPanel
       Left = 814
       Top = 259
       Width = 166
@@ -309,8 +315,9 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       Anchors = [akTop, akRight]
       BevelOuter = bvNone
       Caption = 'Confirmar pagamento'
-      Color = 489483
+      Color = 10658466
       DragCursor = crDefault
+      Enabled = False
       Font.Charset = ANSI_CHARSET
       Font.Color = clWhite
       Font.Height = -15
@@ -319,6 +326,7 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentBackground = False
       ParentFont = False
       TabOrder = 4
+      OnClick = btnConfirmarPagamentoClick
     end
     object dtpFiltroAno: TDatePicker
       Left = 149

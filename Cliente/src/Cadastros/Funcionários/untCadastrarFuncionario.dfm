@@ -134,6 +134,8 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Color = clBtnFace
           ParentColor = False
           TabOrder = 2
+          OnMouseWheelDown = sbxBeneficiosMouseWheelDown
+          OnMouseWheelUp = sbxBeneficiosMouseWheelUp
         end
       end
     end
@@ -405,7 +407,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             ParentFont = False
           end
           object Label37: TLabel
-            Left = 509
+            Left = 517
             Top = 120
             Width = 84
             Height = 16
@@ -418,7 +420,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             ParentFont = False
           end
           object Label38: TLabel
-            Left = 619
+            Left = 642
             Top = 120
             Width = 27
             Height = 16
@@ -431,8 +433,8 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             ParentFont = False
           end
           object Label10: TLabel
-            Left = 728
-            Top = 120
+            Left = 738
+            Top = 121
             Width = 36
             Height = 16
             Caption = 'Status'
@@ -466,6 +468,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 100
             ParentFont = False
             TabOrder = 0
           end
@@ -496,6 +499,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 15
             NumbersOnly = True
             ParentFont = False
             TabOrder = 2
@@ -512,8 +516,9 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 100
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 6
           end
           object edtFuncao: TEdit
             Left = 16
@@ -525,6 +530,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 50
             ParentFont = False
             TabOrder = 4
           end
@@ -538,6 +544,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 14
             NumbersOnly = True
             ParentFont = False
             TabOrder = 5
@@ -556,12 +563,12 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Name = 'Product Sans'
             Font.Style = []
             ParentFont = False
-            TabOrder = 6
+            TabOrder = 3
           end
           object dtpAdmissao: TDateTimePicker
             Left = 391
             Top = 137
-            Width = 112
+            Width = 120
             Height = 24
             Date = 44811.000000000000000000
             Time = 0.664087673612812100
@@ -571,12 +578,12 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Name = 'Product Sans'
             Font.Style = []
             ParentFont = False
-            TabOrder = 7
+            TabOrder = 8
           end
           object dtpDemissao: TDateTimePicker
-            Left = 509
+            Left = 517
             Top = 137
-            Width = 104
+            Width = 120
             Height = 24
             Date = 44811.000000000000000000
             Time = 0.664087673612812100
@@ -587,12 +594,12 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Name = 'Product Sans'
             Font.Style = []
             ParentFont = False
-            TabOrder = 8
+            TabOrder = 9
           end
           object cbxSexo: TComboBox
-            Left = 619
+            Left = 642
             Top = 137
-            Width = 103
+            Width = 90
             Height = 24
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
@@ -601,16 +608,16 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Style = []
             ItemIndex = 0
             ParentFont = False
-            TabOrder = 9
+            TabOrder = 10
             Text = 'Masculino'
             Items.Strings = (
               'Masculino'
               'Feminino')
           end
           object cbxStatus: TComboBox
-            Left = 728
+            Left = 738
             Top = 137
-            Width = 95
+            Width = 85
             Height = 24
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
@@ -618,7 +625,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Name = 'Product Sans'
             Font.Style = []
             ParentFont = False
-            TabOrder = 10
+            TabOrder = 11
             Text = 'Ativo'
             OnChange = cbxStatusChange
             Items.Strings = (
@@ -635,8 +642,9 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
+            MaxLength = 100
             ParentFont = False
-            TabOrder = 11
+            TabOrder = 7
           end
         end
       end
@@ -763,10 +771,12 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Height = -12
           Font.Name = 'Product Sans'
           Font.Style = []
+          MaxLength = 10
           NumbersOnly = True
           ParentFont = False
           TabOrder = 0
           OnChange = edtCEPChange
+          OnExit = edtCEPExit
           OnKeyPress = edtCEPKeyPress
         end
         object edtEndereco: TEdit
@@ -779,6 +789,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Height = -12
           Font.Name = 'Product Sans'
           Font.Style = []
+          MaxLength = 100
           ParentFont = False
           TabOrder = 1
         end
@@ -792,6 +803,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Height = -12
           Font.Name = 'Product Sans'
           Font.Style = []
+          MaxLength = 10
           ParentFont = False
           TabOrder = 2
         end
@@ -805,6 +817,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Height = -12
           Font.Name = 'Product Sans'
           Font.Style = []
+          MaxLength = 100
           ParentFont = False
           TabOrder = 3
         end
@@ -819,7 +832,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Name = 'Product Sans'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 5
           OnChange = cbxEstadoChange
         end
         object edtComplemento: TEdit
@@ -832,8 +845,9 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
           Font.Height = -12
           Font.Name = 'Product Sans'
           Font.Style = []
+          MaxLength = 100
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 4
         end
         object cbxCidade: TComboBox
           Left = 95

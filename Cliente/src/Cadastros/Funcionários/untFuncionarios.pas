@@ -18,12 +18,9 @@ type
     Panel6: TPanel;
     Panel5: TPanel;
     btnSelect: TPanel;
-    btnDelete: TPanel;
     btnEdit: TPanel;
     btnAdd: TPanel;
     dbgFuncionarios: TDBGrid;
-    cbFiltro: TComboBox;
-    Label3: TLabel;
     procedure btnAddClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -31,6 +28,7 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure dbgFuncionariosDblClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
+    procedure edSearchChange(Sender: TObject);
   private
     vFDMFuncionarios: TFDMemTable;
 
@@ -70,6 +68,8 @@ begin
   vFormCadastrarFuncionario := TformCadastrarFuncionario.Create(Self);
   vFormCadastrarFuncionario.CarregarDados(vFDMFuncionarios.FieldByName('id').AsInteger);
   vFormCadastrarFuncionario.ShowModal;
+
+  SQL;
 end;
 
 procedure TformFuncionarios.btnSelectClick(Sender: TObject);
@@ -106,6 +106,17 @@ begin
   dbgFuncionarios.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
+procedure TformFuncionarios.edSearchChange(Sender: TObject);
+begin
+  with dbgFuncionarios.DataSource.DataSet do
+  begin
+    Filtered := False;
+    FilterOptions := [foCaseInsensitive];
+    Filter := ' nome like '+QuotedStr('%'+Trim(edSearch.Text)+'%') + ' or cpf like '+QuotedStr('%'+Trim(edSearch.Text)+'%');
+    Filtered := True;
+  end;
+end;
+
 procedure TformFuncionarios.FormCreate(Sender: TObject);
 begin
   vFDMFuncionarios := BDCriarOuRetornarFDMemTable('FDMFuncionarios', Self);
@@ -122,6 +133,8 @@ begin
   vFDMFuncionarios.Data := BDBuscarRegistros('tab_funcionario',
   ' *, case when ativo is true then ''ATIVO'' else ''BLOQUEADO'' end::varchar status ',
   EmptyStr, EmptyStr, EmptyStr, ' nome ', -1, 'FDQBuscarFuncionarios');
+
+  TNumericField(vFDMFuncionarios.FieldByName('salario')).DisplayFormat := 'R$ ###,###,##0.00';
 
   SISDBGridResizeColumns(dbgFuncionarios);
 end;

@@ -24,9 +24,11 @@ function SisOnlyNumbers(str: string): string;
 function SisCursorIsNumber(edit: TEdit): boolean;
 procedure SisEditKeyPress(edit: TEdit; var Key: Char);
 function SisVerificarPosicaoCursor(campo: TEdit): boolean;
-function SisValidarCEP(stCEP: string): string;
+function SisBuscarCEP(stCEP: string): string;
 function SisPegarMes(vMes: integer): string;
 function SisVarIf(Condicao: Boolean; TrueValue, FalseValue: Variant): Variant overload;
+function SisVarEmptyStrDef(StrValue, Default: string): string;
+function SisTratarDate(vDate: string): TDateTime;
 function validaCPF(CPF: string): boolean;
 function validaCNPJ(CNPJ: string): boolean;
 
@@ -167,7 +169,7 @@ begin
         if not Assigned(FindField(DBGrid.Columns[vNrContCol].FieldName)) or (FindField(DBGrid.Columns[vNrContCol].FieldName).FieldName = EmptyStr) then
           Next;
 
-        if DBGrid.Columns[vNrContCol].Field.DataType = ftCurrency then
+        if DBGrid.Columns[vNrContCol].Field.DataType in [ftCurrency, ftFloat, ftBCD] then
           vDsConteudoLinha := 'R$ '+FormatCurr('###,###,##0.00', FieldByName(DBGrid.Columns[vNrContCol].FieldName).AsCurrency)
         else
           vDsConteudoLinha := FieldByName(DBGrid.Columns[vNrContCol].FieldName).AsString;
@@ -274,7 +276,7 @@ begin
     result := false;
 end;
 
-function SisValidarCEP(stCEP: string): string;
+function SisBuscarCEP(stCEP: string): string;
 var
   IdHTTP: TIdHTTP;
   IdSSL: TIdSSLIOHandlerSocketOpenSSL;
@@ -328,6 +330,19 @@ begin
     Result := TrueValue
   else
     Result := FalseValue;
+end;
+
+function SisVarEmptyStrDef(StrValue, Default: string): string;
+begin
+  if StrValue = EmptyStr then
+    Result := Default
+  else
+    Result := StrValue;
+end;
+
+function SisTratarDate(vDate: string): TDateTime;
+begin
+  Result := StrToDateDef(vDate, StrToDate('01/01/2000'));
 end;
 
 function validaCPF(CPF: string): boolean;

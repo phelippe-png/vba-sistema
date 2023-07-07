@@ -48,8 +48,8 @@ object formCadastrarPonto: TformCadastrarPonto
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 129
-    Top = 203
+    Left = 140
+    Top = 229
     Width = 151
     Height = 25
     Caption = 'Informe seu CPF'
@@ -60,51 +60,9 @@ object formCadastrarPonto: TformCadastrarPonto
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object btnObservacoes: TSpeedButton
-    Left = 576
-    Top = 440
-    Width = 148
-    Height = 31
-    Anchors = [akRight, akBottom]
-    Caption = 'Aplicar observa'#231#245'es'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Product Sans'
-    Font.Style = []
-    ParentFont = False
-    OnClick = btnObservacoesClick
-  end
-  object Label3: TLabel
-    Left = 289
-    Top = 301
-    Width = 6
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -20
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-  end
-  object btnInserir: TSpeedButton
-    Left = 532
-    Top = 228
-    Width = 70
-    Height = 50
-    Anchors = [akTop, akRight]
-    Caption = 'Inserir'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Product Sans'
-    Font.Style = []
-    ParentFont = False
-    OnClick = btnInserirClick
-  end
   object lblAviso: TLabel
-    Left = 129
-    Top = 277
+    Left = 140
+    Top = 310
     Width = 4
     Height = 25
     Font.Charset = DEFAULT_CHARSET
@@ -134,9 +92,9 @@ object formCadastrarPonto: TformCadastrarPonto
     OnClick = Panel1Click
   end
   object edtCPF: TEdit
-    Left = 129
-    Top = 228
-    Width = 400
+    Left = 140
+    Top = 253
+    Width = 346
     Height = 50
     Anchors = [akLeft, akTop, akRight]
     Font.Charset = DEFAULT_CHARSET
@@ -150,6 +108,48 @@ object formCadastrarPonto: TformCadastrarPonto
     OnChange = edtCPFChange
     OnKeyDown = edtCPFKeyDown
     OnKeyPress = edtCPFKeyPress
+  end
+  object btnConfirmar: TPanel
+    Left = 488
+    Top = 253
+    Width = 105
+    Height = 50
+    Cursor = crHandPoint
+    Anchors = [akTop, akRight]
+    BevelOuter = bvNone
+    Caption = 'Confirmar'
+    Color = 489483
+    DragCursor = crDefault
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWhite
+    Font.Height = -17
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
+    TabOrder = 2
+    OnClick = btnConfirmarClick
+  end
+  object btnObservacoes: TPanel
+    Left = 576
+    Top = 440
+    Width = 148
+    Height = 31
+    Cursor = crHandPoint
+    Anchors = [akRight, akBottom]
+    BevelOuter = bvNone
+    Caption = 'Aplicar observa'#231#245'es'
+    Color = 12615680
+    DragCursor = crDefault
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWhite
+    Font.Height = -15
+    Font.Name = 'Product Sans'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
+    TabOrder = 3
+    OnClick = btnObservacoesClick
   end
   object Timer: TTimer
     OnTimer = TimerTimer

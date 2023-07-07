@@ -210,6 +210,10 @@
             <Form>formRelatPontoFuncionarios</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Movimentações\Controle de Pagamentos Funcionários\untInformarValorPagar.pas">
+            <Form>formInformarValorPagar</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <RcItem Include="img\trash.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>ICOTrash</ResourceId>

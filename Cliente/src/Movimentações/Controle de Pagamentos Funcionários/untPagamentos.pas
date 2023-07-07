@@ -25,6 +25,7 @@ type
     procedure dbgPagamentosDblClick(Sender: TObject);
     procedure dbgPagamentosDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure edSearchChange(Sender: TObject);
   private
     vFormPagamento: TformControlePagamentos;
 
@@ -43,13 +44,17 @@ implementation
 procedure TformPagamentos.btnSelectClick(Sender: TObject);
 begin
   vFormPagamento := TformControlePagamentos.Create(Self);
-  with vFormPagamento do
-  begin
-    vIdFuncionario := dbgPagamentos.DataSource.DataSet.FieldByName('id').AsInteger;
-    lblDataOcorrencia.Caption := 'Mês/ano de ocorrência: '+FormatDateTime('mm/yyyy', Now);
-    Parent := Self;
-    vIsPago := dbgPagamentos.DataSource.DataSet.FieldByName('status').AsBoolean;
-    Show;
+  try
+    with vFormPagamento do
+    begin
+      vIdFuncionario := dbgPagamentos.DataSource.DataSet.FieldByName('id').AsInteger;
+      lblDataOcorrencia.Caption := 'Mês/ano de ocorrência: '+FormatDateTime('mm/yyyy', Now);
+  //    Parent := Self;
+      vIsPago := dbgPagamentos.DataSource.DataSet.FieldByName('status').AsBoolean;
+      ShowModal;
+    end;
+  finally
+    SQL;
   end;
 end;
 
@@ -74,6 +79,17 @@ begin
   dbgPagamentos.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
+procedure TformPagamentos.edSearchChange(Sender: TObject);
+begin
+  with dbgPagamentos.DataSource.DataSet do
+  begin
+    Filtered := False;
+    FilterOptions := [foCaseInsensitive];
+    Filter := ' nome like '+QuotedStr('%'+Trim(edSearch.Text)+'%') + ' or cpf like '+QuotedStr('%'+Trim(edSearch.Text)+'%');
+    Filtered := True;
+  end;
+end;
+
 procedure TformPagamentos.FormCreate(Sender: TObject);
 begin
   dbgPagamentos.DataSource := BDCriarOuRetornarDataSource('DSEmpresas', Self);
@@ -88,12 +104,13 @@ procedure TformPagamentos.SQL;
 begin
   dbgPagamentos.DataSource.DataSet := BDBuscarRegistros('tab_funcionario f',
   ' f.id, f.nome, f.cpf, f.salario, ' +
-  ' case when cp.data_ocorrencia = (extract(''month'' from now())||''/''||extract(''year'' from now())) then to_char(cp.data_pagamento, ''DD/MM/YYYY'') else ''PENDENTE'' end::varchar data_pagamento, ' +
-  ' case when cp.data_ocorrencia = (extract(''month'' from now())||''/''||extract(''year'' from now())) then ''PAGO'' else ''AGUARDANDO PAGAMENTO'' end::varchar status_descricao, ' +
-  ' case when cp.data_ocorrencia = (extract(''month'' from now())||''/''||extract(''year'' from now())) then true else false end status ',
-  ' left join tab_controlepagamento cp on cp.id_funcionario = f.id and cp.data_ocorrencia = (extract(''month'' from now())||''/''||extract(''year'' from now())) ',
-  EmptyStr, EmptyStr, EmptyStr, -1, 'FDQBuscaPagamentos');
+  ' case when cp.data_ocorrencia = lpad(extract(''month'' from now())::varchar, 2, ''0'')||''/''||extract(''year'' from now()) then to_char(cp.data_pagamento, ''DD/MM/YYYY'') else ''PENDENTE'' end::varchar data_pagamento, ' +
+  ' case when cp.data_ocorrencia = lpad(extract(''month'' from now())::varchar, 2, ''0'')||''/''||extract(''year'' from now()) then ''PAGO'' else ''AGUARDANDO PAGAMENTO'' end::varchar status_descricao, ' +
+  ' case when cp.data_ocorrencia = lpad(extract(''month'' from now())::varchar, 2, ''0'')||''/''||extract(''year'' from now()) then true else false end status ',
+  ' left join tab_controlepagamento cp on cp.id_funcionario = f.id and cp.data_ocorrencia = lpad(extract(''month'' from now())::varchar, 2, ''0'')||''/''||extract(''year'' from now()) ',
+  ' f.ativo is true ', EmptyStr, EmptyStr, -1, 'FDQBuscaPagamentos');
 
+  TNumericField(dbgPagamentos.DataSource.DataSet.FieldByName('salario')).DisplayFormat := 'R$ ###,###,##0.00';
   SISDBGridResizeColumns(dbgPagamentos);
 end;
 

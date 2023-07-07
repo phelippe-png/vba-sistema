@@ -106,6 +106,7 @@ type
     RLLabel30: TRLLabel;
     RLLabel31: TRLLabel;
     RLLabel32: TRLLabel;
+    RLDBMemo1: TRLDBMemo;
     procedure RLReportDataRecord(Sender: TObject; RecNo, CopyNo: Integer;
       var Eof: Boolean; var RecordAction: TRLRecordAction);
   private
@@ -124,7 +125,18 @@ implementation
 { TForm1 }
 
 procedure TformRelatPontoFuncionarios.imprimirRelatorio(Mes, Ano, IdFuncionario: Integer);
+var
+  vStrListSQL: TStringList;
 begin
+  vStrListSQL := TStringList.Create;
+  if Mes = 0 then
+  begin
+    vStrListSQL.DelimitedText := BDBuscarRegistros('tab_pontofuncionario p',
+    ' replace(replace(array_agg(extract(month from p.data))::varchar, ''{'', ''''), ''}'', '''') meses ',
+    EmptyStr, ' id_funcionario = '+IdFuncionario.ToString+' and extract(year from p.data) = '+Ano.ToString,
+    EmptyStr, EmptyStr, -1, 'FDQBuscarMeses').FieldByName('meses').AsString;
+  end;
+
   DataSource.DataSet := BDBuscarRegistros(
   ' ( ' +
     ' select lpad(d.dia::varchar, 2, ''0'') ||''/''||lpad(m.numero_mes::varchar, 2, ''0'') dia_mes, d.dia, m.numero_mes, m.mes, ' +
@@ -135,13 +147,14 @@ begin
     ' left join tab_funcionario f on f.id = '+IdFuncionario.ToString+
   ' ) ponto_funcionarios  ',
   ' dia, numero_mes, p.hora_entrada, p.hora_saida_almoco, p.hora_entrada_almoco, p.hora_saida, p.observacao, ' +
-  ' (((''24:00:00''::time - p.hora_entrada) - p.hora_saida_almoco) + ((''24:00:00''::time - p.hora_entrada_almoco) - (''24:00:00''::time - p.hora_saida)))::varchar total_horas, ' +
-  ' (((''24:00:00''::time - p.hora_entrada) - p.hora_saida_almoco) + ((''24:00:00''::time - p.hora_entrada_almoco) - (''24:00:00''::time - p.hora_saida)) - ''08:00:00''::time)::varchar hora_extra, ' +
+  ' ((p.hora_saida_almoco - p.hora_entrada) + (p.hora_saida - p.hora_entrada_almoco))::varchar total_horas, ' +
+  ' ((p.hora_saida_almoco - p.hora_entrada) + (p.hora_saida - p.hora_entrada_almoco) - ''08:00:00''::time)::varchar hora_extra, ' +
   ' funcionario, cpf, dt_admissao, funcao, email, telefone, dt_nascimento, sexo, mes, '+Ano.ToString+' ano ',
   ' left join tab_pontofuncionario p on ' +
   ' lpad(extract(day from p.data)::varchar, 2, ''0'')||''/''||lpad(extract(month from p.data)::varchar, 2, ''0'') = dia_mes ' +
   ' and p.id_funcionario = '+IdFuncionario.ToString+' and extract(year from p.data) = '+Ano.ToString,
-  SisVarIf(Mes <> 0, ' numero_mes = '+Mes.ToString, EmptyStr), EmptyStr, ' numero_mes, dia ', -1, 'FDQBuscarPontoFuncionario');
+  SisVarIf(Mes <> 0, ' numero_mes = '+Mes.ToString, ' numero_mes in('+SisVarEmptyStrDef(vStrListSQL.DelimitedText, '0')+') '),
+  EmptyStr, ' numero_mes, dia ', -1, 'FDQBuscarPontoFuncionario');
 
   DataSource2.DataSet := BDBuscarRegistros(' ( ' +
     ' select lpad(d.dia::varchar, 2, ''0'') ||''/''||lpad(m.numero_mes::varchar, 2, ''0'') dia_mes, d.dia, m.numero_mes, m.mes ' +
@@ -149,14 +162,18 @@ begin
     ' left join tab_dias d on d.dia in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31) ' +
   ' ) ponto_funcionarios ',
   ' numero_mes, ' +
-  ' sum(((''24:00:00''::time - p.hora_entrada) - p.hora_saida_almoco) + ((''24:00:00''::time - p.hora_entrada_almoco) - (''24:00:00''::time - p.hora_saida)))::varchar horas_totais, ' +
-  ' sum(((''24:00:00''::time - p.hora_entrada) - p.hora_saida_almoco) + ((''24:00:00''::time - p.hora_entrada_almoco) - (''24:00:00''::time - p.hora_saida)) - ''08:00:00''::time)::varchar extras_totais, ' +
+  ' sum((p.hora_saida_almoco - p.hora_entrada) + (p.hora_saida - p.hora_entrada_almoco))::varchar horas_totais, ' +
+  ' sum((p.hora_saida_almoco - p.hora_entrada) + (p.hora_saida - p.hora_entrada_almoco) - ''08:00:00''::time)::varchar extras_totais, ' +
   ' extract(''day'' from (date_trunc(''month'', (''01/''||lpad(numero_mes::varchar, 2, ''0'')||''/2000'')::date)+interval ''1 month''-interval ''1 day'')::date) - count(p.*) faltas ',
   ' left join tab_pontofuncionario p on lpad(extract(day from p.data)::varchar, 2, ''0'')||''/''||lpad(extract(month from p.data)::varchar, 2, ''0'') = dia_mes ' +
   ' and p.id_funcionario = '+IdFuncionario.ToString+' and extract(year from p.data) = '+Ano.ToString,
-  SisVarIf(Mes <> 0, ' numero_mes = '+Mes.ToString, EmptyStr), ' numero_mes ', ' numero_mes ', -1 ,'FDQBuscarTotais');
+  SisVarIf(Mes <> 0, ' numero_mes = '+Mes.ToString, ' numero_mes in('+SisVarEmptyStrDef(vStrListSQL.DelimitedText, '0')+') '),
+  ' numero_mes ', ' numero_mes ', -1 ,'FDQBuscarTotais');
 
-  RLReport.Preview;
+  if DataSource.DataSet.RecordCount = 0 then
+    Application.MessageBox('Nenhum registro encontrado!', 'Atenção', MB_ICONWARNING)
+  else
+    RLReport.Preview;
 end;
 
 procedure TformRelatPontoFuncionarios.RLReportDataRecord(Sender: TObject; RecNo, CopyNo: Integer; var Eof: Boolean; var RecordAction: TRLRecordAction);

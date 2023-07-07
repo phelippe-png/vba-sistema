@@ -73,11 +73,9 @@ type
     Label18: TLabel;
     Label19: TLabel;
     Panel11: TPanel;
-    pnlBtnBuscarEmpresa: TPanel;
     lblFuncionario: TLabel;
     Panel14: TPanel;
     cardPontoFuncionario: TCard;
-    btnBuscarFuncionario: TSpeedButton;
     Label22: TLabel;
     ckbFiltrarPorMesAno: TCheckBox;
     dtpMesAnoPagamento: TDatePicker;
@@ -85,12 +83,12 @@ type
     Label21: TLabel;
     Panel12: TPanel;
     lblPontoFuncionario: TLabel;
-    Panel13: TPanel;
-    btnPontoBuscarFuncionario: TSpeedButton;
     Panel15: TPanel;
     dtpPontoMes: TDatePicker;
     dtpPontoAno: TDatePicker;
     rgpPontoFiltros: TRadioGroup;
+    btnPontoBuscarFuncionario: TSpeedButton;
+    btnBuscarFuncionario: TSpeedButton;
     procedure rbMesContasPagarClick(Sender: TObject);
     procedure rbDataContasPagarClick(Sender: TObject);
     procedure btnGerarClick(Sender: TObject);
@@ -106,6 +104,7 @@ type
     procedure btnBuscarFuncionarioClick(Sender: TObject);
     procedure Panel2Click(Sender: TObject);
     procedure rgpPontoFiltrosClick(Sender: TObject);
+    procedure btnPontoBuscarFuncionarioClick(Sender: TObject);
   private
     relatorioContasPagar: TformRelatContasPagar;
     relatorioContasReceber: TformRelatContasReceber;
@@ -180,6 +179,27 @@ begin
       Exit;
     end;
     relatorioPontoFuncionario.imprimirRelatorio(SisVarIf(dtpPontoMes.Enabled, MonthOf(dtpPontoMes.Date), 0), YearOf(dtpPontoAno.Date), vIdFuncionario);
+  end;
+end;
+
+procedure TformModalRelatorios.btnPontoBuscarFuncionarioClick(Sender: TObject);
+begin
+  btnPontoBuscarFuncionario.Down := True;
+
+  with TformFuncionarios.Create(Self) do
+  begin
+    WindowState := wsNormal;
+    Align := alNone;
+    BorderStyle := bsSingle;
+    btnSelect.Visible := True;
+    TelaInModal := True;
+    ShowModal;
+
+    if Selecionado then
+    begin
+      lblPontoFuncionario.Caption := 'Funcionário: '+dbgFuncionarios.DataSource.DataSet.FieldByName('nome').AsString;
+      vIdFuncionario := dbgFuncionarios.DataSource.DataSet.FieldByName('id').AsInteger;
+    end;
   end;
 end;
 
@@ -390,25 +410,28 @@ end;
 
 procedure TformModalRelatorios.rgpPontoFiltrosClick(Sender: TObject);
 begin
-  dtpPontoMes.Enabled := True;
-  dtpPontoMes.Color := clWindow;
-
   if rgpPontoFiltros.ItemIndex = 1 then
   begin
     dtpPontoMes.Enabled := False;
     dtpPontoMes.Color := $00B7B7B7;
-    Refresh;
+  end else
+  begin
+    dtpPontoMes.Enabled := True;
+    dtpPontoMes.Color := clWhite;
   end;
 end;
 
 procedure TformModalRelatorios.btnBuscarFuncionarioClick(Sender: TObject);
 begin
+  btnBuscarFuncionario.Down := True;
+
   with TformFuncionarios.Create(Self) do
   begin
     WindowState := wsNormal;
     Align := alNone;
     BorderStyle := bsSingle;
     btnSelect.Visible := True;
+    TelaInModal := True;
     ShowModal;
 
     if Selecionado then

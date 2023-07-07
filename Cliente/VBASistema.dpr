@@ -35,7 +35,8 @@ uses
   untObservacoesDias in 'src\Cadastros\Ponto de Funcionario\untObservacoesDias.pas' {formObservacoesDias},
   untPagamentosAnteriores in 'src\Movimentações\Controle de Pagamentos Funcionários\untPagamentosAnteriores.pas' {formPagamentosAnteriores},
   relatorioControlePagamento in 'src\Relatórios\relatorioControlePagamento.pas' {formRelatorioControlePagamento},
-  relatorioPontoFuncionarios in 'src\Relatórios\relatorioPontoFuncionarios.pas' {formRelatPontoFuncionarios};
+  relatorioPontoFuncionarios in 'src\Relatórios\relatorioPontoFuncionarios.pas' {formRelatPontoFuncionarios},
+  untInformarValorPagar in 'src\Movimentações\Controle de Pagamentos Funcionários\untInformarValorPagar.pas' {formInformarValorPagar};
 
 {$R *.res}
 
@@ -50,5 +51,6 @@ begin
   Application.CreateForm(TformPagamentosAnteriores, formPagamentosAnteriores);
   Application.CreateForm(TformRelatorioControlePagamento, formRelatorioControlePagamento);
   Application.CreateForm(TformRelatPontoFuncionarios, formRelatPontoFuncionarios);
+  Application.CreateForm(TformInformarValorPagar, formInformarValorPagar);
   Application.Run;
 end.

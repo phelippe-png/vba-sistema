@@ -137,7 +137,7 @@ begin
     if Length(edCEP.Text) = 10 then
     begin
       jsonDadosCEP := TJSONObject.Create;
-      jsonDadosCEP := TJSONObject.ParseJSONValue(SisValidarCEP(edCEP.Text)) as TJSONObject;
+      jsonDadosCEP := TJSONObject.ParseJSONValue(SisBuscarCEP(edCEP.Text)) as TJSONObject;
 
       edLogradouro.Text := jsonDadosCEP.GetValue<string>('logradouro');
       edBairro.Text := jsonDadosCEP.GetValue<string>('bairro');

@@ -14,20 +14,19 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Panel1: TPanel;
-    btnObservacoes: TSpeedButton;
-    Label3: TLabel;
     edtCPF: TEdit;
-    btnInserir: TSpeedButton;
+    btnConfirmar: TPanel;
+    btnObservacoes: TPanel;
     lblAviso: TLabel;
     procedure TimerTimer(Sender: TObject);
     procedure edtCPFChange(Sender: TObject);
     procedure edtCPFKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
-    procedure btnInserirClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
-    procedure btnObservacoesClick(Sender: TObject);
     procedure edtCPFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
+    procedure btnObservacoesClick(Sender: TObject);
+    procedure btnConfirmarClick(Sender: TObject);
   private
     procedure ExibirMensagemAviso(Msg: string; DeuCerto: Boolean);
   public
@@ -41,59 +40,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TformCadastrarPonto.btnObservacoesClick(Sender: TObject);
-begin
-  with TformObservacoesDias.Create(Self) do
-    ShowModal;
-end;
-
-procedure TformCadastrarPonto.edtCPFChange(Sender: TObject);
-begin
-  lblAviso.Caption := EmptyStr;
-  SisFormatarEdit(edtCPF, tpFormatCpfCnpj);
-end;
-
-procedure TformCadastrarPonto.edtCPFKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_RETURN then
-    btnInserirClick(Self);
-end;
-
-procedure TformCadastrarPonto.edtCPFKeyPress(Sender: TObject; var Key: Char);
-begin
-  SisEditKeyPress(edtCPF, Key);
-end;
-
-procedure TformCadastrarPonto.ExibirMensagemAviso(Msg: string; DeuCerto: Boolean);
-begin
-  if DeuCerto then
-  begin
-    lblAviso.Caption := Msg;
-    lblAviso.Font.Color := $002BAA00;
-  end else
-  begin
-    lblAviso.Caption := Msg;
-    lblAviso.Font.Color := clMaroon;
-  end;
-end;
-
-procedure TformCadastrarPonto.FormCreate(Sender: TObject);
-begin
-  lblTime.Caption := TimeToStr(Time);
-end;
-
-procedure TformCadastrarPonto.FormShow(Sender: TObject);
-begin
-  edtCPF.SetFocus;
-end;
-
-procedure TformCadastrarPonto.Panel1Click(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TformCadastrarPonto.btnInserirClick(Sender: TObject);
+procedure TformCadastrarPonto.btnConfirmarClick(Sender: TObject);
 var
   vDicDados: TDictionary<String, Variant>;
   vIdFuncionario: Integer;
@@ -151,9 +98,7 @@ begin
       begin
         BDInserirRegistros('tab_pontofuncionario', 'id', 'tab_pontofuncionario_id_seq', vDicDados);
         ExibirMensagemAviso('Ponto registrado com sucesso.', True);
-      end
-      else
-      begin
+      end else
         if FieldByName(vStrFieldName).AsString <> EmptyStr then
           ExibirMensagemAviso('Ponto já registrado no horário atual!', False)
         else
@@ -161,10 +106,63 @@ begin
           BDAtualizarRegistros('tab_pontofuncionario', ' id = ' + FieldByName('id').AsInteger.ToString, vDicDados);
           ExibirMensagemAviso('Ponto registrado com sucesso.', True);
         end;
-      end;
   end;
 
-  edtCPF.Clear;
+  edtCPF.Text := EmptyStr;
+end;
+
+procedure TformCadastrarPonto.btnObservacoesClick(Sender: TObject);
+begin
+  with TformObservacoesDias.Create(Self) do
+    ShowModal;
+end;
+
+procedure TformCadastrarPonto.edtCPFChange(Sender: TObject);
+begin
+  SisFormatarEdit(edtCPF, tpFormatCpfCnpj);
+end;
+
+procedure TformCadastrarPonto.edtCPFKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    btnConfirmarClick(Self);
+end;
+
+procedure TformCadastrarPonto.edtCPFKeyPress(Sender: TObject; var Key: Char);
+begin
+  SisEditKeyPress(edtCPF, Key);
+
+  if Key in ['1'..'9'] then
+    lblAviso.Caption := EmptyStr;
+end;
+
+procedure TformCadastrarPonto.ExibirMensagemAviso(Msg: string; DeuCerto: Boolean);
+begin
+  if DeuCerto then
+  begin
+    lblAviso.Caption := Msg;
+    lblAviso.Font.Color := $00238A00;
+  end else
+  begin
+    lblAviso.Caption := Msg;
+    lblAviso.Font.Color := clMaroon;
+  end;
+end;
+
+procedure TformCadastrarPonto.FormCreate(Sender: TObject);
+begin
+  lblTime.Caption := TimeToStr(Time);
+end;
+
+procedure TformCadastrarPonto.FormShow(Sender: TObject);
+begin
+  edtCPF.SetFocus;
+end;
+
+procedure TformCadastrarPonto.Panel1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TformCadastrarPonto.TimerTimer(Sender: TObject);

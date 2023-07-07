@@ -1533,6 +1533,23 @@ object formRelatorioControlePagamento: TformRelatorioControlePagamento
           Text = ''
           Transparent = False
         end
+        object RLDBText1: TRLDBText
+          Left = 685
+          Top = 5
+          Width = 30
+          Height = 16
+          Alignment = taRightJustify
+          DataField = 'mes'
+          DataSource = DataSource
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          Text = ''
+          Transparent = False
+        end
       end
       object RLBand4: TRLBand
         Left = 0
@@ -1574,9 +1591,9 @@ object formRelatorioControlePagamento: TformRelatorioControlePagamento
         object RLLabel3: TRLLabel
           Left = 363
           Top = 5
-          Width = 208
+          Width = 210
           Height = 16
-          Caption = 'INFORMA'#199#213'ES DE PAGAMENTO'
+          Caption = 'INFORMA'#199#213'ES DO PAGAMENTO'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13

@@ -98,7 +98,6 @@ type
     procedure btnFuncionariosClick(Sender: TObject);
     procedure btnControlePagamentoMouseLeave(Sender: TObject);
     procedure btnControlePagamentoClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure btnCadastrarPontoMouseLeave(Sender: TObject);
     procedure btnCadastrarPontoClick(Sender: TObject);
     procedure btnRelatControlePagamentoMouseLeave(Sender: TObject);
@@ -162,11 +161,6 @@ end;
 procedure TformMain.FormResize(Sender: TObject);
 begin
   Self.Constraints.MinWidth := 1050;
-end;
-
-procedure TformMain.FormShow(Sender: TObject);
-begin
-  btnControlePagamento.Caption := 'Controle de Pagamento' + sLineBreak + '(Manutenção)';
 end;
 
 procedure TformMain.Image2Click(Sender: TObject);
@@ -270,8 +264,6 @@ begin
   formContasPagar := TformContasPagar.Create(self);
   abrirTelas(formContasPagar);
 end;
-
-
 
 procedure TformMain.btnControleProducaoClick(Sender: TObject);
 begin

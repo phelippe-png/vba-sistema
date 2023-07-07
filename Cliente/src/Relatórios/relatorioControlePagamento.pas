@@ -54,6 +54,7 @@ type
     rldbFaltas: TRLDBText;
     rldbValorPago: TRLDBText;
     RLReport: TRLReport;
+    RLDBText1: TRLDBText;
   private
 
   public
@@ -72,12 +73,13 @@ implementation
 procedure TformRelatorioControlePagamento.imprimirRelatorio(stCondicoes: string);
 begin
   DataSource.DataSet := BDBuscarRegistros('tab_funcionario f',
-  ' f.id id_funcionario, f.nome funcionario, f.cpf, f.funcao, f.telefone, f.email, f.dt_nascimento, f.salario, pag.data_pagamento, pag.valor_pago, ' +
+  ' f.id id_funcionario, f.nome funcionario, f.cpf, f.funcao, f.telefone, f.email, f.dt_nascimento, f.salario, pag.data_pagamento, pag.valor_pago, m.mes||'' / ''||right(pag.data_ocorrencia, 4) mes, ' +
   ' case when f.ativo is true then ''ATIVO'' else ''INATIVO'' end::varchar status, ' +
   ' (extract(''day'' from (date_trunc(''month'', CURRENT_DATE)+interval ''1 month''-interval ''1 day'')::date) - count(p.id)) faltas ',
   ' left join tab_controlepagamento pag on pag.id_funcionario = f.id ' +
-  ' left join tab_pontofuncionario p on p.id_funcionario = f.id and pag.data_ocorrencia = (extract(''month'' from p.data)||''/''||extract(''year'' from p.data)) ',
-  SisVarIf(not stCondicoes.IsEmpty, ' 1=1 '+stCondicoes, EmptyStr), ' 1,2,3,4,5,6,7,8,9,10 ', ' pag.data_pagamento ', -1, 'FDQBuscaPagamentoFuncionario');
+  ' left join tab_pontofuncionario p on p.id_funcionario = f.id and pag.data_ocorrencia = (extract(''month'' from p.data)||''/''||extract(''year'' from p.data)) '+
+  ' left join tab_meses m on m.numero_mes = left(pag.data_ocorrencia, 2)::int4 ',
+  SisVarIf(not stCondicoes.IsEmpty, ' 1=1 '+stCondicoes, EmptyStr), ' 1,2,3,4,5,6,7,8,9,10,11,pag.data_ocorrencia ', ' pag.data_ocorrencia ', -1, 'FDQBuscaPagamentoFuncionario');
 
   if DataSource.DataSet.RecordCount = 0 then
   begin

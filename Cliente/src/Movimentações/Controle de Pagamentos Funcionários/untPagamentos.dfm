@@ -74,10 +74,10 @@ object formPagamentos: TformPagamentos
         462)
       object Label1: TLabel
         Left = 14
-        Top = 10
-        Width = 57
+        Top = 13
+        Width = 127
         Height = 17
-        Caption = 'Pesquisar'
+        Caption = 'Pesquisar pagamento'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
@@ -88,7 +88,7 @@ object formPagamentos: TformPagamentos
       object edSearch: TEdit
         Left = 14
         Top = 31
-        Width = 339
+        Width = 403
         Height = 27
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -97,6 +97,7 @@ object formPagamentos: TformPagamentos
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnChange = edSearchChange
       end
       object pnlSearch: TPanel
         AlignWithMargins = True

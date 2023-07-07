@@ -41,6 +41,11 @@ type
     procedure btnPagamentosAnterioresClick(Sender: TObject);
     procedure btnConfirmarPagamentoClick(Sender: TObject);
     procedure btnAlterarSalarioClick(Sender: TObject);
+    procedure Label7Click(Sender: TObject);
+    procedure sbxBeneficiosMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure sbxBeneficiosMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     vFDMObservacoes: TFDMemTable;
     vValorPagar: Double;
@@ -55,7 +60,6 @@ type
     procedure ExibirObservacoesDetalhadas(Memo: TMemo; MemTable: TFDMemTable);
     procedure OnClickConfirmarSalario(Sender: TObject);
     procedure OnChangeEditSalario(Sender: TObject);
-    procedure ResizeTela;
   public
     vIdFuncionario: Integer;
     vIsPago: Boolean;
@@ -70,14 +74,14 @@ implementation
 
 procedure TformControlePagamentos.btnAlterarSalarioClick(Sender: TObject);
 begin
-  lblSalario.Caption := 'Salário: ';
+  lblSalario.Caption := 'Valor: ';
   btnAlterarSalario.Visible := False;
 
   with TEdit.Create(Self) do
   begin
     Name := 'edtSalario';
     Parent := pnlContainer;
-    Text := '0,00';
+    Text := FormatFloat('###,###,##0.00', vValorPagar);
     MaxLength := 13;
     Left := lblSalario.Left+lblSalario.Width+5;
     Top := lblSalario.Top;
@@ -122,8 +126,14 @@ begin
   cvCalendarioPagAtual.Date := Now;
   btnAlterarSalario.Left := lblSalario.Left+lblSalario.Width+5;
   btnConfirmarPagamento.Enabled := not vIsPago;
+  btnAlterarSalario.Visible := not vIsPago;
   if not btnConfirmarPagamento.Enabled then
     btnConfirmarPagamento.Color := $00A2A2A2;
+end;
+
+procedure TformControlePagamentos.Label7Click(Sender: TObject);
+begin
+  ExibirObservacoesDetalhadas(mmObservacao, vFDMObservacoes);
 end;
 
 procedure TformControlePagamentos.LimparBeneficios;
@@ -141,7 +151,7 @@ end;
 
 procedure TformControlePagamentos.OnClickConfirmarSalario(Sender: TObject);
 begin
-  lblSalario.Caption := 'Salário: '+FormatFloat('R$ ###,###,##0.00', Trim(TEdit(Self.FindComponent('edtSalario')).Text).Replace('.', '').ToDouble);
+  lblSalario.Caption := SisVarIf(vIsPago, 'Valor pago confirmado: ', 'Valor a pagar: ')+FormatFloat('R$ ###,###,##0.00', Trim(TEdit(Self.FindComponent('edtSalario')).Text).Replace('.', '').ToDouble);
   vValorPagar := Trim(TEdit(Self.FindComponent('edtSalario')).Text).Replace('.', '').ToDouble;
 
   btnAlterarSalario.Visible := True;
@@ -150,9 +160,16 @@ begin
   TEdit(TEdit(Self.FindComponent('edtSalario'))).Destroy;
 end;
 
-procedure TformControlePagamentos.ResizeTela;
+procedure TformControlePagamentos.sbxBeneficiosMouseWheelDown(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
+  sbxBeneficios.VertScrollBar.Position := sbxBeneficios.VertScrollBar.Position + 5;
+end;
 
+procedure TformControlePagamentos.sbxBeneficiosMouseWheelUp(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  sbxBeneficios.VertScrollBar.Position := sbxBeneficios.VertScrollBar.Position - 5;
 end;
 
 procedure TformControlePagamentos.btnPagamentosAnterioresClick(Sender: TObject);
@@ -166,34 +183,41 @@ end;
 
 procedure TformControlePagamentos.cvCalendarioPagAtualChange(Sender: TObject);
 begin
-  ExibirObservacaoIndividual(mmObservacao, vFDMObservacoes, cvCalendarioPagAtual);
+  mmObservacao.Lines.Text := EmptyStr;
+  with vFDMObservacoes do
+    if (Locate('data', SisTratarDate(DateToStr(cvCalendarioPagAtual.Date)))) and (FieldByName('observacao').AsString <> EmptyStr) then
+      ExibirObservacaoIndividual(mmObservacao, vFDMObservacoes, cvCalendarioPagAtual);
 end;
 
 procedure TformControlePagamentos.cvCalendarioPagAtualDrawDayItem(
   Sender: TObject; DrawParams: TDrawViewInfoParams;
   CalendarViewViewInfo: TCellItemViewInfo);
 begin
-  if vFDMObservacoes.Locate('data', CalendarViewViewInfo.Date) then
-    DrawParams.BkColor := $009FFF80;
+  with vFDMObservacoes do
+    if (Locate('data', CalendarViewViewInfo.Date)) and (FieldByName('observacao').AsString <> EmptyStr) then
+      DrawParams.BkColor := $009FFF80;
 end;
 
 procedure TformControlePagamentos.btnConfirmarPagamentoClick(Sender: TObject);
+var
+  vDataOcorrencia: string;
 begin
   if vValorPagar = 0 then
   begin
-    Application.MessageBox('Não é possível confirmar o pagamento com o valor de pagamento zerado!', 'Atenção', MB_ICONWARNING);
+    Application.MessageBox('Não é possível confirmar o pagamento com o valor zerado!', 'Atenção', MB_ICONWARNING);
     Exit;
   end;
 
   if Application.MessageBox('Deseja confirmar o pagamento do funcionário?', 'Confirmação', MB_ICONINFORMATION+MB_YESNO) = ID_NO then
     Exit;
 
+  vDataOcorrencia := SisVarIf(Length(MonthOf(Now).ToString) = 1, '0'+MonthOf(Now).ToString, MonthOf(Now).ToString)+'/'+YearOf(Now).ToString;
   with vDicPagamento do
   begin
     Add('id_funcionario', vIdFuncionario);
     Add('valor_pago', vValorPagar);
     Add('data_pagamento', DateToStr(Now));
-    Add('data_ocorrencia', MonthOf(Now).ToString+'/'+YearOf(Now).ToString);
+    Add('data_ocorrencia', vDataOcorrencia);
   end;
 
   BDInserirRegistros('tab_controlepagamento', ' id ', ' tab_controlepagamento_id_seq ', vDicPagamento);
@@ -206,11 +230,13 @@ var
   vArrayBeneficios: TJSONArray;
   I, Count: Integer;
 begin
-  with BDBuscarRegistros('tab_funcionario', ' nome, salario, beneficios ', EmptyStr,
-  ' id =  ' + vIdFuncionario.ToString, EmptyStr, EmptyStr, -1, 'FDQBuscaFuncionario') do
+  with BDBuscarRegistros('tab_funcionario f', ' f.nome, f.salario, f.beneficios, p.valor_pago ',
+  ' left join tab_controlepagamento p on p.id_funcionario = f.id and p.data_ocorrencia = lpad(extract(month from now())::varchar, 2, ''0'')||''/''||extract(year from now()) ',
+  ' f.id =  ' + vIdFuncionario.ToString, EmptyStr, EmptyStr, -1, 'FDQBuscaFuncionario') do
   begin
-    lblFuncionario.Caption := 'Funcionário: ' + FieldByName('nome').AsString;
-    lblSalario.Caption := 'Salário: ' + FormatFloat('R$ ###,###,##0.00', FieldByName('salario').AsFloat);
+    lblFuncionario.Caption := 'Funcionário: ' + UpperCase(FieldByName('nome').AsString);
+    lblSalario.Caption := SisVarIf(vIsPago, 'Valor pago confirmado: ', 'Valor a pagar: ')+
+                          FormatFloat('R$ ###,###,##0.00', SisVarIf(vIsPago, FieldByName('valor_pago').AsFloat, FieldByName('salario').AsFloat));
     vValorPagar := FieldByName('salario').AsFloat;
 
     vArrayBeneficios := TJSONArray.Create;

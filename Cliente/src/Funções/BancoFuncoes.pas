@@ -10,7 +10,7 @@ function BDCriarOuRetornarFDQuery(stNomeQuery: string; Owner: TComponent = nil):
 function BDCriarOuRetornarDataSource(stNomeDS: string; Owner: TComponent = nil): TDataSource;
 function BDCriarOuRetornarFDMemTable(stNomeMemTable: string; Owner: TComponent = nil): TFDMemTable;
 
-function BDBuscarRegistros(stTabela, stAtributos, stJoins, stCondicoes, stGroup, stOrder: string; nrLimit: integer; stNomeDataSet: string): TFDQuery;
+function BDBuscarRegistros(stTabela: string; stAtributos: string = ''; stJoins: string = ''; stCondicoes: string = ''; stGroup: string = ''; stOrder: string = ''; nrLimit: Integer = -1; stNomeDataSet: string = ''): TFDQuery;
 function BDInserirRegistros(stTabela, stColunaId, stNomeSeq: string; dicDados: TDictionary<string, Variant>; nrColunaId: Integer = 0): Integer;
 function BDAtualizarRegistros(stTabela, stCondicoes: string; dicDados: TDictionary<string, Variant>): Boolean;
 function BDExcluirRegistro(stTabela, stCondicoes: string): boolean;
@@ -74,7 +74,7 @@ begin
     Result.Name := stNomeMemTable;
 end;
 
-function BDBuscarRegistros(stTabela, stAtributos, stJoins, stCondicoes, stGroup, stOrder: string; nrLimit: integer; stNomeDataSet: string): TFDQuery;
+function BDBuscarRegistros(stTabela: string; stAtributos: string = ''; stJoins: string = ''; stCondicoes: string = ''; stGroup: string = ''; stOrder: string = ''; nrLimit: Integer = -1; stNomeDataSet: string = ''): TFDQuery;
 var
   stSQL, vStrErro: string;
   vFDQuery: TFDQuery;
@@ -156,6 +156,7 @@ begin
             varString, varUString: vValueInsert := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
             varBoolean: vValueInsert := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
             varDate: vValueInsert := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
+            varNull: vValueInsert := 'null';
           end;
 
           stSQL := stSQL + vValueInsert;
@@ -207,6 +208,7 @@ begin
           varString, varUString: vValueUpdate := QuotedStr(dicDados.Items[vArrayDicKeys[I]]);
           varBoolean: vValueUpdate := BoolToStr(dicDados.Items[vArrayDicKeys[I]], True);
           varDate: vValueUpdate := QuotedStr(DateToStr(dicDados.Items[vArrayDicKeys[I]]));
+          varNull: vValueUpdate := 'null';
         end;
 
         vSQL := vSQL + vArrayDicKeys[I] + ' = ' + vValueUpdate;
@@ -257,10 +259,10 @@ var
   vArquivo: TextFile;
 begin
   if StrCaminho = EmptyStr then
-    StrCaminho := ExtractFilePath(Application.ExeName) + StrNomeArquivo;
+    StrCaminho := ExtractFilePath(Application.ExeName);
 
-  AssignFile(vArquivo, StrCaminho);
-  if not FileExists(StrCaminho) then
+  AssignFile(vArquivo, StrCaminho+StrNomeArquivo);
+  if not FileExists(StrCaminho+StrNomeArquivo) then
     Rewrite(vArquivo);
 
   if InRewrite then

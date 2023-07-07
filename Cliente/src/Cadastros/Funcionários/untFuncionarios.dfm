@@ -74,24 +74,11 @@ object formFuncionarios: TformFuncionarios
         852
         473)
       object Label1: TLabel
-        Left = 142
-        Top = 13
-        Width = 54
-        Height = 16
-        Caption = 'Pesquisar'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'Product Sans'
-        Font.Style = [fsBold]
-        ParentFont = False
-      end
-      object Label3: TLabel
         Left = 14
-        Top = 13
-        Width = 59
+        Top = 15
+        Width = 121
         Height = 16
-        Caption = 'Filtrar por:'
+        Caption = 'Pesquisar funcion'#225'rio'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -100,9 +87,9 @@ object formFuncionarios: TformFuncionarios
         ParentFont = False
       end
       object edSearch: TEdit
-        Left = 142
+        Left = 14
         Top = 31
-        Width = 283
+        Width = 411
         Height = 27
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -111,6 +98,7 @@ object formFuncionarios: TformFuncionarios
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnChange = edSearchChange
       end
       object Panel6: TPanel
         AlignWithMargins = True
@@ -137,7 +125,7 @@ object formFuncionarios: TformFuncionarios
         TabOrder = 2
       end
       object btnSelect: TPanel
-        Left = 492
+        Left = 578
         Top = 20
         Width = 87
         Height = 30
@@ -158,26 +146,6 @@ object formFuncionarios: TformFuncionarios
         Visible = False
         OnClick = btnSelectClick
       end
-      object btnDelete: TPanel
-        Left = 585
-        Top = 20
-        Width = 80
-        Height = 30
-        Cursor = crHandPoint
-        Anchors = [akTop, akRight]
-        BevelOuter = bvNone
-        Caption = 'Excluir'
-        Color = clMaroon
-        DragCursor = crDefault
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWhite
-        Font.Height = -15
-        Font.Name = 'Product Sans'
-        Font.Style = [fsBold]
-        ParentBackground = False
-        ParentFont = False
-        TabOrder = 4
-      end
       object btnEdit: TPanel
         Left = 671
         Top = 20
@@ -196,7 +164,7 @@ object formFuncionarios: TformFuncionarios
         Font.Style = [fsBold]
         ParentBackground = False
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 4
         OnClick = btnEditClick
       end
       object btnAdd: TPanel
@@ -217,7 +185,7 @@ object formFuncionarios: TformFuncionarios
         Font.Style = [fsBold]
         ParentBackground = False
         ParentFont = False
-        TabOrder = 6
+        TabOrder = 5
         OnClick = btnAddClick
       end
       object dbgFuncionarios: TDBGrid
@@ -234,7 +202,7 @@ object formFuncionarios: TformFuncionarios
         Font.Style = []
         Options = [dgTitles, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgMultiSelect]
         ParentFont = False
-        TabOrder = 7
+        TabOrder = 6
         TitleFont.Charset = ANSI_CHARSET
         TitleFont.Color = clWindowText
         TitleFont.Height = -13
@@ -319,27 +287,6 @@ object formFuncionarios: TformFuncionarios
             FieldName = 'ativo'
             Visible = False
           end>
-      end
-      object cbFiltro: TComboBox
-        Left = 14
-        Top = 32
-        Width = 122
-        Height = 25
-        Style = csDropDownList
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Product Sans'
-        Font.Style = []
-        ItemIndex = 0
-        ParentFont = False
-        TabOrder = 8
-        Text = 'C'#243'digo'
-        Items.Strings = (
-          'C'#243'digo'
-          'CPF'
-          'Nome'
-          '')
       end
     end
   end
