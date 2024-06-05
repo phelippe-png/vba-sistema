@@ -184,6 +184,7 @@ object formObservacoesDias: TformObservacoesDias
       Font.Name = 'Product Sans'
       Font.Style = []
       ParentFont = False
+      ReadOnly = True
       TabOrder = 1
     end
   end
@@ -196,8 +197,9 @@ object formObservacoesDias: TformObservacoesDias
     Anchors = [akTop, akRight]
     BevelOuter = bvNone
     Caption = 'Salvar observa'#231#227'o'
-    Color = 12615680
+    Color = 10658466
     DragCursor = crDefault
+    Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWhite
     Font.Height = -15

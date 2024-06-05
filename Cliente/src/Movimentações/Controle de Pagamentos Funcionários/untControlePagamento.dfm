@@ -31,8 +31,6 @@ object formControlePagamentos: TformControlePagamentos
     Padding.Bottom = 10
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 927
-    ExplicitHeight = 564
     DesignSize = (
       994
       571)
@@ -47,7 +45,6 @@ object formControlePagamentos: TformControlePagamentos
       Color = clMenu
       ParentBackground = False
       TabOrder = 0
-      ExplicitWidth = 901
       DesignSize = (
         968
         50)
@@ -97,7 +94,6 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 0
         OnClick = btnConfirmarPagamentoClick
-        ExplicitLeft = 620
       end
       object btnCancel: TPanel
         Left = 870
@@ -119,7 +115,6 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 1
         OnClick = btnCancelClick
-        ExplicitLeft = 803
       end
     end
     object pnlContainer: TPanel
@@ -133,8 +128,6 @@ object formControlePagamentos: TformControlePagamentos
       Color = clBtnHighlight
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 901
-      ExplicitHeight = 504
       DesignSize = (
         968
         511)
@@ -252,7 +245,6 @@ object formControlePagamentos: TformControlePagamentos
         Color = 4210688
         ParentBackground = False
         TabOrder = 0
-        ExplicitWidth = 1000
       end
       object cvCalendarioPagAtual: TCalendarView
         Left = 3
@@ -280,7 +272,6 @@ object formControlePagamentos: TformControlePagamentos
         OnDrawDayItem = cvCalendarioPagAtualDrawDayItem
         ParentFont = False
         TabOrder = 1
-        ExplicitTop = 228
       end
       object mmObservacao: TMemo
         Left = 338
@@ -297,8 +288,6 @@ object formControlePagamentos: TformControlePagamentos
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 2
-        ExplicitTop = 254
-        ExplicitWidth = 559
       end
       object Panel5: TPanel
         Left = 3
@@ -308,7 +297,6 @@ object formControlePagamentos: TformControlePagamentos
         Anchors = [akLeft, akTop, akBottom]
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitHeight = 222
         object Panel1: TPanel
           Left = 335
           Top = 1
@@ -317,7 +305,6 @@ object formControlePagamentos: TformControlePagamentos
           Align = alRight
           TabOrder = 0
           Visible = False
-          ExplicitHeight = 184
         end
         object Panel2: TPanel
           Left = 0
@@ -336,7 +323,6 @@ object formControlePagamentos: TformControlePagamentos
           Align = alLeft
           TabOrder = 2
           Visible = False
-          ExplicitHeight = 184
         end
         object Panel4: TPanel
           Left = 0
@@ -346,7 +332,6 @@ object formControlePagamentos: TformControlePagamentos
           Align = alBottom
           TabOrder = 3
           Visible = False
-          ExplicitTop = 185
         end
         object sbxBeneficios: TScrollBox
           Left = 1
@@ -362,7 +347,6 @@ object formControlePagamentos: TformControlePagamentos
           TabOrder = 4
           OnMouseWheelDown = sbxBeneficiosMouseWheelDown
           OnMouseWheelUp = sbxBeneficiosMouseWheelUp
-          ExplicitHeight = 184
         end
       end
       object btnPagamentosAnteriores: TPanel
@@ -385,7 +369,6 @@ object formControlePagamentos: TformControlePagamentos
         ParentFont = False
         TabOrder = 4
         OnClick = btnPagamentosAnterioresClick
-        ExplicitLeft = 619
       end
     end
   end

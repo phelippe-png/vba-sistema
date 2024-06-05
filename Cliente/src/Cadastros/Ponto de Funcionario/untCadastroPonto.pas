@@ -44,7 +44,7 @@ procedure TformCadastrarPonto.btnConfirmarClick(Sender: TObject);
 var
   vDicDados: TDictionary<String, Variant>;
   vIdFuncionario: Integer;
-  vStrFieldName: string;
+  vStrFieldName, vStrNomeFuncionario: string;
 begin
   if (not validaCPF(SisOnlyNumbers(Trim(edtCPF.Text)))) then
   begin
@@ -52,7 +52,7 @@ begin
     Exit;
   end;
 
-  with BDBuscarRegistros('tab_funcionario', ' id ', EmptyStr, ' cpf = ' + QuotedStr(Trim(edtCPF.Text)), EmptyStr, EmptyStr, -1, 'FDQBuscaFuncionario') do
+  with BDBuscarRegistros('tab_funcionario', EmptyStr, EmptyStr, ' cpf = ' + QuotedStr(Trim(edtCPF.Text)), EmptyStr, EmptyStr, -1, 'FDQBuscaFuncionario') do
   begin
     if RecordCount = 0 then
     begin
@@ -60,6 +60,7 @@ begin
       Exit;
     end;
 
+    vStrNomeFuncionario := FieldByName('nome').AsString;
     vIdFuncionario := FieldByName('id').AsInteger;
     vDicDados := TDictionary<String, Variant>.Create;
 
@@ -97,14 +98,17 @@ begin
       if RecordCount = 0 then
       begin
         BDInserirRegistros('tab_pontofuncionario', 'id', 'tab_pontofuncionario_id_seq', vDicDados);
-        ExibirMensagemAviso('Ponto registrado com sucesso.', True);
+        ExibirMensagemAviso('Funcionário: '+vStrNomeFuncionario+sLineBreak+
+                            'Ponto registrado com sucesso.', True);
       end else
         if FieldByName(vStrFieldName).AsString <> EmptyStr then
-          ExibirMensagemAviso('Ponto já registrado no horário atual!', False)
+          ExibirMensagemAviso('Funcionário: '+vStrNomeFuncionario+sLineBreak+
+                              'Ponto já registrado no horário atual!', False)
         else
         begin
           BDAtualizarRegistros('tab_pontofuncionario', ' id = ' + FieldByName('id').AsInteger.ToString, vDicDados);
-          ExibirMensagemAviso('Ponto registrado com sucesso.', True);
+          ExibirMensagemAviso('Funcionário: '+vStrNomeFuncionario+sLineBreak+
+                              'Ponto registrado com sucesso.', True);
         end;
   end;
 

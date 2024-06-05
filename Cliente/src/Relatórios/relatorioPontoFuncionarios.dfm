@@ -1885,9 +1885,9 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
         object RLLabel17: TRLLabel
           Left = 584
           Top = 0
-          Width = 97
+          Width = 98
           Height = 16
-          Caption = 'Data admiss'#227'o'
+          Caption = 'Data Admiss'#227'o'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -2009,9 +2009,9 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
         object RLLabel19: TRLLabel
           Left = 584
           Top = 0
-          Width = 110
+          Width = 111
           Height = 16
-          Caption = 'Data nascimento'
+          Caption = 'Data Nascimento'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -2256,9 +2256,9 @@ object formRelatPontoFuncionarios: TformRelatPontoFuncionarios
         object RLLabel26: TRLLabel
           Left = 130
           Top = 0
-          Width = 207
+          Width = 212
           Height = 16
-          Caption = 'Intervalo do hor'#225'rio de trabalho'
+          Caption = 'Intervalo do Hor'#225'rio de Trabalho'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13

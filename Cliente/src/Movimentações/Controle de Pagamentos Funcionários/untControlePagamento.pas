@@ -385,11 +385,13 @@ begin
     Count := 0;
     while not Eof do
     begin
-      Inc(Count);
-      Memo.Lines.Add(Count.ToString + ' - DATA: ' +
-                            FormatDateTime('dd/mm/yyyy', FieldByName('data').AsDateTime)+sLineBreak+
-                            '--------------------------------'+sLineBreak+
-                            FieldByName('observacao').AsString + sLineBreak+sLineBreak);
+      if FieldByName('observacao').AsString <> EmptyStr then
+      begin
+        Inc(Count);
+        Memo.Lines.Add(Count.ToString + ' - DATA: ' + FormatDateTime('dd/mm/yyyy', FieldByName('data').AsDateTime)+sLineBreak+
+        '--------------------------------'+sLineBreak+ FieldByName('observacao').AsString + sLineBreak+sLineBreak);
+      end;
+
       Next;
     end;
   end;

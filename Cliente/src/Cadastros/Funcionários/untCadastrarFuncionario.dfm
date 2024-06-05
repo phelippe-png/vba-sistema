@@ -499,7 +499,7 @@ object formCadastrarFuncionario: TformCadastrarFuncionario
             Font.Height = -12
             Font.Name = 'Product Sans'
             Font.Style = []
-            MaxLength = 15
+            MaxLength = 14
             NumbersOnly = True
             ParentFont = False
             TabOrder = 2

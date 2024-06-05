@@ -106,13 +106,13 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentFont = False
     end
     object lblDataPagamento: TLabel
-      Left = 946
-      Top = 393
-      Width = 34
+      Left = 863
+      Top = 395
+      Width = 117
       Height = 21
       Alignment = taRightJustify
       Anchors = [akRight, akBottom]
-      Caption = 'data'
+      Caption = 'N'#195'O DEFINIDO'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -17
@@ -121,13 +121,13 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentFont = False
     end
     object lblFaltas: TLabel
-      Left = 936
+      Left = 863
       Top = 440
-      Width = 44
+      Width = 117
       Height = 21
       Alignment = taRightJustify
       Anchors = [akRight, akBottom]
-      Caption = 'Faltas'
+      Caption = 'N'#195'O DEFINIDO'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -17
@@ -136,13 +136,13 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentFont = False
     end
     object lblValorPago: TLabel
-      Left = 905
+      Left = 863
       Top = 488
-      Width = 75
+      Width = 117
       Height = 21
       Alignment = taRightJustify
       Anchors = [akRight, akBottom]
-      Caption = 'valorpago'
+      Caption = 'N'#195'O DEFINIDO'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -17
@@ -166,13 +166,13 @@ object formPagamentosAnteriores: TformPagamentosAnteriores
       ParentFont = False
     end
     object lblStatus: TLabel
-      Left = 934
+      Left = 863
       Top = 350
-      Width = 46
+      Width = 117
       Height = 21
       Alignment = taRightJustify
       Anchors = [akRight, akBottom]
-      Caption = 'status'
+      Caption = 'N'#195'O DEFINIDO'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -17

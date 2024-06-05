@@ -75,9 +75,9 @@ object formPagamentos: TformPagamentos
       object Label1: TLabel
         Left = 14
         Top = 13
-        Width = 127
+        Width = 57
         Height = 17
-        Caption = 'Pesquisar pagamento'
+        Caption = 'Pesquisar'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
